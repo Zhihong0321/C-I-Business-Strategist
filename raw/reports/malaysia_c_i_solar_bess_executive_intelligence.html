@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malaysia C&I Solar PV & BESS Strategic Intelligence Hub (2026–2030)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom Chart Container Styles -->
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 360px;
+            }
+        }
+        .tab-btn.active {
+            border-bottom: 3px solid #0284c7;
+            color: #0284c7;
+            font-weight: 700;
+            background-color: #f0f9ff;
+        }
+        /* Custom scrollbar for tables */
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 6px;
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+
+    <!-- Chosen Palette: Warm Neutral Slate (Slate Blue, Warm Neutral Gray, Emerald Green, Amber Gold) -->
+
+    <!-- Application Structure Plan:
+        Designed as an executive decision-making and analytical intelligence dashboard tailored for Malaysian SEDA RPVSP + RPVI dual-licensed EPCC operators. Organised into 7 thematic operational domains:
+        1. Executive Pulse & Agency Governance Matrix: Core policy direction, statutory roles (PETRA, ST, SEDA, TNB, MIDA, MGTC).
+        2. Behind-the-Meter Pathways (ATAP vs. Enhanced SELCO): Interactive rule matrix, MAQ formula calculator, 1MWac threshold, RM12/kWp standby & BESS rules.
+        3. TNB Tariff Overhaul (RP4) & BESS Peak Shaving Simulator: Interactive 24-hour load curve model, Peak window (2PM-10PM), MD charge surge (RM89.27-97.06/kW), dynamic peak shaving savings.
+        4. Front-of-Meter CRESS Open Access Framework: CRESS 5-contract structure, Sept 18, 2026 Acceleration Package (14 sen SAC, 10-yr PPA, Dec 31 2028 COD deadline), developer revenue calculator.
+        5. Fiscal Incentives & Dec 31, 2026 Tax Cliff Engine: Tiered GITA (100% BESS, 60% Solar), GITE 70% exemption, Capital Allowance stacking (38.4% Solar recovery, 48% BESS recovery), interactive tax shield calculator.
+        6. Technical Interconnection & BOMBA Guidelines: CAS study fee matrix, ST Section 9 licenses, PEPC endorsement rules, BOMBA fire safety & thermal runaway compliance.
+        7. Commercial Playbook & Client Pitch Generator: SARE vs Private Bilateral PPA comparison, 4-Archetype strategy matrix, client proposal blueprint generator.
+    -->
+
+    <!-- Visualization & Content Choices:
+        - RP4 24-Hour Load Curve: Interactive Chart.js Line Chart with peak window highlights to visualize MD shaving and solar shifting economics (Canvas-based).
+        - Tariff Rate Structure: Chart.js Bar Chart comparing Legacy vs RP4 Energy and MD charges across LV, MV, and HV tariffs (Canvas-based).
+        - Tax Recovery Stack: Chart.js Stacked Bar Chart illustrating GITA + Capital Allowance cash tax shield recovery (38.4% for Solar, 48% for BESS) (Canvas-based).
+        - CRESS SAC Comparison: Chart.js Bar Chart highlighting the 44% tariff reduction in wheeling charges under the Sept 2026 Acceleration Package (Canvas-based).
+        - Interactive Calculators: Pure Vanilla JS reactive state components for MAQ caps, Tariff Savings, GITA Tax Shield, CRESS Net Returns, and CAS Fee lookup.
+        - Icons & Elements: Styled HTML/Tailwind containers and Unicode symbols (NO SVG, NO Mermaid JS).
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <!-- Top Navigation Header -->
+    <header class="bg-slate-900 text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <span class="text-2xl font-black text-amber-400">⚡ MY-SOLAR</span>
+                    <div>
+                        <h1 class="text-base sm:text-lg font-bold leading-none">C&I Solar & BESS Intelligence Hub</h1>
+                        <p class="text-xs text-slate-400 mt-0.5">RPVSP + RPVI EPCC Strategic Command Platform (2026–2030)</p>
+                    </div>
+                </div>
+                <div class="hidden lg:flex items-center space-x-2">
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                        ● RP4 Active Paradigm
+                    </span>
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                        ⚠️ 31 Dec 2026 Tax Cliff
+                    </span>
+                </div>
+            </div>
+            <!-- Sub Navigation Tabs -->
+            <div class="flex overflow-x-auto space-x-1 border-t border-slate-800 text-xs sm:text-sm font-medium custom-scrollbar">
+                <button onclick="switchTab('dashboard')" id="tab-btn-dashboard" class="tab-btn active px-4 py-3 whitespace-nowrap text-slate-300 hover:text-white transition">📊 Executive Pulse</button>
+                <button onclick="switchTab('pathways')" id="tab-btn-pathways" class="tab-btn px-4 py-3 whitespace-nowrap text-slate-300 hover:text-white transition">⚖️ ATAP vs SELCO</button>
+                <button onclick="switchTab('tariff')" id="tab-btn-tariff" class="tab-btn px-4 py-3 whitespace-nowrap text-slate-300 hover:text-white transition">⚡ RP4 & BESS Simulator</button>
+                <button onclick="switchTab('cress')" id="tab-btn-cress" class="tab-btn px-4 py-3 whitespace-nowrap text-slate-300 hover:text-white transition">🏛️ CRESS Open Access</button>
+                <button onclick="switchTab('tax')" id="tab-btn-tax" class="tab-btn px-4 py-3 whitespace-nowrap text-slate-300 hover:text-white transition">💰 Tax Shields & Cliff</button>
+                <button onclick="switchTab('tech')" id="tab-btn-tech" class="tab-btn px-4 py-3 whitespace-nowrap text-slate-300 hover:text-white transition">🛠️ CAS & BOMBA Rules</button>
+                <button onclick="switchTab('playbook')" id="tab-btn-playbook" class="tab-btn px-4 py-3 whitespace-nowrap text-slate-300 hover:text-white transition">🎯 EPCC Playbook</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- ================= SECTION 1: EXECUTIVE DASHBOARD ================= -->
+        <section id="sec-dashboard" class="space-y-6">
+            <!-- Intro Paragraph -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-900 mb-2">Executive Summary: The Post-NEM Regulatory & Economic Paradigm</h2>
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                    Malaysia’s Commercial & Industrial (C&I) solar landscape in 2026 has transitioned away from volumetric Net Energy Metering (NEM 3.0) subsidies toward unbundled, grid-stabilized self-consumption (**Solar ATAP** and **Enhanced SELCO**) and open-access wheeling (**CRESS**). Under Tenaga Nasional Berhad’s **Regulatory Period 4 (RP4)** tariff overhaul and the strict **31 December 2026 fiscal incentive cliff**, dual-licensed **RPVSP** (Service Provider) and **RPVI** (Investor) contractors must integrate **Battery Energy Storage Systems (BESS)** to capture Maximum Demand peak-shaving revenue and protect project bankability.
+                </p>
+            </div>
+
+            <!-- Key Metric KPI Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-5 rounded-xl shadow-sm border border-slate-700">
+                    <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">TNB RP4 Peak Window</p>
+                    <p class="text-2xl font-black text-amber-400 mt-2">2:00 PM – 10:00 PM</p>
+                    <p class="text-xs text-slate-300 mt-2">8 Hours/Day Mon–Fri (Off-Peak expanded by 80% to 128 hrs/wk)</p>
+                </div>
+                <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-5 rounded-xl shadow-sm border border-slate-700">
+                    <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">MV Maximum Demand Surge</p>
+                    <p class="text-2xl font-black text-emerald-400 mt-2">RM 89.27 – 97.06 <span class="text-xs font-normal">/kW</span></p>
+                    <p class="text-xs text-slate-300 mt-2">+115% to +201% increase over legacy tariffs under RP4</p>
+                </div>
+                <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-5 rounded-xl shadow-sm border border-slate-700">
+                    <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">CRESS Firm SAC Wheeling Fee</p>
+                    <p class="text-2xl font-black text-sky-400 mt-2">14 sen <span class="text-xs font-normal">/kWh</span></p>
+                    <p class="text-xs text-slate-300 mt-2">Sept 18, 2026 Acceleration Package (Reduced from 25 sen)</p>
+                </div>
+                <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-5 rounded-xl shadow-sm border border-slate-700">
+                    <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Combined Tax Shield (BESS)</p>
+                    <p class="text-2xl font-black text-purple-400 mt-2">48.0% <span class="text-xs font-normal">of Capex</span></p>
+                    <p class="text-xs text-slate-300 mt-2">100% GITA Tier 1 + 100% Capital Allowance (Closes 31 Dec 2026)</p>
+                </div>
+            </div>
+
+            <!-- Inter-Agency Governance Framework -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center">
+                    <span class="mr-2">🏛️</span> Malaysian C&I Regulatory & Statutory Governance Architecture
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="p-4 rounded-lg bg-slate-50 border border-slate-200">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-slate-900 text-sm">PETRA</span>
+                            <span class="text-xs px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-medium">Policy Ministry</span>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed">Ministry of Energy Transition & Water Transformation. Sets national capacity quotas (Solar ATAP, GREENS MADANI), CRESS acceleration packages, and long-term targets (70% RE by 2050).</p>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 border border-slate-200">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-slate-900 text-sm">Suruhanjaya Tenaga (ST)</span>
+                            <span class="text-xs px-2 py-0.5 rounded bg-sky-100 text-sky-800 font-medium">Technical Regulator</span>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed">Issues binding guidelines (Solar ATAP, SELCO, CRESS), grants Section 9 Generating Licenses (>72 kWac), regulates Class A Contractors and Competent Persons under Electricity Supply Act 1990.</p>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 border border-slate-200">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-slate-900 text-sm">SEDA Malaysia</span>
+                            <span class="text-xs px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-medium">Quota & Registry</span>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed">Administers the eATAP portal, manages RPVSP and RPVI directories, certifies GCPV/OGPV Qualified Persons, and verifies first invoices for GITE Solar Leasing tax exemptions.</p>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 border border-slate-200">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-slate-900 text-sm">TNB / Single Buyer / GSO</span>
+                            <span class="text-xs px-2 py-0.5 rounded bg-indigo-100 text-indigo-800 font-medium">Grid & Utility</span>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed">Conducts Connection Assessment Studies (CAS), manages bi-directional metering, enforces RP4 tariff schedules, operates NEDA, and administers SARE contracts via TNBX.</p>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 border border-slate-200">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-slate-900 text-sm">MGTC (MyHIJAU)</span>
+                            <span class="text-xs px-2 py-0.5 rounded bg-green-100 text-green-800 font-medium">Tax Verifier</span>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed">Evaluates and approves GITA Asset (Own Consumption) applications for solar (60% Tier 2) and BESS (100% Tier 1). Manages MyHIJAU green product directory listings.</p>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 border border-slate-200">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-slate-900 text-sm">MIDA & LHDN</span>
+                            <span class="text-xs px-2 py-0.5 rounded bg-purple-100 text-purple-800 font-medium">Investment & Tax</span>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed">MIDA evaluates GITA Project and GITE Solar Leasing applications. LHDN enforces statutory income set-offs (70% limit per year) and Capital Allowance claims.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ================= SECTION 2: BEHIND-THE-METER PATHWAYS ================= -->
+        <section id="sec-pathways" class="hidden space-y-6">
+            <!-- Intro Paragraph -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-900 mb-2">Behind-the-Meter Regulatory Framework: Solar ATAP vs. Enhanced SELCO</h2>
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                    Following the closure of NEM 3.0 on 30 June 2025, Suruhanjaya Tenaga established two mutually exclusive behind-the-meter pathways effective 1 January 2026. **Solar ATAP** (GP/ST/No. 60/2025) allows export credits at Average SMP (~18.8–24.8 sen/kWh) but caps system capacity at 1 MWac. **Enhanced SELCO** (GP/ST/No. 51/2024 Pin. 1/2026) permits unlimited system capacity for zero-export sites, but enforces a **RM 12/kWp/month Standby Charge** and **Mandatory BESS** for installations exceeding 1 MWac.
+                </p>
+            </div>
+
+            <!-- Pathway Comparison Table -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="px-6 py-4 bg-slate-900 text-white font-bold flex justify-between items-center">
+                    <span>Regulatory Framework Feature Comparison</span>
+                    <span class="text-xs font-normal text-slate-300">Effective 1 January 2026</span>
+                </div>
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left text-xs sm:text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 border-b border-slate-200 text-slate-700 font-semibold">
+                                <th class="p-3">Parameter</th>
+                                <th class="p-3 bg-amber-50/50">Solar ATAP (GP/ST/No. 60/2025)</th>
+                                <th class="p-3 bg-sky-50/50">Enhanced SELCO ≤ 1 MWac</th>
+                                <th class="p-3 bg-indigo-50/50">Enhanced SELCO &gt; 1 MWac</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 text-slate-600">
+                            <tr>
+                                <td class="p-3 font-semibold text-slate-900">System Capacity Limit</td>
+                                <td class="p-3">100% 12-mo Avg MD, **Hard Cap 1,000 kW (1 MWac)**</td>
+                                <td class="p-3">Sized to actual load (Up to **1 MWac**)</td>
+                                <td class="p-3 font-bold text-indigo-700">No Cap (85% MD limit abolished)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-semibold text-slate-900">Allowed Mounting</td>
+                                <td class="p-3">Rooftop, Carpark, Covered Walkways</td>
+                                <td class="p-3">Rooftop, Ground, Floating (Water Bodies)</td>
+                                <td class="p-3">Rooftop, Ground, Floating (Water Bodies)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-semibold text-slate-900">Grid Export & Settlement</td>
+                                <td class="p-3">Export allowed; credited at **Average SMP** (~19 sen/kWh) on Base Energy Charge ONLY</td>
+                                <td class="p-3 text-red-600 font-semibold">Strictly Prohibited (Reverse Power Relay)</td>
+                                <td class="p-3 text-red-600 font-semibold">Strictly Prohibited (Reverse Power Relay)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-semibold text-slate-900">Credit Rollover</td>
+                                <td class="p-3 text-red-600 font-semibold">NONE (Forfeited monthly; use-it-or-lose-it)</td>
+                                <td class="p-3">N/A (Zero export)</td>
+                                <td class="p-3">N/A (Zero export)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-semibold text-slate-900">TNB Standby Charge</td>
+                                <td class="p-3 font-bold text-emerald-600">EXEMPT (RM 0)</td>
+                                <td class="p-3 font-bold text-emerald-600">EXEMPT (RM 0)</td>
+                                <td class="p-3 text-red-600 font-bold">RM 12 / kWp / month</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-semibold text-slate-900">Mandatory BESS Rule</td>
+                                <td class="p-3">Optional (For peak shaving / ROI)</td>
+                                <td class="p-3">Optional (For peak shaving / ROI)</td>
+                                <td class="p-3 text-amber-600 font-bold">MANDATORY BESS (From 1 Jan 2026)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-semibold text-slate-900">Application Portal & Fee</td>
+                                <td class="p-3">SEDA `eATAP` (**RM 7.50 / kW** fee) + TNB CAS</td>
+                                <td class="p-3">SEDA registration + TNB CAS + ST Notification</td>
+                                <td class="p-3">SEDA registration + TNB CAS + ST License</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Interactive Solar ATAP MAQ Credit Calculator -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h3 class="text-lg font-bold text-slate-900 mb-2 flex items-center">
+                    <span class="mr-2">🧮</span> Solar ATAP Monthly Maximum Allowable Quantity (MAQ) Calculator
+                </h3>
+                <p class="text-xs text-slate-500 mb-4">Calculate the upper ceiling of export energy eligible for bill offset under ATAP rules: <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-800">MAQ (kWh) = Capacity (kWac) × 5 Hours × Days in Month</code></p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Installed Capacity (kWac) [Max 1000]:</label>
+                        <input type="number" id="maq-capacity" value="800" min="1" max="1000" oninput="calculateMAQ()" class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Billing Period Days:</label>
+                        <input type="number" id="maq-days" value="30" min="28" max="31" oninput="calculateMAQ()" class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Assumed Avg SMP (RM/kWh):</label>
+                        <input type="number" id="maq-smp" value="0.1911" step="0.005" oninput="calculateMAQ()" class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                    </div>
+                </div>
+                <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                    <div>
+                        <p class="text-xs text-amber-800 font-medium">Monthly MAQ Cap</p>
+                        <p id="res-maq-kwh" class="text-xl font-bold text-amber-900 mt-1">120,000 kWh</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-amber-800 font-medium">Max Gross Export Value</p>
+                        <p id="res-maq-value" class="text-xl font-bold text-amber-900 mt-1">RM 22,932</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-amber-800 font-medium">ATAP Rule Constraint</p>
+                        <p class="text-xs text-amber-800 font-semibold mt-2">Cannot exceed actual monthly grid energy import (kWh). Forfeited if unused.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ================= SECTION 3: TARIFF RESTRUCTURING & BESS SIMULATOR ================= -->
+        <section id="sec-tariff" class="hidden space-y-6">
+            <!-- Intro Paragraph -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-900 mb-2">TNB RP4 Tariff Overhaul & C&I BESS Peak Shaving Economics</h2>
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                    Under TNB’s Regulatory Period 4 (RP4) schedule implemented on 1 July 2025, consumption charges were itemised into Energy, Capacity, Network, Retail, and Automatic Fuel Adjustment (AFA) components. While Medium Voltage (MV) volumetric energy rates dropped, **Peak Demand hours were shifted to 2:00 PM – 10:00 PM**, and Peak Maximum Demand charges surged to **RM 89.27–97.06/kW**. Because morning solar PV generation falls in TNB’s Off-Peak window (10 PM – 2 PM), **BESS integration is essential** to store excess solar and shave peak demand during the 2 PM – 10 PM window.
+                </p>
+            </div>
+
+            <!-- Dynamic 24-Hour Load Curve & Peak Shaving Simulator -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">24-Hour Factory Profile & BESS Peak Shaving Simulator</h3>
+                        <p class="text-xs text-slate-500">Simulate solar PV self-consumption and battery discharge during the 2:00 PM – 10:00 PM TNB Peak window.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button onclick="updateLoadProfile('baseline')" id="btn-mode-base" class="px-3 py-1.5 text-xs font-semibold rounded border border-slate-300 bg-slate-100 text-slate-700 hover:bg-slate-200">1. Baseline Grid Load</button>
+                        <button onclick="updateLoadProfile('solar')" id="btn-mode-solar" class="px-3 py-1.5 text-xs font-semibold rounded border border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100">2. With Solar PV Only</button>
+                        <button onclick="updateLoadProfile('hybrid')" id="btn-mode-hybrid" class="px-3 py-1.5 text-xs font-semibold rounded border border-emerald-500 bg-emerald-600 text-white shadow-sm">3. Solar + BESS Peak Shaving</button>
+                    </div>
+                </div>
+
+                <!-- Chart Canvas Container -->
+                <div class="chart-container">
+                    <canvas id="loadCurveChart"></canvas>
+                </div>
+
+                <!-- Simulation Output Dashboard -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+                    <div class="p-4 rounded-lg bg-slate-50 border border-slate-200">
+                        <p class="text-xs text-slate-500 font-medium">Billed Peak Demand (2PM-10PM)</p>
+                        <p id="sim-billed-md" class="text-lg font-black text-slate-900 mt-1">1,200 kW</p>
+                        <p id="sim-md-desc" class="text-xs text-slate-500 mt-0.5">Unmitigated baseline peak</p>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 border border-slate-200">
+                        <p class="text-xs text-slate-500 font-medium">Monthly MD Charge Rate (Tariff E2)</p>
+                        <p class="text-lg font-black text-slate-900 mt-1">RM 97.06 / kW</p>
+                        <p class="text-xs text-slate-500 mt-0.5">TNB RP4 Peak MD Rate</p>
+                    </div>
+                    <div class="p-4 rounded-lg bg-emerald-50 border border-emerald-200">
+                        <p class="text-xs text-emerald-800 font-medium">Monthly Demand Shaving Savings</p>
+                        <p id="sim-md-savings" class="text-lg font-black text-emerald-700 mt-1">RM 0 / month</p>
+                        <p id="sim-md-savings-sub" class="text-xs text-emerald-600 mt-0.5">Select Hybrid Mode to activate</p>
+                    </div>
+                    <div class="p-4 rounded-lg bg-sky-50 border border-sky-200">
+                        <p class="text-xs text-sky-800 font-medium">Annualized Peak Demand Offset</p>
+                        <p id="sim-annual-savings" class="text-lg font-black text-sky-700 mt-1">RM 0 / year</p>
+                        <p id="sim-annual-sub" class="text-xs text-sky-600 mt-0.5">Direct bottom-line RP4 savings</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RP4 Tariff Breakdown Bar Chart -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                <h3 class="text-lg font-bold text-slate-900">RP4 Peak Maximum Demand Charges Across C&I Tariff Categories</h3>
+                <p class="text-xs text-slate-500">Comparison of monthly peak demand charges per kW under RP4 for Medium and High Voltage commercial and industrial consumers.</p>
+                <div class="chart-container">
+                    <canvas id="tariffChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ================= SECTION 4: CRESS OPEN ACCESS ================= -->
+        <section id="sec-cress" class="hidden space-y-6">
+            <!-- Intro Paragraph -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-900 mb-2">Front-of-Meter Open Access: CRESS & The September 18, 2026 Acceleration Package</h2>
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                    The **Corporate Renewable Energy Supply Scheme (CRESS)** allows Renewable Energy Developers (REDs) to sell green power directly to High Voltage (HV) and Medium Voltage (MV) corporate off-takers across Peninsular Malaysia's grid via NEDA. The landmark **18 September 2026 CRESS Acceleration Package** slashed the System Access Charge (SAC) for firm supply from 25 sen/kWh down to **14 sen/kWh**, establishing strict rules: plants must incorporate **≥50% / 4-hour BESS**, sign **minimum 10-year PPAs**, and hit COD by **31 December 2028**.
+                </p>
+            </div>
+
+            <!-- SAC Tariff Slashes & CRESS Economics Calculator -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- CRESS Contractual Framework Stack -->
+                <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                    <h3 class="text-base font-bold text-slate-900 border-b border-slate-200 pb-2">The 5 Mandatory CRESS Agreements</h3>
+                    <div class="space-y-3 text-xs">
+                        <div class="p-3 bg-slate-50 rounded border border-slate-200">
+                            <p class="font-bold text-slate-900">1. Bilateral Energy Supply Contract (BESC)</p>
+                            <p class="text-slate-600 mt-1">Direct PPA between RED and Green Consumer (Min 10-year tenure under Acceleration Package).</p>
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded border border-slate-200">
+                            <p class="font-bold text-slate-900">2. Corporate RE Supply Agreement (CRESA)</p>
+                            <p class="text-slate-600 mt-1">Top-up and backup retail supply agreement between Green Consumer and TNB.</p>
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded border border-slate-200">
+                            <p class="font-bold text-slate-900">3. RE Supply Access Agreement (RE SAA)</p>
+                            <p class="text-slate-600 mt-1">Grid interconnection and transmission access contract between RED and TNB Grid Owner.</p>
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded border border-slate-200">
+                            <p class="font-bold text-slate-900">4. Back-feed Agreement</p>
+                            <p class="text-slate-600 mt-1">Governs auxiliary station power imported by the solar plant and BESS facility from TNB.</p>
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded border border-slate-200">
+                            <p class="font-bold text-slate-900">5. NEDA Agreement (Deed of Accession)</p>
+                            <p class="text-slate-600 mt-1">Governs day-ahead dispatch scheduling with Single Buyer and SAC settlement.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CRESS Dynamic Financial Return Calculator -->
+                <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                    <h3 class="text-base font-bold text-slate-900 border-b border-slate-200 pb-2 flex items-center justify-between">
+                        <span>CRESS Developer Net Generation Revenue Calculator</span>
+                        <span class="text-xs font-normal text-emerald-600 font-semibold">14 sen/kWh SAC Active</span>
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Contracted PPA Price to Off-taker (sen/kWh):</label>
+                            <input type="number" id="cress-ppa" value="38.0" step="0.5" oninput="calculateCRESS()" class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                            <p class="text-[10px] text-slate-500 mt-1">Competes against HV Tariff C4 Peak Rate (44.52 sen/kWh)</p>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">System Access Charge (SAC) Category:</label>
+                            <select id="cress-sac" onchange="calculateCRESS()" class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                                <option value="14">Firm Supply (Solar + ≥50%/4-hr BESS) - 14 sen/kWh</option>
+                                <option value="25">Legacy Firm Supply (Pre-Sept 2026) - 25 sen/kWh</option>
+                                <option value="45">Non-Firm Supply (Solar without BESS) - 45 sen/kWh</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Annual Green Energy Generation (GWh):</label>
+                            <input type="number" id="cress-gen" value="75" step="5" oninput="calculateCRESS()" class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Mandatory BESS Requirement:</label>
+                            <div class="p-2 bg-slate-100 rounded text-slate-800 font-bold">
+                                50% GEP MW / 4-Hours Duration
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Output Summary -->
+                    <div class="bg-gradient-to-r from-slate-900 to-indigo-950 text-white rounded-lg p-5 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center mt-4">
+                        <div>
+                            <p class="text-xs text-slate-400 font-medium">Net Developer Revenue</p>
+                            <p id="res-cress-net-rate" class="text-2xl font-black text-emerald-400 mt-1">24.0 sen <span class="text-xs font-normal">/kWh</span></p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400 font-medium">Annual Gross Cashflow</p>
+                            <p id="res-cress-annual" class="text-2xl font-black text-sky-400 mt-1">RM 18.0 Mil</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400 font-medium">Off-taker Savings vs Tariff</p>
+                            <p id="res-cress-savings" class="text-2xl font-black text-amber-400 mt-1">14.6% Offset</p>
+                        </div>
+                    </div>
+
+                    <!-- SAC Comparison Chart -->
+                    <div class="chart-container pt-2">
+                        <canvas id="cressChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ================= SECTION 5: TAX SHIELDS & FISCAL CLIFF ================= -->
+        <section id="sec-tax" class="hidden space-y-6">
+            <!-- Intro Paragraph -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-900 mb-2">Corporate Tax Architecture: Navigating the 31 December 2026 Fiscal Cliff</h2>
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                    Malaysia’s green tax incentive architecture—jointly administered by **MGTC**, **MIDA**, and **LHDN**—provides a massive capital subsidy for C&I Solar and BESS. However, the current framework faces a hard statutory deadline on **31 December 2026**. By stacking **Green Investment Tax Allowance (GITA)** with standard **Capital Allowance (CA)**, corporate buyers recover **38.4% of Solar PV Capex** and **48.0% of BESS Capex** through corporate income tax offsets.
+                </p>
+            </div>
+
+            <!-- Tax Category Breakdown Matrix -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white p-5 rounded-xl shadow-sm border-t-4 border-emerald-500 border-x border-b border-slate-200">
+                    <span class="text-xs font-bold uppercase text-emerald-600 tracking-wider">MGTC GITA Asset (Tier 1)</span>
+                    <h3 class="text-lg font-bold text-slate-900 mt-1">100% GITA for BESS</h3>
+                    <p class="text-xs text-slate-600 mt-2 leading-relaxed">100% tax allowance on qualifying battery storage Capex. Sets off up to 70% of statutory income per year. Must be commissioned and submitted to MGTC before **31 Dec 2026**.</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border-t-4 border-sky-500 border-x border-b border-slate-200">
+                    <span class="text-xs font-bold uppercase text-sky-600 tracking-wider">MGTC GITA Asset (Tier 2)</span>
+                    <h3 class="text-lg font-bold text-slate-900 mt-1">60% GITA for Solar PV</h3>
+                    <p class="text-xs text-slate-600 mt-2 leading-relaxed">60% tax allowance on qualifying solar rooftop Capex for own consumption. Combine with Capital Allowance for 38.4% tax shield. MGTC window closes **31 Dec 2026**.</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border-t-4 border-purple-500 border-x border-b border-slate-200">
+                    <span class="text-xs font-bold uppercase text-purple-600 tracking-wider">MIDA GITE Solar Leasing</span>
+                    <h3 class="text-lg font-bold text-slate-900 mt-1">70% Income Tax Exemption</h3>
+                    <p class="text-xs text-slate-600 mt-2 leading-relaxed">Exempts 70% of statutory income for SEDA-registered RPVIs offering Solar PPAs (>3 MW capacity) for 5 to 10 years. Must apply to MIDA before **31 Dec 2026**.</p>
+                </div>
+            </div>
+
+            <!-- Interactive Tax Shield & Cash Savings Estimator -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Stacked Tax Chart -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                    <h3 class="text-base font-bold text-slate-900 border-b border-slate-200 pb-2">Effective Tax Shield Recovery Stack (% of Capex)</h3>
+                    <div class="chart-container">
+                        <canvas id="taxStackChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Live Tax Calculator -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                    <h3 class="text-base font-bold text-slate-900 border-b border-slate-200 pb-2">Client Tax Recovery & Net Capex Calculator</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Solar PV Investment (RM):</label>
+                            <input type="number" id="tax-solar-capex" value="2000000" step="100000" oninput="calculateTax()" class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">BESS Investment (RM):</label>
+                            <input type="number" id="tax-bess-capex" value="1000000" step="100000" oninput="calculateTax()" class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <!-- Calculated Breakdown -->
+                    <div class="space-y-2 text-xs pt-2">
+                        <div class="flex justify-between p-2 bg-slate-50 rounded">
+                            <span class="text-slate-600">Solar GITA (60% × 24% Tax Rate):</span>
+                            <span id="tax-val-solar-gita" class="font-bold text-slate-900">RM 288,000</span>
+                        </div>
+                        <div class="flex justify-between p-2 bg-slate-50 rounded">
+                            <span class="text-slate-600">Solar Capital Allowance (100% × 24%):</span>
+                            <span id="tax-val-solar-ca" class="font-bold text-slate-900">RM 480,000</span>
+                        </div>
+                        <div class="flex justify-between p-2 bg-purple-50 rounded text-purple-900">
+                            <span class="font-semibold">BESS GITA Tier 1 (100% × 24% Tax Rate):</span>
+                            <span id="tax-val-bess-gita" class="font-bold">RM 240,000</span>
+                        </div>
+                        <div class="flex justify-between p-2 bg-purple-50 rounded text-purple-900">
+                            <span class="font-semibold">BESS Capital Allowance (100% × 24%):</span>
+                            <span id="tax-val-bess-ca" class="font-bold">RM 240,000</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-emerald-900 text-white p-4 rounded-lg flex justify-between items-center">
+                        <div>
+                            <p class="text-xs text-emerald-300 font-medium">Total Cash Tax Savings</p>
+                            <p id="tax-total-savings" class="text-2xl font-black text-emerald-400 mt-0.5">RM 1,248,000</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs text-emerald-300 font-medium">Net Effective Capex</p>
+                            <p id="tax-net-capex" class="text-xl font-bold text-white mt-0.5">RM 1,752,000</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ================= SECTION 6: TECHNICAL & BOMBA COMPLIANCE ================= -->
+        <section id="sec-tech" class="hidden space-y-6">
+            <!-- Intro Paragraph -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-900 mb-2">Technical Grid Interconnection, Licensing & BOMBA Safety Regulations</h2>
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                    Connecting C&I solar and BESS systems in Peninsular Malaysia requires compliance with **Electricity Regulations 1994**, **MS IEC 60364**, and Suruhanjaya Tenaga licensing thresholds. Furthermore, installing rooftop solar and lithium-ion BESS on designated industrial premises modifies the building's fire hazard profile, mandating formal **Jabatan Bomba dan Penyelamat Malaysia (JBPM / BOMBA)** consultations and thermal runaway safety integration.
+                </p>
+            </div>
+
+            <!-- Interconnection Study & CAS Fee Matrix -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="px-6 py-4 bg-slate-900 text-white font-bold">
+                    TNB Interconnection Study (CAS) & ST Generating License Matrix
+                </div>
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left text-xs sm:text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 border-b border-slate-200 text-slate-700 font-semibold">
+                                <th class="p-3">Capacity Tier (kWac)</th>
+                                <th class="p-3">Required Interconnection Study</th>
+                                <th class="p-3">Regulated CAS Fee</th>
+                                <th class="p-3">ST Section 9 License</th>
+                                <th class="p-3">TNB Metering Fee</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 text-slate-600">
+                            <tr>
+                                <td class="p-3 font-semibold text-slate-900">1 kW – 72 kWac</td>
+                                <td class="p-3">Exempt (CCC for domestic &gt;15kW)</td>
+                                <td class="p-3 font-bold text-emerald-600">RM 0</td>
+                                <td class="p-3">Exempt (Sec 54 Notification)</td>
+                                <td class="p-3">RM 0 (OPC) / RM 1,530 (LPC)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-semibold text-slate-900">&gt;72 kW – 180 kWac</td>
+                                <td class="p-3">Connection Assessment Study (CAS)</td>
+                                <td class="p-3 font-bold text-slate-900">RM 1,000</td>
+                                <td class="p-3 font-semibold text-amber-700">Mandatory ST License</td>
+                                <td class="p-3">RM 1,530 (LV) / RM 2,330 (MV)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-semibold text-slate-900">&gt;180 kW – 425 kWac</td>
+                                <td class="p-3">Connection Assessment Study (CAS)</td>
+                                <td class="p-3 font-bold text-slate-900">RM 5,000</td>
+                                <td class="p-3 font-semibold text-amber-700">Mandatory ST License</td>
+                                <td class="p-3">RM 1,530 (LV) / RM 2,330 (MV)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-semibold text-slate-900">&gt;425 kW – 1,000 kWac</td>
+                                <td class="p-3">Connection Assessment Study (CAS)</td>
+                                <td class="p-3 font-bold text-slate-900">RM 8,000</td>
+                                <td class="p-3 font-semibold text-amber-700">Mandatory ST License</td>
+                                <td class="p-3">RM 2,330 (MV)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-semibold text-slate-900">&gt;1,000 kW – 5,000 kWac</td>
+                                <td class="p-3">Connection Assessment Study (CAS)</td>
+                                <td class="p-3 font-bold text-slate-900">RM 15,000 – RM 20,000</td>
+                                <td class="p-3 font-bold text-indigo-700">License + Mandatory BESS</td>
+                                <td class="p-3">RM 2,330 (MV)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- BOMBA Fire Safety & Technical Compliance Pillars -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-3">
+                    <h3 class="text-base font-bold text-slate-900 flex items-center">
+                        <span class="mr-2">🚒</span> JBPM (BOMBA) Fire Safety & BESS Compliance
+                    </h3>
+                    <ul class="space-y-2 text-xs text-slate-600 list-disc pl-4 leading-relaxed">
+                        <li><strong class="text-slate-900">Designated Premises Fire Certificate:</strong> Factories, warehouses, and shopping complexes must consult BOMBA prior to solar/BESS install to update their annual Fire Certificate (Form I).</li>
+                        <li><strong class="text-slate-900">Rooftop Firefighting Access:</strong> PV arrays must maintain clear perimeter setbacks and access walkways deducted from usable roof space.</li>
+                        <li><strong class="text-slate-900">BESS Thermal Runaway Mitigation:</strong> Enclosures must integrate SIRIM/IEC-certified fire suppression systems and gas detection.</li>
+                        <li><strong class="text-slate-900">Direct Station Alarm Linkage:</strong> Automatic fire alarm switchboards must link directly to the nearest BOMBA Fire Station.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-3">
+                    <h3 class="text-base font-bold text-slate-900 flex items-center">
+                        <span class="mr-2">⚙️</span> Electrical & Structural Mandates
+                    </h3>
+                    <ul class="space-y-2 text-xs text-slate-600 list-disc pl-4 leading-relaxed">
+                        <li><strong class="text-slate-900">PEPC Endorsement:</strong> Mounting structure C&S drawings and electrical single-lines must be endorsed by a BEM-registered Professional Engineer (PEPC).</li>
+                        <li><strong class="text-slate-900">Anti-Islanding Protection:</strong> Inverters certified to MS IEC 62109 must trip within 2 seconds upon loss of TNB grid supply.</li>
+                        <li><strong class="text-slate-900">Reverse Power Relay:</strong> Mandatory on all SELCO systems to prevent accidental export to TNB distribution lines.</li>
+                        <li><strong class="text-slate-900">In-House Competent Personnel:</strong> RPVSP must deploy certified GCPV Qualified Persons, Class A Chargemen, and CIDB G7 registered personnel.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ================= SECTION 7: EPCC PLAYBOOK ================= -->
+        <section id="sec-playbook" class="hidden space-y-6">
+            <!-- Intro Paragraph -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-900 mb-2">Dual-Licensed EPCC + RPVI Strategic Commercial Playbook</h2>
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                    Holding both **SEDA RPVSP** (Service Provider) and **SEDA RPVI** (Investor) credentials allows an operator to capture both upfront EPCC engineering margins and long-term PPA cashflows. This section compares **SARE** vs **Private Bilateral PPAs** and provides a dynamic Client Archetype Decision Matrix to structure high-conversion customer proposals.
+                </p>
+            </div>
+
+            <!-- SARE vs Private Bilateral PPA Comparison -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border-t-4 border-indigo-600 border-x border-b border-slate-200 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-slate-900">SARE (Tripartite via TNBX)</h3>
+                        <span class="text-xs px-2 py-0.5 rounded bg-indigo-100 text-indigo-800 font-semibold">TNB Billing</span>
+                    </div>
+                    <ul class="text-xs text-slate-600 space-y-2 list-disc pl-4 leading-relaxed">
+                        <li><strong>Parties:</strong> Prosumer, RPVI Investor, and TNB.</li>
+                        <li><strong>Billing & Collection:</strong> Consolidated into monthly TNB bill; TNB collects and remits payment to RPVI.</li>
+                        <li><strong>Service Fee:</strong> TNB charges a fixed **2 sen/kWh** fee (~6–8% of gross revenue).</li>
+                        <li><strong>Default Enforcement:</strong> High bankability; non-payment triggers TNB power disconnection.</li>
+                        <li><strong>Best Used For:</strong> Pure rooftop solar PV projects on Tariff B, D, C1, E1.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border-t-4 border-emerald-600 border-x border-b border-slate-200 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-slate-900">Private Bilateral Hybrid PPA / Lease</h3>
+                        <span class="text-xs px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-semibold">Direct Contracting</span>
+                    </div>
+                    <ul class="text-xs text-slate-600 space-y-2 list-disc pl-4 leading-relaxed">
+                        <li><strong>Parties:</strong> Direct contract between C&I Customer and RPVI.</li>
+                        <li><strong>Billing & Collection:</strong> Direct invoicing by RPVI; RPVI manages credit risk.</li>
+                        <li><strong>Service Fee:</strong> **RM 0 fee to TNB** (Saves full 2 sen/kWh margin for RPVI).</li>
+                        <li><strong>Contractual Flexibility:</strong> High; allows **shared-savings split on Maximum Demand (RM/kW) peak shaving**.</li>
+                        <li><strong>Best Used For:</strong> Hybrid Solar + BESS installations on Tariff C2, E2, E3.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Client Archetype Origination Matrix & Blueprint Switcher -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                <h3 class="text-lg font-bold text-slate-900">Strategic Origination Playbook by Client Archetype</h3>
+                <p class="text-xs text-slate-500">Select a target client archetype to view the optimal regulatory pathway, engineering architecture, and sales pitch narrative.</p>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    <button onclick="selectArchetype('taxcliff')" id="arch-btn-taxcliff" class="p-3 text-left rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100 transition">
+                        <p class="text-xs font-bold text-slate-900">1. Q4 Tax Cliff</p>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Outright Ready Buyers</p>
+                    </button>
+                    <button onclick="selectArchetype('lvsme')" id="arch-btn-lvsme" class="p-3 text-left rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100 transition">
+                        <p class="text-xs font-bold text-slate-900">2. Low Voltage C&I</p>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Tariff B & D (Retail/SMEs)</p>
+                    </button>
+                    <button onclick="selectArchetype('mvmfg')" id="arch-btn-mvmfg" class="p-3 text-left rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100 transition">
+                        <p class="text-xs font-bold text-slate-900">3. MV Medium Factory</p>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Tariff C1/C2/E1/E2</p>
+                    </button>
+                    <button onclick="selectArchetype('hvdc')" id="arch-btn-hvdc" class="p-3 text-left rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100 transition">
+                        <p class="text-xs font-bold text-slate-900">4. High Voltage / DC</p>
+                        <p class="text-[10px] text-slate-500 mt-0.5">CRESS Off-takers</p>
+                    </button>
+                </div>
+
+                <!-- Dynamic Archetype Output Card -->
+                <div id="archetype-output-card" class="p-5 rounded-xl bg-slate-900 text-white space-y-3">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 text-slate-400 py-6 text-center text-xs">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>Malaysia C&I Solar & BESS Strategic Intelligence Hub • Designed for SEDA RPVSP + RPVI Dual-Licensed Contractors</p>
+            <p class="mt-1 text-slate-500">Fully compliant with Energy Commission (ST), SEDA, TNB RP4, PETRA CRESS, and LHDN GITA Guidelines (2026)</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Global Application State
+        let currentTab = 'dashboard';
+        let loadCurveChart = null;
+        let tariffChart = null;
+        let cressChart = null;
+        let taxStackChart = null;
+
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', () => {
+            initLoadCurveChart();
+            initTariffChart();
+            initCressChart();
+            initTaxStackChart();
+            calculateMAQ();
+            calculateCRESS();
+            calculateTax();
+            selectArchetype('mvmfg');
+        });
+
+        // Tab Navigation Switcher
+        function switchTab(tabId) {
+            // Hide all sections
+            const sections = ['dashboard', 'pathways', 'tariff', 'cress', 'tax', 'tech', 'playbook'];
+            sections.forEach(s => {
+                const secEl = document.getElementById(`sec-${s}`);
+                const btnEl = document.getElementById(`tab-btn-${s}`);
+                if (secEl) secEl.classList.add('hidden');
+                if (btnEl) btnEl.classList.remove('active');
+            });
+
+            // Show selected section
+            const activeSec = document.getElementById(`sec-${tabId}`);
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            if (activeSec) activeSec.classList.remove('hidden');
+            if (activeBtn) activeBtn.classList.add('active');
+
+            currentTab = tabId;
+        }
+
+        // ================= SECTION 2: MAQ CALCULATOR =================
+        function calculateMAQ() {
+            const cap = parseFloat(document.getElementById('maq-capacity').value) || 0;
+            const days = parseFloat(document.getElementById('maq-days').value) || 30;
+            const smp = parseFloat(document.getElementById('maq-smp').value) || 0.1911;
+
+            const maqKwh = cap * 5 * days;
+            const grossVal = maqKwh * smp;
+
+            document.getElementById('res-maq-kwh').innerText = `${maqKwh.toLocaleString()} kWh`;
+            document.getElementById('res-maq-value').innerText = `RM ${grossVal.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+        }
+
+        // ================= SECTION 3: LOAD CURVE & TARIFF SIMULATOR =================
+        function initLoadCurveChart() {
+            const ctx = document.getElementById('loadCurveChart').getContext('2d');
+
+            // 24 Hour Labels
+            const hours = Array.from({length: 24}, (_, i) => `${i}:00`);
+
+            // Baseline Factory Profile (KW)
+            const baseLoad = [300, 300, 300, 300, 300, 400, 700, 950, 1100, 1150, 1200, 1180, 1100, 1150, 1200, 1200, 1180, 1150, 1100, 900, 700, 500, 350, 300];
+
+            loadCurveChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: hours,
+                    datasets: [
+                        {
+                            label: 'Grid Power Draw (kW)',
+                            data: baseLoad,
+                            borderColor: '#0284c7',
+                            backgroundColor: 'rgba(2, 132, 199, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => ` Grid Load: ${ctx.raw} kW`
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Power Demand (kW)' }
+                        },
+                        x: {
+                            title: { display: true, text: 'Hour of Day (00:00 - 23:00)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateLoadProfile(mode) {
+            if (!loadCurveChart) return;
+
+            const baseLoad = [300, 300, 300, 300, 300, 400, 700, 950, 1100, 1150, 1200, 1180, 1100, 1150, 1200, 1200, 1180, 1150, 1100, 900, 700, 500, 350, 300];
+            const solarGen = [0, 0, 0, 0, 0, 0, 50, 200, 450, 700, 850, 900, 850, 700, 450, 200, 50, 0, 0, 0, 0, 0, 0, 0];
+
+            let newLoad = [];
+            let billedMD = 1200;
+            let monthlySavings = 0;
+
+            if (mode === 'baseline') {
+                newLoad = [...baseLoad];
+                billedMD = 1200;
+                monthlySavings = 0;
+                document.getElementById('sim-md-desc').innerText = 'Unmitigated baseline peak';
+                document.getElementById('sim-md-savings-sub').innerText = 'Select Hybrid Mode to activate';
+            } else if (mode === 'solar') {
+                // Morning solar offsets load, but 2PM-10PM peak remains unmitigated at 5:00 PM
+                newLoad = baseLoad.map((val, idx) => Math.max(50, val - solarGen[idx]));
+                billedMD = 1200; // Peak occurs at 16:00 - 17:00 when solar drops off
+                monthlySavings = 0;
+                document.getElementById('sim-md-desc').innerText = 'Solar drops off during late peak';
+                document.getElementById('sim-md-savings-sub').innerText = 'Solar alone fails to reduce Peak MD';
+            } else if (mode === 'hybrid') {
+                // Solar + 400 kW BESS Discharge during 2:00 PM - 10:00 PM window
+                const bessDischarge = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 400, 400, 400, 400, 400, 400, 300, 0, 0, 0];
+                newLoad = baseLoad.map((val, idx) => Math.max(50, val - solarGen[idx] - bessDischarge[idx]));
+                billedMD = 800; // Shaved 400 kW of Peak Demand
+                monthlySavings = 400 * 97.06; // Tariff E2 MD Rate
+                document.getElementById('sim-md-desc').innerText = 'BESS Shaved 400 kW during Peak';
+                document.getElementById('sim-md-savings-sub').innerText = 'RM 97.06/kW × 400 kW Shaved';
+            }
+
+            loadCurveChart.data.datasets[0].data = newLoad;
+            loadCurveChart.update();
+
+            // Update Text Displays
+            document.getElementById('sim-billed-md').innerText = `${billedMD.toLocaleString()} kW`;
+            document.getElementById('sim-md-savings').innerText = `RM ${monthlySavings.toLocaleString(undefined, {maximumFractionDigits: 0})} / mo`;
+            document.getElementById('sim-annual-savings').innerText = `RM ${(monthlySavings * 12).toLocaleString(undefined, {maximumFractionDigits: 0})} / yr`;
+        }
+
+        function initTariffChart() {
+            const ctx = document.getElementById('tariffChart').getContext('2d');
+            tariffChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['MV Gen (C1/E1)', 'MV TOU (C2/E2)', 'HV Gen (C3)', 'HV TOU (C4/E3)'],
+                    datasets: [
+                        {
+                            label: 'Legacy MD Charge (RM/kW)',
+                            data: [30.30, 45.10, 29.20, 43.60],
+                            backgroundColor: '#94a3b8'
+                        },
+                        {
+                            label: 'RP4 Combined MD Charge (RM/kW)',
+                            data: [89.27, 97.06, 31.21, 44.82],
+                            backgroundColor: '#059669'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Demand Charge Rate (RM / kW / Month)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ================= SECTION 4: CRESS CALCULATOR =================
+        function initCressChart() {
+            const ctx = document.getElementById('cressChart').getContext('2d');
+            cressChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Non-Firm (Solar Only)', 'Pre-Sept 2026 Firm', 'Sept 18, 2026 Accelerated Firm'],
+                    datasets: [{
+                        label: 'System Access Charge (SAC sen/kWh)',
+                        data: [45, 25, 14],
+                        backgroundColor: ['#ef4444', '#f59e0b', '#10b981']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { callbacks: { label: (ctx) => ` SAC Rate: ${ctx.raw} sen/kWh` } }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'SAC Fee (sen/kWh)' } }
+                    }
+                }
+            });
+        }
+
+        function calculateCRESS() {
+            const ppa = parseFloat(document.getElementById('cress-ppa').value) || 38.0;
+            const sac = parseFloat(document.getElementById('cress-sac').value) || 14.0;
+            const gen = parseFloat(document.getElementById('cress-gen').value) || 75; // GWh
+
+            const netRate = ppa - sac;
+            const annualRevMil = (gen * 1000000 * (netRate / 100)) / 1000000;
+            const hvTariffPeak = 44.52;
+            const savingsPercent = ((hvTariffPeak - ppa) / hvTariffPeak) * 100;
+
+            document.getElementById('res-cress-net-rate').innerText = `${netRate.toFixed(1)} sen /kWh`;
+            document.getElementById('res-cress-annual').innerText = `RM ${annualRevMil.toFixed(2)} Mil`;
+            document.getElementById('res-cress-savings').innerText = `${savingsPercent.toFixed(1)}% Offset`;
+        }
+
+        // ================= SECTION 5: TAX SHIELD CALCULATOR =================
+        function initTaxStackChart() {
+            const ctx = document.getElementById('taxStackChart').getContext('2d');
+            taxStackChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Solar PV (Tier 2 GITA)', 'BESS Storage (Tier 1 GITA)'],
+                    datasets: [
+                        {
+                            label: 'GITA Tax Shield (% of Capex)',
+                            data: [14.4, 24.0], // 60% * 24% = 14.4%; 100% * 24% = 24.0%
+                            backgroundColor: '#0284c7'
+                        },
+                        {
+                            label: 'Capital Allowance Shield (% of Capex)',
+                            data: [24.0, 24.0], // 100% * 24% = 24%
+                            backgroundColor: '#8b5cf6'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: {
+                            callbacks: {
+                                footer: (items) => {
+                                    let total = 0;
+                                    items.forEach(i => total += i.raw);
+                                    return ` Total Tax Recovery: ${total.toFixed(1)}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { stacked: true },
+                        y: { stacked: true, beginAtZero: true, max: 60, title: { display: true, text: 'Tax Recovery (% of System Capex)' } }
+                    }
+                }
+            });
+        }
+
+        function calculateTax() {
+            const solarCapex = parseFloat(document.getElementById('tax-solar-capex').value) || 0;
+            const bessCapex = parseFloat(document.getElementById('tax-bess-capex').value) || 0;
+
+            const solarGita = solarCapex * 0.60 * 0.24;
+            const solarCa = solarCapex * 1.00 * 0.24;
+
+            const bessGita = bessCapex * 1.00 * 0.24;
+            const bessCa = bessCapex * 1.00 * 0.24;
+
+            const totalSavings = solarGita + solarCa + bessGita + bessCa;
+            const totalCapex = solarCapex + bessCapex;
+            const netCapex = totalCapex - totalSavings;
+
+            document.getElementById('tax-val-solar-gita').innerText = `RM ${solarGita.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+            document.getElementById('tax-val-solar-ca').innerText = `RM ${solarCa.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+            document.getElementById('tax-val-bess-gita').innerText = `RM ${bessGita.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+            document.getElementById('tax-val-bess-ca').innerText = `RM ${bessCa.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+
+            document.getElementById('tax-total-savings').innerText = `RM ${totalSavings.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+            document.getElementById('tax-net-capex').innerText = `RM ${netCapex.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+        }
+
+        // ================= SECTION 7: CLIENT ARCHETYPE BLUEPRINT =================
+        function selectArchetype(key) {
+            const container = document.getElementById('archetype-output-card');
+
+            const data = {
+                taxcliff: {
+                    title: "Q4 2026 Tax Cliff Pipeline (Outright Capex Buyers)",
+                    reg: "SELCO ≤1 MWac or Solar ATAP (Fast-track commissioning)",
+                    comm: "Outright Purchase with MGTC Tier 1/2 GITA Asset Submission",
+                    tech: "Target COD before 31 Dec 2026 to ensure MGTC GITA/A application filing prior to statutory deadline.",
+                    pitch: "Pitch 38.4% cash tax savings on Solar and 48% on BESS before the 31 Dec 2026 GITA window closes."
+                },
+                lvsme: {
+                    title: "Low Voltage C&I (Tariff B & D: Retail, Warehouses, Light Industrial)",
+                    reg: "SELCO ≤1 MWac (7-day load) or Solar ATAP (5-day load)",
+                    comm: "Outright Capex or TNBX SARE Tripartite PPA (TNB Credit Protection)",
+                    tech: "Size strictly to daytime base load to displace full 50.68 sen/kWh + AFA volumetric tariff.",
+                    pitch: "Simple payback of 3.5–4.5 years by offsetting bundled LV energy + network rates."
+                },
+                mvmfg: {
+                    title: "Medium Voltage C&I (Tariff C1, C2, E1, E2: Manufacturing & Process Plants)",
+                    reg: "Enhanced SELCO (≤1 MWac Voluntary BESS / >1 MWac Mandatory BESS)",
+                    comm: "Private Bilateral Hybrid PPA (Shared savings on Maximum Demand reduction)",
+                    tech: "Integrate BESS to shift 10AM-2PM off-peak solar to shave RM 89.27–97.06/kW MD charges during 2PM-10PM peak.",
+                    pitch: "Standalone solar fails on MV due to off-peak morning rates. Hybrid BESS unlocks massive MD savings."
+                },
+                hvdc: {
+                    title: "High Voltage & Hyperscale Data Centres (Tariff C3, C4, E3)",
+                    reg: "CRESS Acceleration Package (≥30 MW Solar + ≥50%/4-hr BESS)",
+                    comm: "≥10-Year Bilateral Energy Supply Contract (BESC) via ≥51% Local RED SPV",
+                    tech: "Lock in 14 sen/kWh Firm SAC. Fast-track EPCC engineering to hit mandatory 31 Dec 2028 COD deadline.",
+                    pitch: "Deliver green power with 24/7 RECs at ~38 sen/kWh delivered cost against HV Tariff C4 peak rate (44.52 sen)."
+                }
+            };
+
+            const item = data[key];
+
+            container.innerHTML = `
+                <div class="flex items-center justify-between border-b border-slate-700 pb-2">
+                    <h4 class="text-base font-bold text-amber-400">${item.title}</h4>
+                    <span class="text-xs px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-semibold">Strategic Blueprint</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs pt-1">
+                    <div>
+                        <p class="text-slate-400 font-medium">Optimal Regulatory Pathway:</p>
+                        <p class="text-white font-semibold mt-0.5">${item.reg}</p>
+                    </div>
+                    <div>
+                        <p class="text-slate-400 font-medium">Recommended Commercial Model:</p>
+                        <p class="text-white font-semibold mt-0.5">${item.comm}</p>
+                    </div>
+                    <div>
+                        <p class="text-slate-400 font-medium">Core Engineering Strategy:</p>
+                        <p class="text-white mt-0.5">${item.tech}</p>
+                    </div>
+                    <div>
+                        <p class="text-slate-400 font-medium">Key Sales Pitch Narrative:</p>
+                        <p class="text-emerald-300 font-semibold mt-0.5">${item.pitch}</p>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

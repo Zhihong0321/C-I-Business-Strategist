@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malaysia C&I Solar & BESS Market Benchmark (2026)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                        },
+                        amberbrand: {
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                        },
+                        warmbg: '#fbfbf9',
+                        cardbg: '#ffffff'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 680px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 380px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 360px;
+            }
+        }
+        /* Custom scrollbar for data tables */
+        .custom-scroll::-webkit-scrollbar {
+            height: 6px;
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-warmbg text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Chosen Palette: Warm Cleantech Neutral (Warm off-white #fbfbf9 background, Slate #1e293b text, Emerald/Teal #0d9488 primary accent, Amber #d97706 secondary accent, clean white card containers). -->
+
+    <!-- Application Structure Plan:
+        1. Sticky Header & Navigation: Quick jump tabs for Executive Overview, Interactive ROI & Pricing Calculator, Top 15 Competitor Matrix, Zero-Capex & RP4 Tariff Analysis, and EPCC Margins & Risk Flow.
+        2. Executive Summary Dashboard: 4 key metric cards highlighting 5,777 MW cumulative capacity, RP4 162% MD surge, 31 Dec 2026 GITA sunset, and RM 13B-23B tender replenishment.
+        3. Interactive Section 1 - Pricing Benchmarks & ROI Simulator: Integrated dynamic project estimator that allows users to pick solar tier, BESS sizing, and tax scenarios (GITA 100% vs pre-tax) to instantly simulate Gross CAPEX, Tax Shield, Annual Savings, and Simple Payback. Paired with Chart.js visualization of solar EPCC rates and BESS turnkey costs.
+        4. Interactive Section 2 - Top 15 Market Competitor Explorer: Filterable/searchable matrix across listed and private developers with modal detail popup on completed BESS projects, business models, and EMS software moats.
+        5. Interactive Section 3 - RP4 Tariff & Zero-Capex BESS Mechanisms: Comparative breakdown of TNB RP4 capacity+network charges vs legacy demand charges. Interactive comparison tool mapping terms, savings splits (15/85), and performance guarantees across 8 leading Zero-Capex providers.
+        6. Interactive Section 4 - EPCC Margins & Payment Flow: Chart.js visualization comparing Gross Margin vs Core Net Margin across market tiers (Turnkey C&I vs Utility EPC vs Subcontracting vs High-Voltage Grid). Interactive milestone timeline illustrating working capital risk and 5% retention sum locks.
+        Why this structure: Allows commercial end-users, developers, and investors to navigate seamlessly between high-level pricing benchmarks, competitive intelligence, and financial feasibility modeling without layout clutter.
+    -->
+
+    <!-- Visualization & Content Choices:
+        - Solar EPCC Pricing: Goal = Compare across tiers; Method = Chart.js Bar Chart (Pre-GITA vs Post-GITA Net CAPEX); Interaction = Capacity tier toggle; Justification = Clearly illustrates economies of scale from 100 kWp to 3 MWp.
+        - Turnkey BESS Rates: Goal = Show range & tax impact; Method = Chart.js Grouped Bar Chart; Interaction = Hover tooltips; Justification = Displays hardware vs net post-GITA effective cost (RM/kWh).
+        - RP4 Tariff Demand Impact: Goal = Demonstrate cost surge; Method = Chart.js Bar Chart comparing Legacy vs RP4 charges; Justification = Quantifies the 162% surge in peak demand penalties.
+        - Competitor Matrix: Goal = Organize & filter; Method = Dynamic HTML Table + Search/Filter JS; Interaction = Category filter & click for deep-dive detail modal; Justification = Facilitates easy comparison of 15 players across cumulative MW, BESS projects, and EMS tools.
+        - EPCC Margin Stratification: Goal = Display profit hierarchy; Method = Chart.js Horizontal Bar Chart; Justification = Visually separates direct C&I turnkey margins (25-35%) from thin BoP subcontracting (6.5-10.8%).
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <!-- Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <span class="text-2xl">⚡</span>
+                    <div>
+                        <h1 class="text-lg font-bold text-slate-900 leading-tight">Malaysia C&I Solar & BESS Market</h1>
+                        <p class="text-xs text-slate-500">2026 Pricing Benchmarks, Competitors & Zero-Capex Economics</p>
+                    </div>
+                </div>
+                <nav class="hidden lg:flex space-x-1 text-sm font-medium text-slate-600">
+                    <button onclick="scrollToSection('overview')" class="px-3 py-2 rounded-md hover:text-brand-600 hover:bg-slate-50 transition">Overview</button>
+                    <button onclick="scrollToSection('pricing')" class="px-3 py-2 rounded-md hover:text-brand-600 hover:bg-slate-50 transition">Pricing & ROI Calculator</button>
+                    <button onclick="scrollToSection('competitors')" class="px-3 py-2 rounded-md hover:text-brand-600 hover:bg-slate-50 transition">Top 15 Competitors</button>
+                    <button onclick="scrollToSection('zerocapex')" class="px-3 py-2 rounded-md hover:text-brand-600 hover:bg-slate-50 transition">Zero-Capex & RP4</button>
+                    <button onclick="scrollToSection('margins')" class="px-3 py-2 rounded-md hover:text-brand-600 hover:bg-slate-50 transition">Margins & Milestones</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+        <!-- Executive Summary Dashboard -->
+        <section id="overview" class="space-y-6">
+            <div class="bg-gradient-to-r from-brand-900 via-brand-800 to-slate-900 rounded-2xl p-6 sm:p-8 text-white shadow-xl">
+                <div class="max-w-3xl space-y-3">
+                    <span class="inline-block px-3 py-1 bg-amberbrand-500/20 text-amber-300 border border-amber-500/30 text-xs font-semibold uppercase tracking-wider rounded-full">Market Intelligence Report 2026</span>
+                    <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight">Malaysia Commercial & Industrial Solar & BESS Benchmarks</h2>
+                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                        Driven by Tenaga Nasional Berhad’s (TNB) Regulatory Period 4 (RP4) unbundled tariffs, mandatory SELCO battery storage guidelines, and the imminent 31 December 2026 sunset of GITA tax allowances, Malaysia's C&I energy landscape has shifted permanently toward combined Solar + Storage deployment and Zero-Capex Peak Demand Shaving.
+                    </p>
+                </div>
+
+                <!-- Key Metrics Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-6 border-t border-brand-700/50">
+                    <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
+                        <p class="text-xs text-slate-300 font-medium">National Solar Capacity</p>
+                        <p class="text-2xl sm:text-3xl font-black text-amber-400 mt-1">5,777 MW</p>
+                        <p class="text-xs text-slate-400 mt-1">End-2025 (2.5 GW added in '25)</p>
+                    </div>
+                    <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
+                        <p class="text-xs text-slate-300 font-medium">RP4 Peak Demand Charge</p>
+                        <p class="text-2xl sm:text-3xl font-black text-emerald-400 mt-1">+162%</p>
+                        <p class="text-xs text-slate-400 mt-1">Up to RM 97.06/kW/mo</p>
+                    </div>
+                    <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
+                        <p class="text-xs text-slate-300 font-medium">GITA / GTFS Sunset</p>
+                        <p class="text-2xl sm:text-3xl font-black text-amber-400 mt-1">31 Dec 2026</p>
+                        <p class="text-xs text-slate-400 mt-1">60-100% Tax Allowance Deadline</p>
+                    </div>
+                    <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
+                        <p class="text-xs text-slate-300 font-medium">EPCC Order Book Flow</p>
+                        <p class="text-2xl sm:text-3xl font-black text-emerald-400 mt-1">RM 13B–23B</p>
+                        <p class="text-xs text-slate-400 mt-1">LSS5, LSS6 & CRESS Tenders</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 1: Turnkey Pricing Benchmarks & Interactive ROI Estimator -->
+        <section id="pricing" class="space-y-8 bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+            <div class="border-b border-slate-100 pb-5">
+                <span class="text-brand-600 text-xs font-bold uppercase tracking-wider">Section 1</span>
+                <h2 class="text-2xl font-bold text-slate-900 mt-1">Turnkey Pricing Benchmarks & Financial Feasibility Calculator</h2>
+                <p class="text-slate-600 text-sm mt-2 leading-relaxed">
+                    While global module costs declined through 2025, H1 2026 experienced upward pressure due to China's 9% VAT rebate removal and raw material inflation (silver +167%, copper +40%). C&I rooftop solar turnkey EPCC spans <strong>RM 1.85 to RM 3.80/Wp</strong> depending on scale and structural enhancements, while C&I BESS ranges from <strong>RM 1,150 to RM 1,450/kWh</strong> for 200–500 kWh cabinets and <strong>RM 1,000 to RM 1,350/kWh</strong> for 2–5 MWh containerised units. Post-tax costs are substantially lowered by GITA capital allowances until 31 December 2026.
+                </p>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                    <h3 class="text-sm font-bold text-slate-800 mb-2 text-center">Solar EPCC CAPEX per Tier (Gross vs. Net Effective after GITA)</h3>
+                    <div class="chart-container">
+                        <canvas id="chartSolarPricing"></canvas>
+                    </div>
+                    <p class="text-xs text-slate-500 text-center mt-3">Reflects 2026 turnkey installation benchmarks across 100 kWp to 3 MWp systems.</p>
+                </div>
+
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                    <h3 class="text-sm font-bold text-slate-800 mb-2 text-center">C&I BESS Turnkey Cost per kWh (Gross vs. GITA + CA Net Shield)</h3>
+                    <div class="chart-container">
+                        <canvas id="chartBessPricing"></canvas>
+                    </div>
+                    <p class="text-xs text-slate-500 text-center mt-3">Includes LFP active liquid-cooled cabinets/containers, PCS, EMS & NFPA 855 fire suppression.</p>
+                </div>
+            </div>
+
+            <!-- Interactive Project Economics Simulator -->
+            <div class="bg-brand-50/60 rounded-xl p-6 border border-brand-200/80">
+                <div class="flex items-center space-x-2 mb-4">
+                    <span class="text-xl">🧮</span>
+                    <h3 class="text-base font-bold text-brand-900">Interactive C&I Solar + BESS Project ROI & Tax Shield Estimator</h3>
+                </div>
+                <p class="text-xs text-slate-600 mb-6">Select system capacities and tax parameters below to calculate estimated project CAPEX, GITA corporate tax savings, annual energy & MD savings, and simple payback horizon.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-2">1. Rooftop Solar PV Scale</label>
+                        <select id="simSolarSize" onchange="updateSimulator()" class="w-full text-sm bg-white border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                            <option value="100">100 kWp (SME Factory - RM 2.80/Wp)</option>
+                            <option value="500" selected>500 kWp (Medium Factory - RM 2.50/Wp)</option>
+                            <option value="1000">1 MWp (Large Warehouse - RM 2.20/Wp)</option>
+                            <option value="3000">3 MWp (Industrial Campus - RM 2.00/Wp)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-2">2. Battery Energy Storage (BESS)</label>
+                        <select id="simBessSize" onchange="updateSimulator()" class="w-full text-sm bg-white border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                            <option value="0">None (Solar Only)</option>
+                            <option value="200" selected>200 kWh Cabinet (Peak Shaving - RM 1,350/kWh)</option>
+                            <option value="500">500 kWh Cabinet Bank (RM 1,250/kWh)</option>
+                            <option value="2000">2 MWh Container System (RM 1,150/kWh)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-2">3. Fiscal Tax Allowance Scenario</label>
+                        <select id="simTaxMode" onchange="updateSimulator()" class="w-full text-sm bg-white border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                            <option value="gita100" selected>100% GITA + CA Tax Allowance (Pre-Dec 2026)</option>
+                            <option value="gita60">60% GITA Tier (Standard Solar Asset)</option>
+                            <option value="none">Pre-Tax / No GITA Allowance</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Calculator Output Cards -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white p-4 rounded-xl border border-brand-200 shadow-sm">
+                    <div>
+                        <p class="text-xs text-slate-500 font-medium">Total Gross CAPEX</p>
+                        <p id="outGrossCapex" class="text-lg font-bold text-slate-900 mt-1">RM 1,520,000</p>
+                        <p id="outCapexSub" class="text-[10px] text-slate-400">Solar: RM 1.25M | BESS: RM 270k</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-medium">Tax Shield Savings</p>
+                        <p id="outTaxSavings" class="text-lg font-bold text-emerald-600 mt-1">RM 391,800</p>
+                        <p id="outTaxSub" class="text-[10px] text-emerald-700">Combined GITA & Corporate CA</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-medium">Est. Year-1 Bill Savings</p>
+                        <p id="outYearlySavings" class="text-lg font-bold text-amberbrand-600 mt-1">RM 253,200 / yr</p>
+                        <p id="outSavingsSub" class="text-[10px] text-slate-400">Solar energy + BESS MD cut</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-medium">Net Simple Payback</p>
+                        <p id="outPayback" class="text-lg font-bold text-brand-700 mt-1">4.4 Years</p>
+                        <p id="outPaybackSub" class="text-[10px] text-slate-400">vs. 6.0 yrs without GITA</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Turnkey & O&M Data Tables -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-4">
+                <!-- C&I Solar Benchmarks Table -->
+                <div class="space-y-3">
+                    <h4 class="text-sm font-bold text-slate-800 flex items-center space-x-2">
+                        <span>☀️</span>
+                        <span>C&I Solar EPCC Benchmark Table (2026)</span>
+                    </h4>
+                    <div class="overflow-x-auto custom-scroll border border-slate-200 rounded-xl">
+                        <table class="w-full text-left text-xs text-slate-700">
+                            <thead class="bg-slate-100 text-slate-800 font-semibold uppercase tracking-wider border-b border-slate-200">
+                                <tr>
+                                    <th class="p-3">Capacity</th>
+                                    <th class="p-3">Turnkey Unit Rate</th>
+                                    <th class="p-3">Gross CAPEX Range</th>
+                                    <th class="p-3">Payback (Post-GITA)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 bg-white">
+                                <tr>
+                                    <td class="p-3 font-semibold text-slate-900">100 kWp</td>
+                                    <td class="p-3">RM 2.40 – RM 3.80/Wp</td>
+                                    <td class="p-3">RM 240k – RM 380k</td>
+                                    <td class="p-3 text-emerald-700 font-medium">4.0 – 4.5 Yrs</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-semibold text-slate-900">500 kWp</td>
+                                    <td class="p-3">RM 2.40 – RM 2.60/Wp</td>
+                                    <td class="p-3">RM 1.20M – RM 1.30M</td>
+                                    <td class="p-3 text-emerald-700 font-medium">4.4 Yrs</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-semibold text-slate-900">1 MWp</td>
+                                    <td class="p-3">RM 2.00 – RM 2.50/Wp</td>
+                                    <td class="p-3">RM 2.00M – RM 2.50M</td>
+                                    <td class="p-3 text-emerald-700 font-medium">3.5 – 4.5 Yrs</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-semibold text-slate-900">3 MWp</td>
+                                    <td class="p-3">RM 1.85 – RM 2.20/Wp (Solar)</td>
+                                    <td class="p-3">RM 5.55M – RM 6.60M</td>
+                                    <td class="p-3 text-emerald-700 font-medium">3.5 – 4.5 Yrs</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- O&M Rates Table -->
+                <div class="space-y-3">
+                    <h4 class="text-sm font-bold text-slate-800 flex items-center space-x-2">
+                        <span>🛠️</span>
+                        <span>Operations & Maintenance (O&M) Rates</span>
+                    </h4>
+                    <div class="overflow-x-auto custom-scroll border border-slate-200 rounded-xl">
+                        <table class="w-full text-left text-xs text-slate-700">
+                            <thead class="bg-slate-100 text-slate-800 font-semibold uppercase tracking-wider border-b border-slate-200">
+                                <tr>
+                                    <th class="p-3">Asset Type</th>
+                                    <th class="p-3">Annual O&M (% CAPEX)</th>
+                                    <th class="p-3">Unit Rate</th>
+                                    <th class="p-3">Scope & Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 bg-white">
+                                <tr>
+                                    <td class="p-3 font-semibold text-slate-900">C&I Rooftop Solar</td>
+                                    <td class="p-3">1.0% – 1.5% / yr</td>
+                                    <td class="p-3">RM 25 – RM 45 / kWp / yr</td>
+                                    <td class="p-3 text-slate-500">Cloud monitoring, panel washings, thermal scans</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-semibold text-slate-900">C&I BESS (Preventive)</td>
+                                    <td class="p-3">1.5% – 2.5% / yr</td>
+                                    <td class="p-3">RM 15 – RM 35 / kWh / yr</td>
+                                    <td class="p-3 text-slate-500">EMS dashboard, chiller service, fire safety checks</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-semibold text-slate-900">C&I BESS (Full Wrap)</td>
+                                    <td class="p-3">3.5% – 4.5% / yr</td>
+                                    <td class="p-3">RM 45 – RM 60 / kWh / yr</td>
+                                    <td class="p-3 text-slate-500">Includes mid-life cell augmentation & performance SLAs</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Top 15 C&I Solar & BESS Competitors -->
+        <section id="competitors" class="space-y-6 bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+            <div class="border-b border-slate-100 pb-5">
+                <span class="text-brand-600 text-xs font-bold uppercase tracking-wider">Section 2</span>
+                <h2 class="text-2xl font-bold text-slate-900 mt-1">Top 15 C&I Solar & BESS Companies & Developers (2026 Matrix)</h2>
+                <p class="text-slate-600 text-sm mt-2 leading-relaxed">
+                    Malaysia's cumulative solar capacity reached 5,777 MW at end-2025. Competition in 2026 is defined by three structural moats: bundling solar with mandatory SELCO BESS hardware, vertical integration into high-voltage switchgear and data-centre earthing (ELP), and deploying proprietary AI-driven EMS dispatch software.
+                </p>
+            </div>
+
+            <!-- Controls: Search & Filters -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <div class="relative w-full sm:w-80">
+                    <input type="text" id="compSearch" onkeyup="filterCompetitors()" placeholder="Search company, client, or EMS..." class="w-full text-xs bg-white border border-slate-300 rounded-lg pl-8 pr-3 py-2 focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    <span class="absolute left-2.5 top-2 text-slate-400 text-xs">🔍</span>
+                </div>
+                <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+                    <button onclick="setFilter('all')" id="btn-all" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-brand-600 text-white shadow-sm transition">All (15)</button>
+                    <button onclick="setFilter('listed')" id="btn-listed" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 transition">Listed</button>
+                    <button onclick="setFilter('zerocapex')" id="btn-zerocapex" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 transition">Zero-Capex / EaaS</button>
+                    <button onclick="setFilter('bess')" id="btn-bess" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 transition">Major BESS Track Record</button>
+                </div>
+            </div>
+
+            <!-- Competitors Table -->
+            <div class="overflow-x-auto custom-scroll border border-slate-200 rounded-xl">
+                <table class="w-full text-left text-xs text-slate-700">
+                    <thead class="bg-slate-800 text-white font-semibold uppercase tracking-wider">
+                        <tr>
+                            <th class="p-3">Rank & Company</th>
+                            <th class="p-3">Listing & Scale</th>
+                            <th class="p-3">Cumulative Solar MW</th>
+                            <th class="p-3">Completed & Contracted BESS Projects</th>
+                            <th class="p-3">Business Models</th>
+                            <th class="p-3">EMS & Product Suite</th>
+                        </tr>
+                    </thead>
+                    <tbody id="competitorTableBody" class="divide-y divide-slate-100 bg-white">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Strategic Insights Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                    <div class="text-amberbrand-600 font-bold text-xs flex items-center space-x-1">
+                        <span>🔋</span>
+                        <span>1. Solar + Storage Convergence</span>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Plus Xnergy leads direct industrial BESS with a 100 MWh portfolio (including a 20 MWh SELCO BESS in Perak and a 1.45 MWh NaS system in Kedah), while Northern Solar holds a RM 20.5M SELCO BESS award, and Sunview/Cypark lead the RM 1.96B Lake Kenyir 595 MWac floating solar + BESS JV.
+                    </p>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                    <div class="text-brand-600 font-bold text-xs flex items-center space-x-1">
+                        <span>🏭</span>
+                        <span>2. High-Voltage & Data Centre Integration</span>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Pekat Group secured RM 47M in data-centre contracts across Port Dickson and Johor by combining solar EPCC with its 60% market share in Earthing & Lightning Protection (ELP) and EPE Switchgear, building an unbilled order book of RM 994M.
+                    </p>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                    <div class="text-emerald-700 font-bold text-xs flex items-center space-x-1">
+                        <span>🤖</span>
+                        <span>3. Proprietary Algorithmic EMS</span>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Top contractors rely on software moats to prevent 30-minute peak-shaving failures: Solarvest utilizes AI machine-learning EPMS, Ditrolic deployed its Net-Zero Energy OS with 15-min interval dispatch, and Plus Xnergy automates weekday peak shaving via SOURCE.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: RP4 Tariff Catalyst & Zero-Capex BESS Mechanisms -->
+        <section id="zerocapex" class="space-y-8 bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+            <div class="border-b border-slate-100 pb-5">
+                <span class="text-brand-600 text-xs font-bold uppercase tracking-wider">Section 3</span>
+                <h2 class="text-2xl font-bold text-slate-900 mt-1">RP4 Tariff Catalyst & Zero-Capex Shared-Savings Mechanisms</h2>
+                <p class="text-slate-600 text-sm mt-2 leading-relaxed">
+                    TNB’s RP4 tariff schedule (1 July 2025 – 31 Dec 2027) unbundled bills into five lines, unmasking peak demand penalties. Commercial Maximum Demand (MD) charges surged by <strong>162%</strong> (from RM 30.30/kW to <strong>RM 89.27–RM 97.06/kW/month</strong> for Capacity + Network charges). Because a single 30-minute dispatch failure during weekday peak hours (2:00 PM – 10:00 PM) resets the entire month's MD charge, CFOs heavily prefer Zero-Capex, Shared-Savings, and Energy-as-a-Service (EaaS) structures that transfer algorithmic risk to developers.
+                </p>
+            </div>
+
+            <!-- RP4 Tariff Surge Visual Chart -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                    <h3 class="text-sm font-bold text-slate-800 mb-2 text-center">TNB Demand Tariff Surge: Legacy vs. RP4 Capacity + Network Charge</h3>
+                    <div class="chart-container">
+                        <canvas id="chartRp4Tariff"></canvas>
+                    </div>
+                    <p class="text-xs text-slate-500 text-center mt-3">Unbundled RP4 capacity & network charges now represent 30% to 70% of C&I monthly power bills.</p>
+                </div>
+
+                <!-- 15/85 Split Explanation Box -->
+                <div class="bg-amber-50/70 border border-amber-200 rounded-xl p-6 space-y-4">
+                    <div class="flex items-center space-x-2 text-amber-800 font-bold text-sm">
+                        <span>⚖️</span>
+                        <h3>The 15% / 85% Savings Split Benchmark Explained</h3>
+                    </div>
+                    <p class="text-xs text-slate-700 leading-relaxed">
+                        Plus Xnergy’s benchmark model illustrates the financial mechanics of Zero-Capex MD shaving:
+                    </p>
+                    <ul class="text-xs text-slate-700 space-y-2 list-disc pl-4">
+                        <li><strong>Client Billing Rate:</strong> The developer bills the host at <strong>RM 82.50/kW</strong> vs TNB's <strong>RM 97.06/kW</strong> rate.</li>
+                        <li><strong>Immediate Client Net Benefit:</strong> The factory retains a risk-free <strong>15.0% savings</strong> (~RM 14.56/kW shaved, yielding ~RM 21,520/month on 1,478 kW shaved).</li>
+                        <li><strong>Developer Retained Capital (85%):</strong> The developer retains ~85% of gross utility savings to cover 2-hour LFP battery CAPEX (RM 2,300–RM 2,900/kW), off-peak charging power costs, 10-15 yr liquid-cooling O&M, and mid-life cell augmentation.</li>
+                        <li><strong>Financier Returns:</strong> Generates a <strong>12% to 18% p.a. return (~4-year payback)</strong> while transferring all 30-min peak shaving risk away from the industrial CFO.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Zero-Capex Provider Matrix -->
+            <div class="space-y-4">
+                <h3 class="text-base font-bold text-slate-900 flex items-center space-x-2">
+                    <span>🤝</span>
+                    <span>Comparison of 8 Key Zero-Capex & Shared-Savings BESS Providers</span>
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Provider 1 -->
+                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-2 hover:border-brand-500 transition">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-bold text-slate-900 text-sm">Plus Xnergy</h4>
+                            <span class="text-[10px] bg-brand-100 text-brand-800 px-2 py-0.5 rounded font-semibold">15 Years</span>
+                        </div>
+                        <p class="text-xs font-semibold text-brand-700">Discounted MD Tariff (RM 82.50/kW)</p>
+                        <p class="text-[11px] text-slate-600">Client retains 15% net MD savings. 100% funded CAPEX & O&M with AI-driven EMS discharging Mon–Fri (2–10 PM).</p>
+                    </div>
+
+                    <!-- Provider 2 -->
+                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-2 hover:border-brand-500 transition">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-bold text-slate-900 text-sm">EV Connection (EVC)</h4>
+                            <span class="text-[10px] bg-brand-100 text-brand-800 px-2 py-0.5 rounded font-semibold">7 – 10 Years</span>
+                        </div>
+                        <p class="text-xs font-semibold text-brand-700">Shared Savings Model</p>
+                        <p class="text-[11px] text-slate-600">First Zero-Capex BESS programme. 15%–30% net client savings split. Curated via 12-month data logging by Registered Energy Managers.</p>
+                    </div>
+
+                    <!-- Provider 3 -->
+                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-2 hover:border-brand-500 transition">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-bold text-slate-900 text-sm">Solarvest Holdings</h4>
+                            <span class="text-[10px] bg-brand-100 text-brand-800 px-2 py-0.5 rounded font-semibold">10 – 15 Years</span>
+                        </div>
+                        <p class="text-xs font-semibold text-brand-700">Powervest EaaS Structure</p>
+                        <p class="text-[11px] text-slate-600">Monthly EaaS fee structured lower than monthly MD savings. AI load simulator + EPMS achieving 20% to 65% MD cuts.</p>
+                    </div>
+
+                    <!-- Provider 4 -->
+                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-2 hover:border-brand-500 transition">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-bold text-slate-900 text-sm">UniBess</h4>
+                            <span class="text-[10px] bg-brand-100 text-brand-800 px-2 py-0.5 rounded font-semibold">10 Years</span>
+                        </div>
+                        <p class="text-xs font-semibold text-brand-700">Operating Lease + Performance SLAs</p>
+                        <p class="text-[11px] text-slate-600">Written performance contracts with capped Liquidated Damages (LDs) for availability, Year-10 capacity, and round-trip efficiency.</p>
+                    </div>
+
+                    <!-- Provider 5 -->
+                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-2 hover:border-brand-500 transition">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-bold text-slate-900 text-sm">ERS Energy</h4>
+                            <span class="text-[10px] bg-brand-100 text-brand-800 px-2 py-0.5 rounded font-semibold">15 – 25 Years</span>
+                        </div>
+                        <p class="text-xs font-semibold text-brand-700">Bundled Hybrid PPA</p>
+                        <p class="text-[11px] text-slate-600">Fixed PPA rate 25%–40% below TNB tariff. Includes &lt;20ms backup switchover & mid-life inverter replacement at zero cost.</p>
+                    </div>
+
+                    <!-- Provider 6 -->
+                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-2 hover:border-brand-500 transition">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-bold text-slate-900 text-sm">Cenergi SEA</h4>
+                            <span class="text-[10px] bg-brand-100 text-brand-800 px-2 py-0.5 rounded font-semibold">10 – 20 Years</span>
+                        </div>
+                        <p class="text-xs font-semibold text-brand-700">Zero-Capex SELCO BESS</p>
+                        <p class="text-[11px] text-slate-600">Khazanah/UEM-backed funding. Fully automated background controller for mandatory SELCO (&ge;1 MWac) storage compliance.</p>
+                    </div>
+
+                    <!-- Provider 7 -->
+                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-2 hover:border-brand-500 transition">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-bold text-slate-900 text-sm">Kawan Renergy</h4>
+                            <span class="text-[10px] bg-brand-100 text-brand-800 px-2 py-0.5 rounded font-semibold">10 – 15 Years</span>
+                        </div>
+                        <p class="text-xs font-semibold text-brand-700">BaaS & EaaS Models</p>
+                        <p class="text-[11px] text-slate-600">Backed by internal project fund. Turnkey transformer, PCS, and BESS integration with automated peak-discharge control.</p>
+                    </div>
+
+                    <!-- Provider 8 -->
+                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-2 hover:border-brand-500 transition">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-bold text-slate-900 text-sm">XPERTS.NRG</h4>
+                            <span class="text-[10px] bg-brand-100 text-brand-800 px-2 py-0.5 rounded font-semibold">10 – 15 Years</span>
+                        </div>
+                        <p class="text-xs font-semibold text-brand-700">ESCO Shared Savings</p>
+                        <p class="text-[11px] text-slate-600">ESCO shared-savings split on verified MD reductions after 12 months of interval meter analysis. Partnered on 1,000 MWh CRESS BESS.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: EPCC Profit Margins & Payment Terms -->
+        <section id="margins" class="space-y-8 bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+            <div class="border-b border-slate-100 pb-5">
+                <span class="text-brand-600 text-xs font-bold uppercase tracking-wider">Section 4</span>
+                <h2 class="text-2xl font-bold text-slate-900 mt-1">EPCC Profit Margins, Payment Milestones & Competition Heatmap</h2>
+                <p class="text-slate-600 text-sm mt-2 leading-relaxed">
+                    Financial disclosures reveal a strict three-tier margin hierarchy in Malaysia's EPCC sector. Direct C&I rooftop turnkey solar yields <strong>25% to 35% Gross Profit (GP) Margins</strong>, whereas utility-scale (LSS5/CGPP) main contracting compresses GP margins to <strong>15%–22%</strong>, and pure installation subcontracts yield thin <strong>6.5%–10.8% GP margins</strong> (often resulting in net operating losses). High-voltage grid engineering commands the highest profitability at <strong>~50% GP margin</strong>.
+                </p>
+            </div>
+
+            <!-- Charts Row: Margins & Listed Performance -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                    <h3 class="text-sm font-bold text-slate-800 mb-2 text-center">EPCC Gross Margin Hierarchy by Market Segment</h3>
+                    <div class="chart-container">
+                        <canvas id="chartMargins"></canvas>
+                    </div>
+                    <p class="text-xs text-slate-500 text-center mt-3">Exhibits the margin gap between direct C&I solar, utility EPC, and BoP subcontracting.</p>
+                </div>
+
+                <!-- Financial Performance Table of Listed Contractors -->
+                <div class="space-y-3">
+                    <h3 class="text-sm font-bold text-slate-800 flex items-center space-x-2">
+                        <span>📊</span>
+                        <span>Audited Financial Benchmarks of Listed EPCCs</span>
+                    </h3>
+                    <div class="overflow-x-auto custom-scroll border border-slate-200 rounded-xl">
+                        <table class="w-full text-left text-xs text-slate-700">
+                            <thead class="bg-slate-100 text-slate-800 font-semibold uppercase">
+                                <tr>
+                                    <th class="p-2.5">Company</th>
+                                    <th class="p-2.5">Unbilled Order Book</th>
+                                    <th class="p-2.5">Gross Margin</th>
+                                    <th class="p-2.5">Net Margin</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 bg-white">
+                                <tr>
+                                    <td class="p-2.5 font-bold text-slate-900">Northern Solar</td>
+                                    <td class="p-2.5">RM 119.4M LSS5 + C&I</td>
+                                    <td class="p-2.5 text-emerald-700 font-semibold">27.4% – 37.8%</td>
+                                    <td class="p-2.5">10.1% – 13.5%</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 font-bold text-slate-900">Solarvest</td>
+                                    <td class="p-2.5 text-brand-700 font-bold">RM 2,370M (Aug 2026)</td>
+                                    <td class="p-2.5">28.3% – 28.5%</td>
+                                    <td class="p-2.5">10.7% – 12.5%</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 font-bold text-slate-900">Pekat Group</td>
+                                    <td class="p-2.5">RM 994M (Jul 2026)</td>
+                                    <td class="p-2.5">25.2% – 27.0%</td>
+                                    <td class="p-2.5">8.0% – 10.5%</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 font-bold text-slate-900">Sunview Group</td>
+                                    <td class="p-2.5">~RM 1,169.5M</td>
+                                    <td class="p-2.5 text-amber-700">12.0% – 16.0%</td>
+                                    <td class="p-2.5 text-amber-700">2.1% – 2.8%</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 font-bold text-slate-900">Founder Group</td>
+                                    <td class="p-2.5">Active CGPP Subcontracts</td>
+                                    <td class="p-2.5 text-rose-600 font-semibold">6.5% – 10.8%</td>
+                                    <td class="p-2.5 text-rose-600 font-semibold">-4.7% (Pre-tax Loss)</td>
+                                </tr>
+                                <tr class="bg-emerald-50/50">
+                                    <td class="p-2.5 font-bold text-slate-900">Cheeding (HV Grid)</td>
+                                    <td class="p-2.5">RM 600M Target</td>
+                                    <td class="p-2.5 text-emerald-800 font-black">~50.0%</td>
+                                    <td class="p-2.5 text-emerald-800 font-black">28.2%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Payment Milestone Timeline -->
+            <div class="space-y-4 pt-2">
+                <h3 class="text-base font-bold text-slate-900 flex items-center space-x-2">
+                    <span>💵</span>
+                    <span>Standard C&I Turnkey Payment Milestones & Working Capital Flow</span>
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center hover:border-brand-500 transition">
+                        <span class="text-xs bg-slate-200 text-slate-800 font-bold px-2 py-0.5 rounded-full">Stage 1</span>
+                        <p class="text-sm font-bold text-slate-900 mt-2">10% – 20%</p>
+                        <p class="text-xs font-medium text-brand-700 mt-0.5">LOA & Survey</p>
+                        <p class="text-[10px] text-slate-500 mt-1">Covers site engineering, SLD, TNB Connection Check & CAS filing.</p>
+                    </div>
+
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center hover:border-brand-500 transition">
+                        <span class="text-xs bg-slate-200 text-slate-800 font-bold px-2 py-0.5 rounded-full">Stage 2</span>
+                        <p class="text-sm font-bold text-slate-900 mt-2">40% – 50%</p>
+                        <p class="text-xs font-medium text-brand-700 mt-0.5">Equipment Delivery</p>
+                        <p class="text-[10px] text-slate-500 mt-1">Due upon arrival of Tier-1 modules, inverters & BESS cabinets on site.</p>
+                    </div>
+
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center hover:border-brand-500 transition">
+                        <span class="text-xs bg-slate-200 text-slate-800 font-bold px-2 py-0.5 rounded-full">Stage 3</span>
+                        <p class="text-sm font-bold text-slate-900 mt-2">20% – 25%</p>
+                        <p class="text-xs font-medium text-brand-700 mt-0.5">Installation</p>
+                        <p class="text-[10px] text-slate-500 mt-1">Roof mounting, DC/AC cabling, MV transformer & switchgear hookup.</p>
+                    </div>
+
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center hover:border-brand-500 transition">
+                        <span class="text-xs bg-slate-200 text-slate-800 font-bold px-2 py-0.5 rounded-full">Stage 4</span>
+                        <p class="text-sm font-bold text-slate-900 mt-2">5% – 10%</p>
+                        <p class="text-xs font-medium text-brand-700 mt-0.5">COD Commissioning</p>
+                        <p class="text-[10px] text-slate-500 mt-1">TNB meter swap, SCADA/EMS testing, grid handover sign-off.</p>
+                    </div>
+
+                    <div class="bg-slate-50 border border-amber-300 bg-amber-50/40 rounded-xl p-3 text-center hover:border-brand-500 transition">
+                        <span class="text-xs bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded-full">Stage 5</span>
+                        <p class="text-sm font-bold text-amber-900 mt-2">5% Retention</p>
+                        <p class="text-xs font-medium text-amber-800 mt-0.5">12-Month DLP</p>
+                        <p class="text-[10px] text-slate-600 mt-1">Held for 1-year Defects Liability Period. Locks ~half of contractor net margin.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price Competition Heatmap Box -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                <div class="bg-rose-50/60 border border-rose-200 rounded-xl p-5 space-y-2">
+                    <div class="flex items-center space-x-2 text-rose-800 font-bold text-sm">
+                        <span>🔥</span>
+                        <h3>Severe Price Competition Segments (Low Barrier)</h3>
+                    </div>
+                    <ul class="text-xs text-slate-700 space-y-1.5 list-disc pl-4">
+                        <li><strong>Tier-2 Utility Balance-of-Plant Subcontracting:</strong> Pure installation contractors compete fiercely on labour rates, eroding gross margins to 6.5%–10.8%.</li>
+                        <li><strong>Small C&I Rooftops (50–300 kWp):</strong> Hundreds of RPVSPs pivoting from residential ATAP offer low-ball quotes (RM 2.40/Wp) by omitting roof reinforcement and structural warranties.</li>
+                        <li><strong>Standard BESS Hardware Distribution:</strong> Direct Chinese OEM cabinet importers face heavy price degradation without software EMS integration.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-emerald-50/60 border border-emerald-200 rounded-xl p-5 space-y-2">
+                    <div class="flex items-center space-x-2 text-emerald-800 font-bold text-sm">
+                        <span>🛡️</span>
+                        <h3>High-Moat & Margin-Insulated Segments</h3>
+                    </div>
+                    <ul class="text-xs text-slate-700 space-y-1.5 list-disc pl-4">
+                        <li><strong>Zero-Capex / EaaS Peak Demand Shaving:</strong> Protected by low-cost balance sheets, Sukuk facilities, REM engineers, and performance guarantee warranties.</li>
+                        <li><strong>Hyperscale Data Centre ELP & Switchgear:</strong> Pekat commands ~30% GP margins in Earthing & Lightning Protection for Johor/PD data centres.</li>
+                        <li><strong>High-Voltage Grid Interconnections:</strong> Cheeding holds 500 kV TNB transmission licenses, earning ~50% GP margins and 28% net margins.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 text-xs py-8 border-t border-slate-800 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+            <div>
+                <p class="font-semibold text-slate-300">Malaysia C&I Solar & BESS Market Report (2026)</p>
+                <p class="text-slate-500 text-[11px] mt-0.5">Synthesized from Bursa Malaysia filings, institutional equity research, SEDA & TNB RP4 guidelines.</p>
+            </div>
+            <p class="text-slate-500 text-[11px]">Designed for C&I Energy Buyers, Financiers & Developers.</p>
+        </div>
+    </footer>
+
+    <!-- Competitor Detail Modal -->
+    <div id="compModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 space-y-4 relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+            <div id="modalContent">
+                <!-- Content inserted by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Data Store: Top 15 Competitors
+        const competitors = [
+            {
+                rank: 1,
+                name: "Solarvest Holdings Bhd",
+                ticker: "KLSE: SLVEST (0215)",
+                listed: true,
+                mw: "~3,700 MWp (3.7 GWp)",
+                bessTrack: "Multiple C&I BESS (20%-65% MD cuts); Utility BESS bidder under MyBeST auction",
+                bessProjects: "2024–2026 deployments across manufacturing plants, data centres & EV hubs. Bidding for 400 MW / 1,600 MWh MyBeST.",
+                businessModels: ["Outright CAPEX", "Zero-CAPEX Powervest PPA", "Fintech Financing", "Zero-CAPEX BESS EaaS"],
+                emsProduct: "AI machine-learning load simulator + EPMS (Energy Performance Monitoring System)",
+                moat: "Record RM 2.37B unbilled order book (Aug 2026) anchored by RM 1.06B LSS5+ EPCC in Perak.",
+                hasZeroCapex: true,
+                hasMajorBess: true
+            },
+            {
+                rank: 2,
+                name: "Gentari Sdn Bhd",
+                ticker: "Private (Wholly PETRONAS)",
+                listed: false,
+                mw: "~9,100 MW (9.1 GW) Global RE",
+                bessTrack: "Malaysia's 1st Solar+BESS EV Charging Hub (Oct 2023); ~1.5 GW Gamuda CRESS BESS",
+                bessProjects: "Hyperscale data centre CRESS BESS firming + EV supercharging hub buffering.",
+                businessModels: ["Zero-CAPEX PPA", "CRESS Green Power Supply", "Outright EPCC", "Integrated EaaS"],
+                emsProduct: "Integrated C&I energy management & CRESS BESS firming for hyperscale data centres",
+                moat: "Backed by PETRONAS balance sheet; targeting 1.5 GW hyperscale data centre green power.",
+                hasZeroCapex: true,
+                hasMajorBess: true
+            },
+            {
+                rank: 3,
+                name: "Ditrolic Energy Holdings",
+                ticker: "Private (IFC & Sukuk Backed)",
+                listed: false,
+                mw: "1,000+ MW Constructed / 300 MW O&M",
+                bessTrack: "C&I behind-the-meter EnerPack BESS; Johor RE Corridor utility BESS with IFC & PDT",
+                bessProjects: "Industrial & data centre EnerPack deployments; 600 MW SJREC cross-border export approval (Aug 2026).",
+                businessModels: ["Outright EPC (EnerGreen)", "Zero-CAPEX PPA (EnerLoop)", "O&M Asset Mgmt"],
+                emsProduct: "EnerPack BTM BESS + Integrated Net-Zero Energy OS & 15-min Smart Integrated System",
+                moat: "RM 150M Sukuk Wakalah tranche; IFC partnership for regional utility BESS.",
+                hasZeroCapex: true,
+                hasMajorBess: true
+            },
+            {
+                rank: 4,
+                name: "Samaiden Group Bhd",
+                ticker: "KLSE: SAMAIDEN",
+                listed: true,
+                mw: "700+ MWp Cumulative",
+                bessTrack: "C&I BESS peak-shaving & backup installations (2025–2026); LSS6 BESS awards",
+                bessProjects: "Industrial factory BESS; projected 125–188 MW LSS6 BESS awards.",
+                businessModels: ["Outright EPCC", "Zero-CAPEX PPA Framework", "O&M Services", "REC Trading"],
+                emsProduct: "Automated BESS Peak-Shaving & MD Threshold Dispatch Controller",
+                moat: "RM 600M YTD contract wins (Jul 2026); strong C&I client base including Nippon Electric Glass.",
+                hasZeroCapex: true,
+                hasMajorBess: true
+            },
+            {
+                rank: 5,
+                name: "Sunview Group Bhd",
+                ticker: "KLSE: SUNVIEW",
+                listed: true,
+                mw: "~650–800+ MWp Portfolio",
+                bessTrack: "595 MWac Floating Solar + BESS at Lake Kenyir for TNB Genco; SunBESS projects",
+                bessProjects: "40% lead share in RM 1.96B CRE-Sunview JV at Lake Kenyir (Apr 2026); Uzbekistan BESS.",
+                businessModels: ["Outright EPCC", "Solar + Storage CAPEX", "Asset Ownership / PPA"],
+                emsProduct: "SunBESS automated C&I peak-shaving & SELCO (>72 kWp) storage system",
+                moat: "RM 1.17B backlog; massive utility floating solar + storage pipeline.",
+                hasZeroCapex: true,
+                hasMajorBess: true
+            },
+            {
+                rank: 6,
+                name: "Plus Xnergy Services",
+                ticker: "KLSE: BMGREEN (Parent)",
+                listed: true,
+                mw: ">400+ MWp Solar / 100 MWh BESS",
+                bessTrack: "20 MWh SELCO BESS in Perak (HyperStrong, Jun 2026); 1.45 MWh NaS BESS in Kedah",
+                bessProjects: "Flagship 20 MWh single industrial deployment at Perak food factory; Leader Energy NaS BESS.",
+                businessModels: ["Outright EPCC", "15-Yr Zero-CAPEX BESS Partnership", "Zero-CAPEX PPA"],
+                emsProduct: "AI-Driven BESS EMS & SOURCE smart energy platform (weekday 2–10 PM MD shaving)",
+                moat: "Market leader in direct C&I BESS with 100 MWh deployed; offers benchmark RM 82.50/kW MD tariff.",
+                hasZeroCapex: true,
+                hasMajorBess: true
+            },
+            {
+                rank: 7,
+                name: "Cypark Resources Bhd",
+                ticker: "KLSE: CYPARK",
+                listed: true,
+                mw: ">400 MWp Operational / Hybrid",
+                bessTrack: "595 MWac Floating Solar + BESS at Lake Kenyir (60% JV lead with Sunview)",
+                bessProjects: "Co-lead in RM 1.96B Lake Kenyir floating PV + BESS project for TNB Genco (Apr 2026).",
+                businessModels: ["IPP Asset Ownership", "Turnkey EPCC", "Public-Private Partnerships"],
+                emsProduct: "Utility & hybrid solar-storage dispatch and grid-firming SCADA",
+                moat: "Pioneer in utility-scale floating solar and large-scale hybrid storage infrastructure.",
+                hasZeroCapex: false,
+                hasMajorBess: true
+            },
+            {
+                rank: 8,
+                name: "Pekat Group Bhd",
+                ticker: "KLSE: PEKAT (0233)",
+                listed: true,
+                mw: "~300–400+ MWp Portfolio",
+                bessTrack: "Data centre & factory BESS integrated with EPE MV switchgear & ELP systems",
+                bessProjects: "Port Dickson (RM 20M) and Johor (RM 27M) data centre electrical & BESS wins in Jul 2026.",
+                businessModels: ["Outright EPCC", "Zero-CAPEX PPA / CGPP Asset", "BESS + O&M"],
+                emsProduct: "Integrated Solar + BESS peak-shaving & EPE medium-voltage distribution EMS",
+                moat: "60% Peninsular market share in Earthing & Lightning Protection (ELP); RM 994M unbilled backlog.",
+                hasZeroCapex: true,
+                hasMajorBess: true
+            },
+            {
+                rank: 9,
+                name: "GSPARX Sdn Bhd",
+                ticker: "Private (Wholly TNB)",
+                listed: false,
+                mw: "224 MW Installed C&I",
+                bessTrack: "76.8–170 kWh BESS at Elmina Ilham; C&I BESS partnership with EVE Energy",
+                bessProjects: "Residential & factory BESS; EVE Energy built 36 MWh / 18 MW BESS at KLIA (Feb 2026).",
+                businessModels: ["Zero-CAPEX SARE PPA (via TNB Bill)", "Outright EPCC"],
+                emsProduct: "TNB Smart Grid-integrated BESS peak shaving & automated load management",
+                moat: "Direct billing integration via TNB electricity invoice via SARE mechanism.",
+                hasZeroCapex: true,
+                hasMajorBess: true
+            },
+            {
+                rank: 10,
+                name: "Progressture Solar",
+                ticker: "Private",
+                listed: false,
+                mw: "~200–300+ MWp C&I",
+                bessTrack: "Turnkey C&I BESS for manufacturing factories, commercial property & data centres",
+                bessProjects: "600+ Shell stations, ~100 Petron stations, data centres, 12 MWp Brunei utility plant in 2026.",
+                businessModels: ["Outright EPCC", "Zero-Upfront Solar PPA", "Custom Solar/BESS Financing"],
+                emsProduct: "End-to-end BESS peak shaving, load shifting & power expansion EMS",
+                moat: "Dominant retail fuel station solarization track record across Peninsular Malaysia.",
+                hasZeroCapex: true,
+                hasMajorBess: false
+            },
+            {
+                rank: 11,
+                name: "Founder Group Ltd",
+                ticker: "NASDAQ: FGL (Reservoir Link)",
+                listed: true,
+                mw: "~200+ MWp EPCC",
+                bessTrack: "Iron-Flow Long-Duration Energy Storage (LDES) via JV RL ADS Power",
+                bessProjects: "Commercializing long-duration iron-flow batteries across MY, SG, and ID (2025–2026).",
+                businessModels: ["Outright EPCC", "BoP Subcontracting", "C&I Rooftop Investor"],
+                emsProduct: "AI-powered O&M & Iron-Flow LDES industrial load-shifting platform",
+                moat: "Specialised in Iron-Flow LDES chemistry for long-duration industrial storage.",
+                hasZeroCapex: false,
+                hasMajorBess: true
+            },
+            {
+                rank: 12,
+                name: "Northern Solar Holdings",
+                ticker: "KLSE: NORTHERN (0340)",
+                listed: true,
+                mw: "~150+ MWp Cumulative",
+                bessTrack: "Contracted RM 20.5M ground-mounted SELCO BESS project (~15–18 MWh)",
+                bessProjects: "Disclosed RM 20.5M SELCO BESS award; C&I Sungrow/Huawei/EVE cabinets.",
+                businessModels: ["Outright EPCC (96.7% Rev)", "Zero-CAPEX PPA", "GTFS 5.0 Financing"],
+                emsProduct: "Interval-meter-calibrated BESS Peak Shaving suppressing 30-min TNB MD spikes",
+                moat: "Direct high-margin C&I specialist (~34.4% FY26 GP margin) with RM 119.4M LSS5 award.",
+                hasZeroCapex: true,
+                hasMajorBess: true
+            },
+            {
+                rank: 13,
+                name: "ERS Energy Sdn Bhd",
+                ticker: "Private",
+                listed: false,
+                mw: "~150+ MWp C&I",
+                bessTrack: "500 kWp Solar + 200 kWh BESS at Penang Electronics Plant (35% MD cut)",
+                bessProjects: "Penang electronics plant cutting peak demand by 35% with zero upfront CAPEX.",
+                businessModels: ["Direct Purchase (CAPEX)", "Zero-Upfront PPA (15-25 Yrs)", "Green Lease"],
+                emsProduct: "Solar + BESS Hybrid EMS (<20 ms UPS switchover & 35% MD cut)",
+                moat: "Pioneer in seamless <20ms UPS switchover for high-tech semiconductor & electronics plants.",
+                hasZeroCapex: true,
+                hasMajorBess: true
+            },
+            {
+                rank: 14,
+                name: "Cenergi SEA Bhd",
+                ticker: "Private (Khazanah / UEM)",
+                listed: false,
+                mw: "~100+ MWp Clean Energy",
+                bessTrack: "Operational C&I BESS integrated with solar (>1 MWac SELCO) & biogas",
+                bessProjects: "Mandatory SELCO BESS projects paired with rooftop solar across West Malaysia.",
+                businessModels: ["Zero-CAPEX BESS", "Zero-CAPEX Solar PPA (100% Funded)"],
+                emsProduct: "Automated background BESS controller for SELCO compliance & MD network shaving",
+                moat: "Backed by Khazanah's green vehicle UEM Group; strong public sector & corporate access.",
+                hasZeroCapex: true,
+                hasMajorBess: true
+            },
+            {
+                rank: 15,
+                name: "XPERTS.NRG (Green Xperts)",
+                ticker: "Private / KLSE: KAB (Partner)",
+                listed: false,
+                mw: "50 MW EPCC / 15 MW Owned",
+                bessTrack: "Consortium partner with TNB for 1,000 MWh BESS under CRESS",
+                bessProjects: "1,000 MWh CRESS utility storage partnership with TNB; C&I ESCO MD shaving.",
+                businessModels: ["Zero-CAPEX Solar PPA", "ESCO Shared Savings", "Outright EPCC"],
+                emsProduct: "Dedicated MD Shaving BESS dispatch & industrial Energy Management Systems",
+                moat: "Consortium partner for TNB's 1,000 MWh CRESS mega-storage deployment.",
+                hasZeroCapex: true,
+                hasMajorBess: true
+            }
+        ];
+
+        let activeFilter = 'all';
+
+        // Render Competitor Table
+        function renderCompetitors(data) {
+            const tbody = document.getElementById('competitorTableBody');
+            tbody.innerHTML = '';
+
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50/80 transition cursor-pointer";
+                tr.onclick = () => openModal(item);
+
+                tr.innerHTML = `
+                    <td class="p-3">
+                        <div class="font-bold text-slate-900">${item.rank}. ${item.name}</div>
+                        <div class="text-[10px] text-slate-400">${item.ticker}</div>
+                    </td>
+                    <td class="p-3">
+                        <span class="inline-block px-2 py-0.5 rounded text-[10px] font-semibold ${item.listed ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-slate-100 text-slate-700'}">
+                            ${item.listed ? 'Listed' : 'Private'}
+                        </span>
+                    </td>
+                    <td class="p-3 font-semibold text-brand-800">${item.mw}</td>
+                    <td class="p-3 text-slate-600 max-w-xs truncate">${item.bessTrack}</td>
+                    <td class="p-3">
+                        <div class="flex flex-wrap gap-1">
+                            ${item.businessModels.slice(0, 2).map(m => `<span class="bg-slate-100 text-slate-700 text-[9px] px-1.5 py-0.5 rounded">${m}</span>`).join('')}
+                            ${item.businessModels.length > 2 ? `<span class="text-[9px] text-slate-400">+${item.businessModels.length - 2}</span>` : ''}
+                        </div>
+                    </td>
+                    <td class="p-3 text-slate-600 font-medium">${item.emsProduct.split('+')[0]}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Filter and Search
+        function filterCompetitors() {
+            const query = document.getElementById('compSearch').value.toLowerCase();
+            let filtered = competitors.filter(c => {
+                const matchesSearch = c.name.toLowerCase().includes(query) ||
+                                      c.bessTrack.toLowerCase().includes(query) ||
+                                      c.emsProduct.toLowerCase().includes(query);
+
+                if (activeFilter === 'listed') return matchesSearch && c.listed;
+                if (activeFilter === 'zerocapex') return matchesSearch && c.hasZeroCapex;
+                if (activeFilter === 'bess') return matchesSearch && c.hasMajorBess;
+                return matchesSearch;
+            });
+            renderCompetitors(filtered);
+        }
+
+        function setFilter(filter) {
+            activeFilter = filter;
+            ['all', 'listed', 'zerocapex', 'bess'].forEach(f => {
+                const btn = document.getElementById(`btn-${f}`);
+                if (f === filter) {
+                    btn.className = "px-3 py-1.5 text-xs font-semibold rounded-lg bg-brand-600 text-white shadow-sm transition";
+                } else {
+                    btn.className = "px-3 py-1.5 text-xs font-semibold rounded-lg bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 transition";
+                }
+            });
+            filterCompetitors();
+        }
+
+        // Modal Handler
+        function openModal(item) {
+            const modal = document.getElementById('compModal');
+            const content = document.getElementById('modalContent');
+            content.innerHTML = `
+                <div class="space-y-4">
+                    <div class="border-b border-slate-100 pb-3">
+                        <span class="text-brand-600 font-bold text-xs">Rank #${item.rank} Market Leader</span>
+                        <h3 class="text-xl font-bold text-slate-900 mt-0.5">${item.name}</h3>
+                        <p class="text-xs text-slate-500">${item.ticker} | Portfolio Scale: <strong class="text-slate-800">${item.mw}</strong></p>
+                    </div>
+
+                    <div class="space-y-3 text-xs">
+                        <div>
+                            <p class="font-bold text-slate-800">Completed & Contracted BESS Projects:</p>
+                            <p class="text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-200 mt-1">${item.bessProjects}</p>
+                        </div>
+
+                        <div>
+                            <p class="font-bold text-slate-800">Business Models Offered:</p>
+                            <div class="flex flex-wrap gap-1.5 mt-1">
+                                ${item.businessModels.map(m => `<span class="bg-brand-50 text-brand-800 border border-brand-200 font-medium px-2 py-0.5 rounded text-[11px]">${m}</span>`).join('')}
+                            </div>
+                        </div>
+
+                        <div>
+                            <p class="font-bold text-slate-800">EMS & Maximum Demand Product Suite:</p>
+                            <p class="text-slate-700 bg-amber-50/60 p-2.5 rounded-lg border border-amber-200 mt-1 font-medium">${item.emsProduct}</p>
+                        </div>
+
+                        <div>
+                            <p class="font-bold text-slate-800">Strategic Moat & Positioning:</p>
+                            <p class="text-slate-600 leading-relaxed mt-1">${item.moat}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('compModal').classList.add('hidden');
+        }
+
+        // Interactive Project ROI Simulator Calculation
+        function updateSimulator() {
+            const solarKw = parseInt(document.getElementById('simSolarSize').value);
+            const bessKwh = parseInt(document.getElementById('simBessSize').value);
+            const taxMode = document.getElementById('simTaxMode').value;
+
+            // Unit rate dynamics
+            let solarRate = 2.80;
+            if (solarKw === 500) solarRate = 2.50;
+            if (solarKw === 1000) solarRate = 2.20;
+            if (solarKw === 3000) solarRate = 2.00;
+
+            let bessRate = 1350;
+            if (bessKwh === 500) bessRate = 1250;
+            if (bessKwh === 2000) bessRate = 1150;
+
+            const solarCapex = solarKw * 1000 * solarRate;
+            const bessCapex = bessKwh * bessRate;
+            const grossCapex = solarCapex + bessCapex;
+
+            // Tax shield calculation (Corporate tax = 24%)
+            let taxSavings = 0;
+            if (taxMode === 'gita100') {
+                // 100% GITA ITA + standard Capital Allowance (~34% total tax shield)
+                taxSavings = grossCapex * 0.34;
+            } else if (taxMode === 'gita60') {
+                // 60% GITA ITA + standard CA (~24% net)
+                taxSavings = grossCapex * 0.24;
+            } else {
+                taxSavings = 0;
+            }
+
+            const netCapex = grossCapex - taxSavings;
+
+            // Energy & MD Savings Estimation
+            // Solar yield ~1,250 kWh / kWp / yr @ ~RM 0.38 blended avoided cost
+            const solarSavingsYr = solarKw * 1250 * 0.38;
+
+            // BESS MD Shaving: ~1 kW shaved per 2 kWh BESS @ RM 89.27/kW/month TNB NDMV rate
+            const bessKwShaved = bessKwh / 2;
+            const bessSavingsYr = bessKwShaved * 89.27 * 12;
+
+            const totalSavingsYr = solarSavingsYr + bessSavingsYr;
+            const paybackYrs = netCapex / totalSavingsYr;
+
+            // DOM Updates
+            document.getElementById('outGrossCapex').innerText = 'RM ' + grossCapex.toLocaleString();
+            document.getElementById('outCapexSub').innerText = `Solar: RM ${(solarCapex/1000).toFixed(0)}k | BESS: RM ${(bessCapex/1000).toFixed(0)}k`;
+
+            document.getElementById('outTaxSavings').innerText = 'RM ' + Math.round(taxSavings).toLocaleString();
+            document.getElementById('outTaxSub').innerText = taxMode === 'none' ? 'No tax shield applied' : `GITA Allowance @ 24% tax rate`;
+
+            document.getElementById('outYearlySavings').innerText = 'RM ' + Math.round(totalSavingsYr).toLocaleString() + ' / yr';
+            document.getElementById('outSavingsSub').innerText = `Solar: RM ${Math.round(solarSavingsYr/1000)}k | MD Shaving: RM ${Math.round(bessSavingsYr/1000)}k`;
+
+            document.getElementById('outPayback').innerText = paybackYrs.toFixed(1) + ' Years';
+            document.getElementById('outPaybackSub').innerText = `Net CAPEX RM ${Math.round(netCapex/1000)}k vs pre-tax ${(grossCapex/totalSavingsYr).toFixed(1)} yrs`;
+        }
+
+        // Navigation Scroll Helper
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Chart Initializations
+        window.addEventListener('DOMContentLoaded', () => {
+            renderCompetitors(competitors);
+            updateSimulator();
+
+            // Chart 1: Solar EPCC Rates
+            const ctxSolar = document.getElementById('chartSolarPricing').getContext('2d');
+            new Chart(ctxSolar, {
+                type: 'bar',
+                data: {
+                    labels: ['100 kWp', '500 kWp', '1 MWp', '3 MWp (Solar Only)', '3 MWp (Bundled BESS)'],
+                    datasets: [
+                        {
+                            label: 'Gross CAPEX (RM/Wp)',
+                            data: [2.80, 2.50, 2.25, 2.00, 3.25],
+                            backgroundColor: '#0d9488'
+                        },
+                        {
+                            label: 'Net Effective after GITA (RM/Wp)',
+                            data: [2.12, 1.90, 1.71, 1.52, 2.21],
+                            backgroundColor: '#f59e0b'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': RM ' + context.parsed.y.toFixed(2) + '/Wp';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { title: { display: true, text: 'Unit Cost (RM/Wp)', font: { size: 11 } }, beginAtZero: true }
+                    }
+                }
+            });
+
+            // Chart 2: BESS Turnkey Rates
+            const ctxBess = document.getElementById('chartBessPricing').getContext('2d');
+            new Chart(ctxBess, {
+                type: 'bar',
+                data: {
+                    labels: ['50-200 kWh Racks', '200-500 kWh Cabinets', '2-5 MWh Containers'],
+                    datasets: [
+                        {
+                            label: 'Gross Installed Cost (RM/kWh)',
+                            data: [1475, 1300, 1175],
+                            backgroundColor: '#0f766e'
+                        },
+                        {
+                            label: 'Net Effective Cost after GITA (RM/kWh)',
+                            data: [973, 858, 775],
+                            backgroundColor: '#10b981'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': RM ' + context.parsed.y + '/kWh';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { title: { display: true, text: 'Turnkey Rate (RM/kWh)', font: { size: 11 } }, beginAtZero: true }
+                    }
+                }
+            });
+
+            // Chart 3: RP4 Demand Tariff Surge
+            const ctxRp4 = document.getElementById('chartRp4Tariff').getContext('2d');
+            new Chart(ctxRp4, {
+                type: 'bar',
+                data: {
+                    labels: ['Legacy Commercial MD (C1/C2)', 'RP4 Commercial ToU (Capacity + Network)', 'RP4 NDMV General (Capacity + Network)', 'RP4 High-Peak Industrial'],
+                    datasets: [
+                        {
+                            label: 'Monthly Demand Charge (RM/kW/month)',
+                            data: [37.00, 97.06, 89.27, 98.61],
+                            backgroundColor: ['#94a3b8', '#d97706', '#0d9488', '#b45309']
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Demand Penalty: RM ' + context.parsed.y.toFixed(2) + '/kW/mo';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { title: { display: true, text: 'RM / kW / Month', font: { size: 11 } }, beginAtZero: true }
+                    }
+                }
+            });
+
+            // Chart 4: EPCC Margins Hierarchy
+            const ctxMargins = document.getElementById('chartMargins').getContext('2d');
+            new Chart(ctxMargins, {
+                type: 'bar',
+                indexAxis: 'y',
+                data: {
+                    labels: ['Direct C&I Turnkey', 'Utility Main EPC (LSS/CGPP)', 'Utility BoP Subcontracting', 'High-Voltage Grid Engineering'],
+                    datasets: [
+                        {
+                            label: 'Gross Profit Margin %',
+                            data: [30.0, 18.5, 8.6, 50.0],
+                            backgroundColor: '#0d9488'
+                        },
+                        {
+                            label: 'Core Net Profit Margin %',
+                            data: [12.5, 7.5, -2.5, 28.2],
+                            backgroundColor: '#f59e0b'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.x.toFixed(1) + '%';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'Margin Percentage (%)', font: { size: 11 } }, beginAtZero: true }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

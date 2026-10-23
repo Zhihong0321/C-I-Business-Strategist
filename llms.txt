@@ -1,0 +1,28 @@
+# C&I Business Strategist (Malaysia solar + BESS)
+
+> Knowledge base that turns an AI into a Malaysia commercial & industrial solar, battery storage and Maximum Demand strategist. Read RULES.md first and follow it; then MIND_MAP.md; facts live in kb/. Knowledge as of 23 Oct 2026; research is AI-generated and partly unverified.
+
+## Rules (read first)
+- [RULES.md](https://raw.githubusercontent.com/Zhihong0321/C-I-Business-Strategist/main/RULES.md): role, boot sequence, retrieval loop, truth rules, answer format, gap logging
+- [MIND_MAP.md](https://raw.githubusercontent.com/Zhihong0321/C-I-Business-Strategist/main/MIND_MAP.md): mind map and question → file routing table
+
+## Core knowledge
+- [Big picture](https://raw.githubusercontent.com/Zhihong0321/C-I-Business-Strategist/main/kb/01_BIG_PICTURE.md): market story, key numbers with confidence grades
+- [Index](https://raw.githubusercontent.com/Zhihong0321/C-I-Business-Strategist/main/kb/00_INDEX.md): file map and source registry
+- [Conflicts](https://raw.githubusercontent.com/Zhihong0321/C-I-Business-Strategist/main/kb/registers/conflicts.md): where the reports disagree
+
+## Topics
+- [T01 Tariff and Maximum Demand](https://raw.githubusercontent.com/Zhihong0321/C-I-Business-Strategist/main/kb/topics/T01_tariff_rp4_and_maximum_demand.md)
+- [T02 Solar schemes](https://raw.githubusercontent.com/Zhihong0321/C-I-Business-Strategist/main/kb/topics/T02_solar_schemes_atap_selco_cress.md)
+- [T03 Tax incentives](https://raw.githubusercontent.com/Zhihong0321/C-I-Business-Strategist/main/kb/topics/T03_tax_incentives_gita_gite.md)
+- [T04 Market size and geography](https://raw.githubusercontent.com/Zhihong0321/C-I-Business-Strategist/main/kb/topics/T04_market_size_and_geography.md)
+- [T05 Competitors](https://raw.githubusercontent.com/Zhihong0321/C-I-Business-Strategist/main/kb/topics/T05_competitors_and_providers.md)
+- [T06 Pricing and margins](https://raw.githubusercontent.com/Zhihong0321/C-I-Business-Strategist/main/kb/topics/T06_pricing_margins_payment_terms.md)
+- [T07 Financing and business models](https://raw.githubusercontent.com/Zhihong0321/C-I-Business-Strategist/main/kb/topics/T07_financing_and_business_models.md)
+- [T08 BESS technical and sizing](https://raw.githubusercontent.com/Zhihong0321/C-I-Business-Strategist/main/kb/topics/T08_bess_technical_and_sizing.md)
+- [T09 Regulation and compliance](https://raw.githubusercontent.com/Zhihong0321/C-I-Business-Strategist/main/kb/topics/T09_regulation_safety_compliance.md)
+- [T10 Strategy playbooks](https://raw.githubusercontent.com/Zhihong0321/C-I-Business-Strategist/main/kb/topics/T10_strategy_playbooks_from_reports.md)
+
+## Optional
+- [Single-file pack for upload](https://raw.githubusercontent.com/Zhihong0321/C-I-Business-Strategist/main/dist/PACK_1_RULES_MAP_CORE.md): rules + map + all core knowledge in one file
+- [Open knowledge gaps](https://raw.githubusercontent.com/Zhihong0321/C-I-Business-Strategist/main/gaps/INDEX.md)

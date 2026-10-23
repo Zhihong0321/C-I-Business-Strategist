@@ -1,0 +1,53 @@
+name: Knowledge gap
+description: A question the C&I strategist repo could not answer (paste the AI's GAP block or fill in the fields)
+title: "gap: "
+labels: ["knowledge-gap"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: One line — the question the repo could not answer.
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - high
+        - medium
+        - low
+      default: 1
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why the repo can't answer it
+      description: Not covered / disputed [C##] / stale / single unverified source. Files checked.
+  - type: input
+    id: related
+    attributes:
+      label: Related topics and conflicts
+      placeholder: "T03, C01"
+  - type: textarea
+    id: what_would_answer
+    attributes:
+      label: What would answer it
+      description: Official documents, data or a research prompt.
+  - type: textarea
+    id: interim
+    attributes:
+      label: Interim answer given (unverified)
+  - type: input
+    id: asked_via
+    attributes:
+      label: Asked via
+      placeholder: "ChatGPT / Gemini / Claude"
+  - type: textarea
+    id: gap_block
+    attributes:
+      label: Raw GAP block (optional)
+      description: Paste the AI's === KNOWLEDGE GAP === block here if you have it.
+      render: text

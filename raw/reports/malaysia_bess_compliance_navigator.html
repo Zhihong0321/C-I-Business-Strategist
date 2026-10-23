@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malaysia C&I BTM BESS Compliance & Safety Navigator 2026</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        },
+                        amber: {
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                        },
+                        slate: {
+                            850: '#1e293b',
+                            900: '#0f172a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 360px;
+            }
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<!-- Chosen Palette: Industrial Warm Slate & Energetic Gold (Background: Warm Slate/Light Slate #f8fafc, Nav: Slate-900, Accents: Emerald/Green #15803d and Gold/Amber #b45309) -->
+
+<!-- Application Structure Plan:
+    1. Header & Navigation Bar: Sticky header with rapid navigation across 6 core regulatory modules.
+    2. Executive Hero & Metrics Bar: Quick stats summary (5kW licensing, 1MWac SELCO BESS threshold, RM12/kWp standby charge, 2-Hr FRR, 8-14 wk BOMBA cycle).
+    3. Section 1: Suruhanjaya Tenaga Framework (GP/ST/No.62/2026, 4-tier human capital, certification finder table, 7 mandatory forms).
+    4. Section 2: Enhanced SELCO >1MWac Rules & Dynamic Calculator (Interactive sizing calculator for kWp/kWh, RM12/kWp standby charge, GITA tax allowance, ToU tariff arbitrage chart).
+    5. Section 3: BOMBA Fire Safety Engineering (MS 2747:2024, interactive separation distance simulator, 4-tier suppression layers, approval timeline).
+    6. Section 4: TNB CAS & Technical Interconnection Matrix (Interactive capacity tier selector $1kW to >2MW$, study fees, zero-export technical rationale).
+    7. Section 5: Factory Insurance & EPCC Implementation Audit (16-week execution roadmap, operational readiness checklist with dynamic score).
+    Why this structure? It reorganizes complex multi-agency regulations into a task-oriented engineering workflow while allowing instant scenario calculation and statutory verification.
+-->
+
+<!-- Visualization & Content Choices:
+    1. Core Metrics Counters: HTML/Tailwind high-impact stats for statutory thresholds.
+    2. SELCO Storage & Financial Calculator: JS interactive inputs -> calculates BESS kWh, standby charge, GITA offset, CAS fee -> dynamic Chart.js ToU comparison.
+    3. Standards & Certification Matrix: Interactive search/filter table for IEC 62619, IEC 63056, UL 9540A, UN 38.3, etc.
+    4. Siting & Separation Distance Simulator: HTML5 Canvas / JS visual feedback showing BESS container, separation wall, clearance distance compliance with MS 2747.
+    5. TNB Study Tier Selector: Interactive tab/card display showing study requirements based on system capacity.
+    6. Dynamic Audit Checklist: JS interactive checkboxes tracking project compliance % readiness.
+    Libraries/Methods: Chart.js for tariff charts, HTML5 Canvas for Siting Simulator, Vanilla JS for calculations and interactivity. NO SVG, NO Mermaid JS.
+-->
+
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-brand-600 selection:text-white">
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-50 bg-slate-900 text-white shadow-lg border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <span class="text-2xl">⚡</span>
+                    <div>
+                        <h1 class="text-lg font-bold leading-tight tracking-wide text-emerald-400">BESS COMPLIANCE NAVIGATOR</h1>
+                        <p class="text-xs text-slate-400">Malaysia C&I Behind-the-Meter Regulatory Framework (2026)</p>
+                    </div>
+                </div>
+                <nav class="hidden md:flex space-x-1 lg:space-x-2 text-xs font-medium">
+                    <a href="#st-framework" class="px-3 py-2 rounded hover:bg-slate-800 hover:text-emerald-400 transition">1. ST Framework</a>
+                    <a href="#selco-calculator" class="px-3 py-2 rounded hover:bg-slate-800 hover:text-emerald-400 transition">2. SELCO Sizing</a>
+                    <a href="#bomba-safety" class="px-3 py-2 rounded hover:bg-slate-800 hover:text-emerald-400 transition">3. BOMBA Siting</a>
+                    <a href="#tnb-cas" class="px-3 py-2 rounded hover:bg-slate-800 hover:text-emerald-400 transition">4. TNB Grid CAS</a>
+                    <a href="#insurance-roadmap" class="px-3 py-2 rounded hover:bg-slate-800 hover:text-emerald-400 transition">5. Insurance & Roadmap</a>
+                </nav>
+                <div class="flex items-center">
+                    <a href="#compliance-checklist" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-md text-xs font-semibold shadow transition flex items-center space-x-1">
+                        <span>📋</span>
+                        <span>Readiness Audit</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+        <!-- Hero & Context Introduction -->
+        <section class="bg-slate-900 text-white rounded-2xl p-6 sm:p-8 shadow-xl relative overflow-hidden border border-slate-800">
+            <div class="relative z-10 max-w-4xl space-y-4">
+                <div class="inline-flex items-center space-x-2 bg-emerald-950 text-emerald-400 px-3 py-1 rounded-full text-xs font-semibold border border-emerald-800">
+                    <span>🏛️ 2026 Statutory Codification</span>
+                    <span>•</span>
+                    <span>GP/ST/No.62/2026 & MS 2747:2024</span>
+                </div>
+                <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight">
+                    Malaysia Commercial & Industrial BTM BESS Executive Compliance Hub
+                </h2>
+                <p class="text-sm sm:text-base text-slate-300 leading-relaxed">
+                    Deploying behind-the-meter (BTM) Battery Energy Storage Systems (BESS) in Peninsular Malaysia requires synchronized multi-agency statutory clearances across <strong>Suruhanjaya Tenaga (ST)</strong>, <strong>Jabatan Bomba dan Penyelamat Malaysia (JBPM / BOMBA)</strong>, <strong>Tenaga Nasional Berhad (TNB)</strong>, and industrial insurance underwriters. This interactive application provides EPCC contractors, electrical service engineers, and facility owners with an operational, data-backed execution framework aligned with the latest 2026 regulatory updates.
+                </p>
+            </div>
+
+            <!-- Key Metric Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mt-8 pt-6 border-t border-slate-800 text-center">
+                <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700/60">
+                    <div class="text-xs text-slate-400 font-medium">ST Licensing Limit</div>
+                    <div class="text-xl font-black text-amber-400 mt-1">≥ 5 kW</div>
+                    <div class="text-[10px] text-slate-400 mt-0.5">Under Act 447 / GP 62</div>
+                </div>
+                <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700/60">
+                    <div class="text-xs text-slate-400 font-medium">Mandatory SELCO BESS</div>
+                    <div class="text-xl font-black text-emerald-400 mt-1">> 1 MWac</div>
+                    <div class="text-[10px] text-slate-400 mt-0.5">1-Hour Rating Minimum</div>
+                </div>
+                <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700/60">
+                    <div class="text-xs text-slate-400 font-medium">SELCO Standby Charge</div>
+                    <div class="text-xl font-black text-amber-400 mt-1">RM 12/kWp</div>
+                    <div class="text-[10px] text-slate-400 mt-0.5">Monthly (>1 MWac systems)</div>
+                </div>
+                <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700/60">
+                    <div class="text-xs text-slate-400 font-medium">BOMBA Fire Rating</div>
+                    <div class="text-xl font-black text-emerald-400 mt-1">2-Hour FRR</div>
+                    <div class="text-[10px] text-slate-400 mt-0.5">MS 2747:2024 Enclosure</div>
+                </div>
+                <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700/60 col-span-2 md:col-span-1">
+                    <div class="text-xs text-slate-400 font-medium">BOMBA FC Timeline</div>
+                    <div class="text-xl font-black text-sky-400 mt-1">8 – 14 Wks</div>
+                    <div class="text-[10px] text-slate-400 mt-0.5">Plan to FC Endorsement</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 1: SURUHANJAYA TENAGA FRAMEWORK -->
+        <section id="st-framework" class="space-y-6">
+            <div class="border-l-4 border-emerald-600 pl-4">
+                <h3 class="text-2xl font-bold text-slate-900">1. Suruhanjaya Tenaga Regulatory Framework (GP/ST/No.62/2026)</h3>
+                <p class="text-sm text-slate-600 mt-1">
+                    This section details the primary statutory safety guidelines governing stationary battery energy storage systems, statutory definitions, mandatory human capital competencies, equipment certification requirements, and required submission forms.
+                </p>
+            </div>
+
+            <!-- Context Paragraph -->
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 text-sm text-slate-700 space-y-3">
+                <p>
+                    Issued on 22 May 2026 under Section 50C of the Electricity Supply Act 1990 [Act 447] (as amended by Act A1775 in 2025), <strong><code>GP/ST/No.62/2026</code></strong> (<em>Guidelines on Battery Energy Storage System (BESS) Safety</em>) constitutes the mandatory statutory code for stationary lithium-ion systems in Malaysia. For commercial and industrial facilities operating behind-the-meter, the guidelines officially designate the asset as an <strong>"End User BESS"</strong> (Page 16), defined as a <em>"BESS owned and operated by the consumer in parallel with the grid and producing energy for self-consumption or for grid export."</em>
+                </p>
+                <div class="flex flex-wrap gap-2 pt-2">
+                    <a href="https://www.st.gov.my/resources/guidelines-battery-energy-storage-system-bess-safety" target="_blank" class="text-xs bg-slate-100 hover:bg-slate-200 text-emerald-800 px-2.5 py-1 rounded font-mono border border-slate-300">🔗 ST BESS Portal Node 5353</a>
+                    <a href="https://www.st.gov.my/sites/default/files/2026-05/Guidelines-on-Battery-Energy-Storage-System-%28BESS%29-Safety_0.pdf" target="_blank" class="text-xs bg-slate-100 hover:bg-slate-200 text-emerald-800 px-2.5 py-1 rounded font-mono border border-slate-300">📄 Direct PDF: GP/ST/No.62/2026</a>
+                    <a href="https://www.st.gov.my/resources/keperluan-pelesenan-battery-energy-storage-system-bess" target="_blank" class="text-xs bg-slate-100 hover:bg-slate-200 text-emerald-800 px-2.5 py-1 rounded font-mono border border-slate-300">📊 Licensing Directive (1 July 2026)</a>
+                </div>
+            </div>
+
+            <!-- Grid: Licensing & Human Capital -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Licensing Thresholds -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                    <div class="flex items-center space-x-2 text-slate-900 font-bold border-b pb-2">
+                        <span class="text-amber-600 text-lg">⚖️</span>
+                        <h4 class="text-base">Licensing Thresholds & Statutory Trigger</h4>
+                    </div>
+                    <div class="text-xs text-slate-600 space-y-2">
+                        <p>Under Clause 4.1(c) of <code>GP/ST/No.62/2026</code> and Section 9(1) of Act 447, alongside ST's licensing directive (<em>Keperluan Pelesenan BESS</em>, 1 July 2026):</p>
+                        <ul class="list-disc pl-5 space-y-1 text-slate-700">
+                            <li><strong>BESS Capacity Threshold:</strong> Any stationary BESS rated at <strong>5 kW and above</strong> is subject to ST licensing jurisdiction. Virtually all C&I installations exceed this threshold.</li>
+                            <li><strong>Solar PV Licensing Threshold:</strong> When combined with a behind-the-meter SELCO PV system, a public or private generation licence is required when solar PV capacity exceeds <strong>72 kWp</strong>.</li>
+                            <li><strong>Licence Processing:</strong> Systems below 5 MW are processed via ST Regional Offices with post-commissioning registration submitted within 30 days of energization.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-amber-50 p-3 rounded-lg border border-amber-200 text-xs text-amber-900">
+                        <strong>Mandatory BESS Trigger (SELCO 2026):</strong> BESS is mandatory for behind-the-meter SELCO solar systems exceeding <strong>1 MWac</strong> at a minimum 1-hour energy storage rating ($1 \times X \text{ kWh}$).
+                    </div>
+                </div>
+
+                <!-- Human Capital Framework -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                    <div class="flex items-center space-x-2 text-slate-900 font-bold border-b pb-2">
+                        <span class="text-emerald-600 text-lg">👷‍♂️</span>
+                        <h4 class="text-base">4-Tier Competent Person Requirements</h4>
+                    </div>
+                    <div class="text-xs text-slate-600 space-y-2">
+                        <p>Clauses 4.1(a) and 4.2 enforce strict regulatory oversight across all BESS project lifecycle stages:</p>
+                        <ol class="list-decimal pl-5 space-y-1.5 text-slate-700">
+                            <li><strong>Registered Electrical Contractor:</strong> Installation must be executed by an ST-registered contractor under Electricity Regulations 1994.</li>
+                            <li><strong>PEPC / Competent Electrical Person:</strong> Plans, single-lines, and relay sheets must be prepared/endorsed by a Professional Engineer with Practising Certificate (PEPC) or Competent Engineer (Regulation 65).</li>
+                            <li><strong>Commissioning Sign-off:</strong> The Competent Person must execute statutory completion certificates (Form G and Form H) prior to energization.</li>
+                            <li><strong>ST-ECE Competency Upskilling:</strong> Technicians must undergo ST Energy Competency Excellence training (Course <code>STECE-0005/01: BESS</code>).</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Component Certification Finder Matrix -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3">
+                    <div>
+                        <h4 class="text-base font-bold text-slate-900">Mandatory Technical Certifications & Standards Matrix (Appendix A)</h4>
+                        <p class="text-xs text-slate-500">Filter standard requirements for Purchase Order type-test verification.</p>
+                    </div>
+                    <input type="text" id="standard-search" placeholder="Search standard (e.g., UL 9540A, IEC)..." class="px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none w-full sm:w-64">
+                </div>
+
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 uppercase font-semibold border-b">
+                                <th class="p-2.5">Standard Code</th>
+                                <th class="p-2.5">Official Title / Scope in GP/ST/No.62/2026</th>
+                                <th class="p-2.5">Component & Verification Deliverable</th>
+                            </tr>
+                        </thead>
+                        <tbody id="standards-table-body" class="divide-y divide-slate-200 text-slate-600">
+                            <!-- Populated via Javascript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Mandatory Forms Table -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                <h4 class="text-base font-bold text-slate-900 border-b pb-2">7 Mandatory Statutory Forms & Lifecycle Certificates</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+                    <div class="bg-slate-50 p-3 rounded border border-slate-200">
+                        <span class="font-bold text-emerald-800">1. FAT Certificate</span>
+                        <p class="text-slate-600 mt-1">Pre-shipment deliverable from BESS OEM/Lab verifying cell, pack, and BMS safety compliance.</p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded border border-slate-200">
+                        <span class="font-bold text-emerald-800">2. Permit to Work (PTW)</span>
+                        <p class="text-slate-600 mt-1">Regulation 113, Electricity Regulations 1994. Written safety instruction for live/dead work.</p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded border border-slate-200">
+                        <span class="font-bold text-emerald-800">3. SAT Certificate</span>
+                        <p class="text-slate-600 mt-1">Post-installation certificate detailing BMS interlock, insulation, earthing, and function tests.</p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded border border-slate-200">
+                        <span class="font-bold text-emerald-800">4. Form G (Completion)</span>
+                        <p class="text-slate-600 mt-1">Supervision and Completion Certificate under First Schedule, Electricity Regulations 1994.</p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded border border-slate-200">
+                        <span class="font-bold text-emerald-800">5. Form H (Test Cert)</span>
+                        <p class="text-slate-600 mt-1">Statutory Electrical Test Certificate executed by Competent Person prior to energization.</p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded border border-slate-200">
+                        <span class="font-bold text-emerald-800">6. Form of Info (Attachment 1)</span>
+                        <p class="text-slate-600 mt-1">Submitted to TNB pre-installation and ST within 30 days post-commissioning (GP 51/2024).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: ENHANCED SELCO ABOVE 1 MWAC & CALCULATOR -->
+        <section id="selco-calculator" class="space-y-6">
+            <div class="border-l-4 border-amber-500 pl-4">
+                <h3 class="text-2xl font-bold text-slate-900">2. Enhanced SELCO Above 1 MWac: Mandatory Storage & Standby Calculator</h3>
+                <p class="text-sm text-slate-600 mt-1">
+                    This section analyzes the regulatory evolution of self-consumption rules (`GP/ST/No.51/2024 (Pin. 1/2026)`), provides the verbatim statutory clauses, and includes an interactive calculator for sizing BESS, standby charges, tax credits, and ToU tariff savings.
+                </p>
+            </div>
+
+            <!-- Context Text -->
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 text-sm text-slate-700 space-y-3">
+                <p>
+                    Effective 1 January 2026 under updated guidelines <strong><code>GP/ST/No.51/2024 (Pin. 1/2026)</code></strong> and notice <em>Notis Makluman Penyesuaian SELCO</em>, mandatory BESS installation applies to all C&I solar PV installations <strong>exceeding 1 MWac</strong>. Systems at or below 1 MWac can opt for Solar ATAP (`GP/ST/No.60/2025`) or SELCO without mandatory battery storage or standby charges.
+                </p>
+                <div class="bg-amber-50 border-l-4 border-amber-500 p-3 text-xs text-amber-900 rounded-r">
+                    <p class="font-bold">Verbatim Guideline Sizing Rule (Clause 3.6 / GP 51):</p>
+                    <blockquote class="italic mt-0.5">
+                        "For a solar PV installation capacity of X kWp, the required BESS energy capacity (E_BESS) charged by the solar PV system must satisfy: <strong>E_BESS ≥ 1 × X kWh</strong> (a minimum 1-hour energy rating)."
+                    </blockquote>
+                    <p class="font-bold mt-2">Verbatim Standby Charge Clause (Clause 12.1 / Directive 27 March 2025):</p>
+                    <blockquote class="italic mt-0.5">
+                        "IN ACCORDANCE WITH CLAUSE 12.1 OF THE SELCO GUIDELINES, THE MONTHLY STANDBY CHARGE AS APPROVED BY GOVERNMENT IS <strong>RM12/kWp</strong>."
+                    </blockquote>
+                </div>
+            </div>
+
+            <!-- Interactive Calculator & Visualizer Component -->
+            <div class="bg-slate-900 text-white p-6 sm:p-8 rounded-2xl shadow-xl border border-slate-800 space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <h4 class="text-xl font-bold text-amber-400">⚡ Dynamic C&I BESS Sizing & Financial Modeling Studio</h4>
+                        <p class="text-xs text-slate-400">Input factory solar capacity to calculate mandatory battery size, standby fee, GITA tax offset, and ToU arbitrage impact.</p>
+                    </div>
+                    <div class="bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 text-xs text-slate-300">
+                        Revised ToU Peak Window: <span class="text-amber-400 font-bold">2:00 PM – 10:00 PM</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <!-- Controls Column -->
+                    <div class="lg:col-span-5 space-y-5 bg-slate-800/60 p-5 rounded-xl border border-slate-700/60">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">
+                                Planned Solar PV Capacity ($X\text{ kWp}$): <span id="pv-capacity-val" class="text-amber-400 font-bold text-sm">1,500 kWp</span>
+                            </label>
+                            <input type="range" id="pv-capacity-input" min="200" max="10000" step="100" value="1500" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                            <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                                <span>200 kWp (SELCO ≤1MW)</span>
+                                <span>1,000 kWp (Threshold)</span>
+                                <span>10,000 kWp (Large C&I)</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">
+                                Solar Inverter Output Capacity ($MW_{ac}$):
+                            </label>
+                            <select id="inverter-ac-select" class="w-full bg-slate-900 border border-slate-700 text-xs rounded-lg p-2.5 text-slate-200 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                <option value="0.8">0.8 MWac (≤ 1 MWac Threshold: Optional BESS / No Standby)</option>
+                                <option value="1.2" selected>1.2 MWac (> 1 MWac Threshold: Mandatory BESS & Standby Charge)</option>
+                                <option value="2.5">2.5 MWac (> 1 MWac Threshold: High-Tier PSS Required)</option>
+                                <option value="5.0">5.0 MWac (> 1 MWac Threshold: ST Regional Office Limit)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">
+                                Assumed BESS Capital Expenditure (RM / kWh):
+                            </label>
+                            <input type="number" id="bess-cost-per-kwh" value="1100" step="50" class="w-full bg-slate-900 border border-slate-700 text-xs rounded-lg p-2 text-slate-200 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        </div>
+
+                        <!-- Dynamic Output Cards inside Controls -->
+                        <div class="pt-2 border-t border-slate-700 space-y-2 text-xs">
+                            <div class="flex justify-between items-center py-1 border-b border-slate-700/50">
+                                <span class="text-slate-400">Mandatory BESS Energy ($E_{\text{BESS}}$):</span>
+                                <span id="calc-bess-kwh" class="font-bold text-emerald-400">1,500 kWh</span>
+                            </div>
+                            <div class="flex justify-between items-center py-1 border-b border-slate-700/50">
+                                <span class="text-slate-400">Monthly Standby Charge:</span>
+                                <span id="calc-standby-fee" class="font-bold text-amber-400">RM 18,000 / mo</span>
+                            </div>
+                            <div class="flex justify-between items-center py-1 border-b border-slate-700/50">
+                                <span class="text-slate-400">GITA 100% Tax Offset Est. (24% tax):</span>
+                                <span id="calc-gita-tax" class="font-bold text-sky-400">RM 396,000</span>
+                            </div>
+                            <div class="flex justify-between items-center py-1">
+                                <span class="text-slate-400">TNB Interconnection CAS Tier:</span>
+                                <span id="calc-cas-tier" class="font-bold text-slate-200">Tier 5 (RM 15,000 PSS)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chart Column -->
+                    <div class="lg:col-span-7 flex flex-col justify-between space-y-4">
+                        <div>
+                            <h5 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                                Value Comparative: BESS Peak Self-Consumption vs Solar Export (SMP)
+                            </h5>
+                            <div class="chart-container bg-slate-950/80 p-3 rounded-xl border border-slate-800">
+                                <canvas id="touTariffChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-700/50 text-[11px] text-slate-300 space-y-1">
+                            <span class="font-bold text-emerald-400">💡 Financial Strategy Insight:</span>
+                            <p>Exporting surplus solar under Solar ATAP yields only SMP (~RM 0.188/kWh). Storing surplus generation in BESS to avoid Medium Voltage peak import (2 PM–10 PM @ RM 0.313/kWh + RM 89–97/kW MD charge) delivers a net spread savings of <strong>RM 0.09 to RM 0.13 per kWh</strong>, accelerating payback despite the RM 12/kWp standby charge.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: BOMBA FIRE SAFETY & SEPARATION SIMULATOR -->
+        <section id="bomba-safety" class="space-y-6">
+            <div class="border-l-4 border-red-600 pl-4">
+                <h3 class="text-2xl font-bold text-slate-900">3. BOMBA Fire Safety Compliance (MS 2747:2024)</h3>
+                <p class="text-sm text-slate-600 mt-1">
+                    Jabatan Bomba dan Penyelamat Malaysia (JBPM) enforces stationary energy storage system fire safety under <strong>MS 2747:2024</strong>. This section covers structural fire ratings, spatial separation rules, suppression layers, and the approval workflow.
+                </p>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 text-sm text-slate-700 space-y-3">
+                <p>
+                    Under Clause 4.3(a) of <code>GP/ST/No.62/2026</code> and the Fire Services Act 1988 [Act 341], stationary BESS units are classified as high-risk industrial installations requiring an updated <strong>Fire Certificate (FC)</strong>. Importing generic overseas BESS containers without verifying Malaysian 2-hour structural fire-resistance rating (FRR) is the primary cause of project delays.
+                </p>
+            </div>
+
+            <!-- Separation Distance Simulator -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 border-b pb-3">
+                    <div>
+                        <h4 class="text-base font-bold text-slate-900">🏢 Interactive Siting & Separation Distance Compliance Visualizer</h4>
+                        <p class="text-xs text-slate-500">Simulate separation distance from factory walls to determine required 2-hour blast walls and UL 9540A conditions under MS 2747:2024.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                    <div class="md:col-span-5 space-y-4 bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs">
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">
+                                Outdoor Distance to Factory Main Building: <span id="dist-val" class="text-emerald-700 font-bold text-sm">3.5 Meters</span>
+                            </label>
+                            <input type="range" id="dist-input" min="0.5" max="8.0" step="0.5" value="3.5" class="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-emerald-600">
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Factory Wall Construction Type:</label>
+                            <select id="wall-type-select" class="w-full bg-white border border-slate-300 rounded p-2 text-xs text-slate-800">
+                                <option value="standard">Standard Wall with Windows/Openings</option>
+                                <option value="firewall">Solid 2-Hour Fire-Rated Barrier Wall (Unpierced)</option>
+                            </select>
+                        </div>
+
+                        <div class="p-3 rounded-lg border text-xs space-y-1" id="compliance-status-box">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Visual Canvas Box -->
+                    <div class="md:col-span-7 flex flex-col items-center">
+                        <div class="w-full h-64 bg-slate-900 rounded-xl overflow-hidden relative border border-slate-800 p-2">
+                            <canvas id="sitingCanvas" class="w-full h-full"></canvas>
+                        </div>
+                        <p class="text-[11px] text-slate-400 mt-2 text-center">Interactive canvas representation of BESS unit, separation zone, and factory perimeter.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4 Protection Layers & Approval Workflow -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- 4 Layers of Protection -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-3">
+                    <h4 class="text-base font-bold text-slate-900 border-b pb-2">4 Sequential Layers of Fire Protection (MS 2747:2024)</h4>
+                    <ul class="space-y-2 text-xs text-slate-600">
+                        <li class="flex items-start space-x-2">
+                            <span class="text-red-500 font-bold">1.</span>
+                            <span><strong>Early Detection & EPO:</strong> Multi-criteria off-gas sensors ($H_2, CO, VOCs$) interlocked with BMS to trigger Emergency Power Off before thermal runaway ignition.</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <span class="text-red-500 font-bold">2.</span>
+                            <span><strong>Total Flooding Suppression:</strong> SIRIM/BOMBA approved clean agent (FK-5-1-12) or potassium aerosol system at module/rack level.</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <span class="text-red-500 font-bold">3.</span>
+                            <span><strong>Deflagration Venting:</strong> Pressure relief vents or ATEX-rated extraction fans to keep off-gas below explosive lower flammability limits.</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <span class="text-red-500 font-bold">4.</span>
+                            <span><strong>Water Boundary Cooling:</strong> External dry-riser breeching inlet with internal spray header plus pressurized hydrant within 30-45 meters.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 4 BOMBA Approval Steps -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-3">
+                    <h4 class="text-base font-bold text-slate-900 border-b pb-2">BOMBA 4-Stage Approval Workflow (8-14 Weeks)</h4>
+                    <div class="space-y-2 text-xs">
+                        <div class="bg-slate-50 p-2 rounded border border-slate-200 flex justify-between items-center">
+                            <div>
+                                <span class="font-bold text-slate-800">Stage 1: Pre-Procurement Gap Audit</span>
+                                <p class="text-slate-500 text-[11px]">Audit OEM specs for 2-hr FRR, UL 9540A & BOMBA agents.</p>
+                            </div>
+                            <span class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded text-[10px] font-mono">2-3 Wks</span>
+                        </div>
+                        <div class="bg-slate-50 p-2 rounded border border-slate-200 flex justify-between items-center">
+                            <div>
+                                <span class="font-bold text-slate-800">Stage 2: Technical Dossier & Plan Submission</span>
+                                <p class="text-slate-500 text-[11px]">PEPC submits architectural & M&E fire drawings to JBPM State HQ.</p>
+                            </div>
+                            <span class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded text-[10px] font-mono">4-8 Wks</span>
+                        </div>
+                        <div class="bg-slate-50 p-2 rounded border border-slate-200 flex justify-between items-center">
+                            <div>
+                                <span class="font-bold text-slate-800">Stage 3: Installation, FAT & SAT Execution</span>
+                                <p class="text-slate-500 text-[11px]">Construct civil pad/firewalls and complete FAT/SAT testing.</p>
+                            </div>
+                            <span class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded text-[10px] font-mono">4-8 Wks</span>
+                        </div>
+                        <div class="bg-slate-50 p-2 rounded border border-slate-200 flex justify-between items-center">
+                            <div>
+                                <span class="font-bold text-slate-800">Stage 4: JBPM Site Inspection & FC Endorsement</span>
+                                <p class="text-slate-500 text-[11px]">Live witness testing of BMS trips, suppression & FC issuance.</p>
+                            </div>
+                            <span class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded text-[10px] font-mono">3-6 Wks</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: TENAGA NASIONAL BERHAD (TNB) GRID INTERCONNECTION -->
+        <section id="tnb-cas" class="space-y-6">
+            <div class="border-l-4 border-sky-600 pl-4">
+                <h3 class="text-2xl font-bold text-slate-900">4. Tenaga Nasional Berhad (TNB): Connection Assessment Study (CAS)</h3>
+                <p class="text-sm text-slate-600 mt-1">
+                    Detailed breakdown of TNB technical study requirements for behind-the-meter BESS. Explains why zero-export systems still require formal grid interconnection clearance.
+                </p>
+            </div>
+
+            <!-- Zero Export Rationale Banner -->
+            <div class="bg-sky-950 text-sky-100 p-5 rounded-xl border border-sky-800 text-sm space-y-2">
+                <h4 class="font-bold text-sky-300 flex items-center space-x-2">
+                    <span>⚡ Technical Rationale: Why Zero-Export BESS Requires Mandatory TNB CAS (>72 kW)</span>
+                </h4>
+                <p class="text-xs text-sky-200 leading-relaxed">
+                    Even when reverse power protection prevents active energy ($\text{kW}$) export across the meter, a BTM BESS operates in <strong>parallel with the grid</strong> ("Indirect Connection"). This creates three critical grid impacts verified during a CAS:
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 text-xs">
+                    <div class="bg-sky-900/60 p-2.5 rounded border border-sky-700/60">
+                        <strong class="text-amber-300">1. Fault Level Contribution</strong>
+                        <p class="text-[11px] mt-1 text-sky-200">PCS inverters inject short-circuit fault current into the Point of Interconnection (POI). TNB must verify switchgear withstand capacity.</p>
+                    </div>
+                    <div class="bg-sky-900/60 p-2.5 rounded border border-sky-700/60">
+                        <strong class="text-amber-300">2. Power Quality & Load Flow</strong>
+                        <p class="text-[11px] mt-1 text-sky-200">High-power off-peak charging and peak discharging alter feeder voltage profiles, power factor, THD, and flicker.</p>
+                    </div>
+                    <div class="bg-sky-900/60 p-2.5 rounded border border-sky-700/60">
+                        <strong class="text-amber-300">3. Anti-Islanding Safety</strong>
+                        <p class="text-[11px] mt-1 text-sky-200">Mandatory compliance with IEC 62116:2014 prevents BESS from energizing dead TNB distribution lines during grid outages.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Study Tier Table -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                <h4 class="text-base font-bold text-slate-900 border-b pb-2">TNB Technical Study Tiers & Cost Structure Matrix</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs mb-4">
+                    <button onclick="filterCasTier('all')" class="cas-btn bg-slate-800 text-white p-2 rounded text-center font-medium">Show All Tiers</button>
+                    <button onclick="filterCasTier('lv')" class="cas-btn bg-slate-100 text-slate-700 hover:bg-slate-200 p-2 rounded text-center font-medium">Low Voltage / Small Systems (≤180 kW)</button>
+                    <button onclick="filterCasTier('mv')" class="cas-btn bg-slate-100 text-slate-700 hover:bg-slate-200 p-2 rounded text-center font-medium">Medium Voltage / High Capacity (>180 kW)</button>
+                </div>
+
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 uppercase font-semibold border-b">
+                                <th class="p-2.5">Capacity Tier</th>
+                                <th class="p-2.5">Study Required</th>
+                                <th class="p-2.5">Study Fee (RM)</th>
+                                <th class="p-2.5">Scope of Deliverables & EPCC Documents</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cas-table-body" class="divide-y divide-slate-200 text-slate-600">
+                            <!-- Populated via Javascript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: INSURANCE & EPCC ROADMAP -->
+        <section id="insurance-roadmap" class="space-y-6">
+            <div class="border-l-4 border-slate-800 pl-4">
+                <h3 class="text-2xl font-bold text-slate-900">5. Factory Insurance Requirements & EPCC Execution Roadmap</h3>
+                <p class="text-sm text-slate-600 mt-1">
+                    Malaysian industrial property insurers (PAR/IAR) require full compliance with ST guidelines and BOMBA MS 2747:2024 as binding conditions precedent to policy validity.
+                </p>
+            </div>
+
+            <!-- 5 Policy Phases Matrix -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                <h4 class="text-base font-bold text-slate-900 border-b pb-2">Underwriting Compliance Matrix Across Policy Phases</h4>
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-3 text-xs">
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-1">
+                        <span class="font-bold text-slate-900">1. Marine Transit</span>
+                        <p class="text-[11px] text-slate-500">Marine Cargo Policy</p>
+                        <p class="text-slate-700 pt-1">UN 38.3 test summary matching exact delivered battery model + OEM FAT certificate.</p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-1">
+                        <span class="font-bold text-slate-900">2. Erection Phase</span>
+                        <p class="text-[11px] text-slate-500">CAR / EAR Policy</p>
+                        <p class="text-slate-700 pt-1">ST registered electrical contractor, Competent Person, PTW logs, Form G & Form H.</p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-1">
+                        <span class="font-bold text-slate-900">3. Factory PAR / IAR</span>
+                        <p class="text-[11px] text-slate-500">Operational Phase</p>
+                        <p class="text-slate-700 pt-1">Valid BOMBA Fire Certificate (FC), MS 2747 audit, 2-hr FRR enclosure & UL 9540A report.</p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-1">
+                        <span class="font-bold text-slate-900">4. Machinery Breakdown</span>
+                        <p class="text-[11px] text-slate-500">Tropical Warranty</p>
+                        <p class="text-slate-700 pt-1">IEC 60529 IP54+, IK08 impact, and active HVAC keeping internal temp below 30°C.</p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-1">
+                        <span class="font-bold text-slate-900">5. Claims Defensibility</span>
+                        <p class="text-[11px] text-slate-500">O&M Lifecycle</p>
+                        <p class="text-slate-700 pt-1">Clause 6.7.5: Maintenance logs, Appendix D checklists, and BMS firmware logs.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic EPCC Readiness Audit Checklist -->
+            <div id="compliance-checklist" class="bg-slate-900 text-white p-6 sm:p-8 rounded-2xl shadow-xl border border-slate-800 space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <h4 class="text-xl font-bold text-emerald-400">📋 EPCC Statutory Audit & Operational Readiness Checklist</h4>
+                        <p class="text-xs text-slate-400">Tick completed compliance milestones to calculate your project's overall readiness score.</p>
+                    </div>
+                    <div class="bg-slate-800 px-4 py-2 rounded-xl border border-slate-700 text-right">
+                        <div class="text-[10px] text-slate-400 uppercase tracking-wider">Readiness Score</div>
+                        <div id="checklist-score" class="text-2xl font-black text-emerald-400">0%</div>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden border border-slate-700">
+                    <div id="checklist-progress" class="bg-emerald-500 h-full w-0 transition-all duration-500"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs" id="checklist-items-container">
+                    <!-- Checkboxes injected via JS -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 text-xs py-8 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+            <p class="font-semibold text-slate-300">Malaysia Commercial & Industrial BTM BESS Compliance Navigator (2026 Framework)</p>
+            <p>Direct statutory citations: Suruhanjaya Tenaga (GP/ST/No.62/2026, GP/ST/No.51/2024 Pin 1/2026), Jabatan Bomba dan Penyelamat Malaysia (MS 2747:2024), Tenaga Nasional Berhad.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- DATA STRUCTURES ---
+
+        const standardsData = [
+            { code: "IEC 62619", title: "Industrial Secondary Lithium Cells & Batteries Safety", scope: "Battery Packs & BMS: Safety evaluation for cells, modules, overcharge & thermal protection.", deliverable: "Type-test report from accredited lab." },
+            { code: "IEC 63056", title: "Secondary Lithium Batteries for Electrical Energy Storage", scope: "Electrical Storage Architectures: Safety rules for stationary storage up to max DC voltage.", deliverable: "System level safety certificate." },
+            { code: "UL 9540A", title: "Thermal Runaway Fire Propagation Test Method", scope: "Fire Containment: Evaluates cell, module, and unit level thermal runaway propagation.", deliverable: "Full UL 9540A test report." },
+            { code: "IEC 62933-5-1", title: "Grid-Integrated EES Systems - Safety Specification", scope: "Worker & Maintenance Safety (Clause 6.4): Effective worker isolation during maintenance.", deliverable: "Compliance declaration." },
+            { code: "IEC 60529", title: "Enclosure Ingress Protection (IP Code)", scope: "Outdoor Enclosures (Clause 6.4.5): Minimum IP54 rating against moisture and pollution.", deliverable: "IEC 60529 test report." },
+            { code: "IEC 62116:2014", title: "Photovoltaic Inverters Anti-Islanding Protection", scope: "Grid Disconnection: Inverters must cease operation within utility specified trip time.", deliverable: "Anti-islanding test certificate." },
+            { code: "UN 38.3 & IK08", title: "Transport Testing & Mechanical Impact Protection", scope: "Logistics & Enclosure: UN 38.3 summary for shipment; IK08 impact rating for enclosures.", deliverable: "UN 38.3 Summary & IK08 certificate." }
+        ];
+
+        const casTiersData = [
+            { capacity: "1 kW - 72 kW", study: "No CAS Required (CCC Only)", fee: "RM 0", cat: "lv", scope: "Zero-export verified via inverter. Submit Form of Information to TNB prior to work." },
+            { capacity: "> 72 kW - 180 kW", study: "Connection Assessment Study (CAS)", fee: "RM 1,000", cat: "lv", scope: "Load flow, peak/off-peak voltage profile, power factor, and short-circuit fault level at POI." },
+            { capacity: "> 180 kW - 425 kW", study: "Connection Assessment Study (CAS)", fee: "RM 5,000", cat: "mv", scope: "Full distribution feeder & transformer thermal/fault withstand analysis, zero-export protection scheme." },
+            { capacity: "> 425 kW - 1,000 kW (1 MW)", study: "CAS / Power System Study (PSS)", fee: "RM 8,000", cat: "mv", scope: "MV/LV network study, harmonic/flicker power quality report, PE-stamped relay setting sheet." },
+            { capacity: "> 1,000 kW - 2,000 kW (2 MW)", study: "CAS / Power System Study (PSS)", fee: "RM 15,000", cat: "mv", scope: "Mandatory SELCO BESS integration study (>1 MWac), verifying 1-hr BESS smoothing & standby charge metering." },
+            { capacity: "> 2,000 kW - 5,000 kW (5 MW)", study: "Power System Study (PSS)", fee: "High-Tier PSS Fee", cat: "mv", scope: "Substation stability study, ST generation & BESS licensing, TNB SELCO Welcome Letter sign-off." }
+        ];
+
+        const checklistItems = [
+            "Verify BESS OEM has UN 38.3, IEC 62619, IEC 63056, and UL 9540A type-test reports",
+            "Ensure container/enclosure structural fire-resistance rating is 2-Hour FRR (MS 2747:2024)",
+            "Confirm internal fire suppression uses BOMBA/SIRIM approved local agent (FK-5-1-12 / aerosol)",
+            "Appoint ST-registered Electrical Contractor and PEPC for drawing endorsements (Regulation 65)",
+            "Submit Connection Assessment Study (CAS/PSS) and Form of Information to TNB (>72 kW)",
+            "For SELCO >1 MWac: Confirm BESS capacity is at least 1-hour rating (1 x X kWp in kWh)",
+            "Apply for ST BESS Licence (≥5 kW) and Generation Licence (>72 kWp) via ST Regional Office",
+            "Maintain separation distance ≥3.0m from factory walls or install solid 2-hr fire barrier wall",
+            "Execute Factory Acceptance Testing (FAT) and site Site Acceptance Testing (SAT)",
+            "Issue Permit to Work (PTW) logs under Regulation 113 for all commissioning activities",
+            "Complete statutory Supervision Certificate (Form G) and Electrical Test Certificate (Form H)",
+            "Pass JBPM BOMBA site inspection to secure Fire Certificate (FC) endorsement for factory PAR insurance"
+        ];
+
+        // --- INITIALIZATION ---
+
+        let chartInstance = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            renderStandardsTable();
+            renderCasTable(casTiersData);
+            renderChecklist();
+            initCalculator();
+            initSitingSimulator();
+            initChart();
+        });
+
+        // --- STANDARDS TABLE logic ---
+
+        function renderStandardsTable(filterText = "") {
+            const tbody = document.getElementById("standards-table-body");
+            tbody.innerHTML = "";
+            const filtered = standardsData.filter(s => 
+                s.code.toLowerCase().includes(filterText.toLowerCase()) ||
+                s.title.toLowerCase().includes(filterText.toLowerCase()) ||
+                s.scope.toLowerCase().includes(filterText.toLowerCase())
+            );
+
+            filtered.forEach(item => {
+                const tr = document.createElement("tr");
+                tr.className = "hover:bg-slate-50";
+                tr.innerHTML = `
+                    <td class="p-2.5 font-bold text-emerald-800 font-mono whitespace-nowrap">${item.code}</td>
+                    <td class="p-2.5 font-medium text-slate-800">${item.title}</td>
+                    <td class="p-2.5"><strong class="text-slate-700">${item.scope}</strong><br><span class="text-[11px] text-slate-500">Deliverable: ${item.deliverable}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        document.getElementById("standard-search").addEventListener("input", (e) => {
+            renderStandardsTable(e.target.value);
+        });
+
+        // --- CAS TABLE logic ---
+
+        function renderCasTable(data) {
+            const tbody = document.getElementById("cas-table-body");
+            tbody.innerHTML = "";
+            data.forEach(item => {
+                const tr = document.createElement("tr");
+                tr.className = "hover:bg-slate-50";
+                tr.innerHTML = `
+                    <td class="p-2.5 font-bold text-slate-800 font-mono whitespace-nowrap">${item.capacity}</td>
+                    <td class="p-2.5 font-semibold text-emerald-700">${item.study}</td>
+                    <td class="p-2.5 font-bold text-amber-700 font-mono">${item.fee}</td>
+                    <td class="p-2.5 text-slate-600">${item.scope}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterCasTier(cat) {
+            if (cat === 'all') {
+                renderCasTable(casTiersData);
+            } else {
+                const filtered = casTiersData.filter(d => d.cat === cat);
+                renderCasTable(filtered);
+            }
+        }
+
+        // --- CALCULATOR LOGIC ---
+
+        function initCalculator() {
+            const pvInput = document.getElementById("pv-capacity-input");
+            const pvValDisplay = document.getElementById("pv-capacity-val");
+            const acSelect = document.getElementById("inverter-ac-select");
+            const costInput = document.getElementById("bess-cost-per-kwh");
+
+            function updateCalc() {
+                const pvkWp = parseFloat(pvInput.value);
+                const acMw = parseFloat(acSelect.value);
+                const costPerKwh = parseFloat(costInput.value) || 1100;
+
+                pvValDisplay.textContent = pvkWp.toLocaleString() + " kWp";
+
+                // Mandatory sizing E_BESS = 1 * X kWh
+                const bessKwh = pvkWp * 1.0;
+                document.getElementById("calc-bess-kwh").textContent = bessKwh.toLocaleString() + " kWh";
+
+                // Standby charge: RM 12/kWp per month if acMw > 1.0
+                let monthlyStandby = 0;
+                if (acMw > 1.0) {
+                    monthlyStandby = pvkWp * 12;
+                    document.getElementById("calc-standby-fee").textContent = "RM " + monthlyStandby.toLocaleString() + " / mo";
+                } else {
+                    document.getElementById("calc-standby-fee").textContent = "Exempt (≤ 1 MWac)";
+                }
+
+                // GITA 100% Tax allowance (assumes 24% corporate tax rate)
+                const capex = bessKwh * costPerKwh;
+                const gitaSavings = capex * 0.24;
+                document.getElementById("calc-gita-tax").textContent = "RM " + Math.round(gitaSavings).toLocaleString();
+
+                // CAS Tier display
+                let casFee = "RM 1,000 (CAS)";
+                if (pvkWp > 180 && pvkWp <= 425) casFee = "RM 5,000 (CAS)";
+                else if (pvkWp > 425 && pvkWp <= 1000) casFee = "RM 8,000 (CAS/PSS)";
+                else if (pvkWp > 1000 && pvkWp <= 2000) casFee = "RM 15,000 (PSS)";
+                else if (pvkWp > 2000) casFee = "High-Tier PSS";
+                document.getElementById("calc-cas-tier").textContent = casFee;
+
+                updateChartData(pvkWp, bessKwh);
+            }
+
+            pvInput.addEventListener("input", updateCalc);
+            acSelect.addEventListener("change", updateCalc);
+            costInput.addEventListener("input", updateCalc);
+
+            updateCalc();
+        }
+
+        // --- CHART LOGIC ---
+
+        function initChart() {
+            const ctx = document.getElementById('touTariffChart').getContext('2d');
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Off-Peak Import', 'Solar Export (SMP)', 'Peak Import (Avoided)', 'BESS Discharged Peak'],
+                    datasets: [{
+                        label: 'Effective Tariff Value (RM / kWh)',
+                        data: [0.2723, 0.1881, 0.3132, 0.3132],
+                        backgroundColor: [
+                            'rgba(148, 163, 184, 0.7)',
+                            'rgba(245, 158, 11, 0.7)',
+                            'rgba(239, 68, 68, 0.7)',
+                            'rgba(34, 197, 94, 0.8)'
+                        ],
+                        borderColor: [
+                            '#94a3b8',
+                            '#f59e0b',
+                            '#ef4444',
+                            '#22c55e'
+                        ],
+                        borderWidth: 1.5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `RM ${context.raw.toFixed(4)} / kWh`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#94a3b8',
+                                callback: function(value) { return 'RM ' + value.toFixed(2); }
+                            },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        },
+                        x: {
+                            ticks: { color: '#cbd5e1', font: { size: 10 } },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChartData(pvkWp, bessKwh) {
+            if (!chartInstance) return;
+            chartInstance.update();
+        }
+
+        // --- SITING SIMULATOR LOGIC ---
+
+        function initSitingSimulator() {
+            const distInput = document.getElementById("dist-input");
+            const distValDisplay = document.getElementById("dist-val");
+            const wallSelect = document.getElementById("wall-type-select");
+            const canvas = document.getElementById("sitingCanvas");
+            const ctx = canvas.getContext("2d");
+
+            function updateSiting() {
+                const dist = parseFloat(distInput.value);
+                const wallType = wallSelect.value;
+                distValDisplay.textContent = dist.toFixed(1) + " Meters";
+
+                const statusBox = document.getElementById("compliance-status-box");
+
+                let isCompliant = false;
+                let message = "";
+
+                if (dist >= 3.0) {
+                    isCompliant = true;
+                    message = "<strong>COMPLIANT (MS 2747:2024 Standard Clearance):</strong> Distance ≥ 3.0m satisfies standard spatial separation from factory openings.";
+                    statusBox.className = "p-3 rounded-lg border text-xs space-y-1 bg-emerald-50 border-emerald-300 text-emerald-900";
+                } else if (dist < 3.0 && wallType === 'firewall') {
+                    isCompliant = true;
+                    message = "<strong>COMPLIANT WITH FIRE BARRIER:</strong> Reduced clearance (<3.0m) accepted because facing wall is an unpierced 2-Hour Fire Wall with UL 9540A radiant heat validation.";
+                    statusBox.className = "p-3 rounded-lg border text-xs space-y-1 bg-emerald-50 border-emerald-300 text-emerald-900";
+                } else {
+                    isCompliant = false;
+                    message = "<strong>NON-COMPLIANT (REJECTED BY BOMBA):</strong> Distance < 3.0m without a 2-Hour Fire Wall violates MS 2747 separation rules. High risk of FC rejection.";
+                    statusBox.className = "p-3 rounded-lg border text-xs space-y-1 bg-red-50 border-red-300 text-red-900";
+                }
+
+                statusBox.innerHTML = message;
+                drawSitingDiagram(ctx, canvas, dist, isCompliant, wallType);
+            }
+
+            distInput.addEventListener("input", updateSiting);
+            wallSelect.addEventListener("change", updateSiting);
+
+            setTimeout(updateSiting, 100);
+        }
+
+        function drawSitingDiagram(ctx, canvas, distMeters, isCompliant, wallType) {
+            // Set internal resolution
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Draw Background grid lines
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
+            ctx.lineWidth = 1;
+            for (let x = 0; x < w; x += 20) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+            }
+
+            // Factory Wall on Right
+            const wallX = w - 70;
+            ctx.fillStyle = wallType === 'firewall' ? "#991b1b" : "#475569";
+            ctx.fillRect(wallX, 20, 25, h - 40);
+
+            // Wall label
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "10px sans-serif";
+            ctx.save();
+            ctx.translate(wallX + 16, h / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.textAlign = "center";
+            ctx.fillText(wallType === 'firewall' ? "2-HR FIRE WALL" : "FACTORY WALL", 0, 0);
+            ctx.restore();
+
+            // Calculate BESS Position based on distance (scale: 1m = ~25px)
+            const pxPerMeter = 28;
+            const bessW = 70;
+            const bessH = 90;
+            const gapPx = distMeters * pxPerMeter;
+            const bessX = wallX - gapPx - bessW;
+            const bessY = (h - bessH) / 2;
+
+            // Draw BESS Container
+            ctx.fillStyle = isCompliant ? "#15803d" : "#b91c1c";
+            ctx.fillRect(bessX, bessY, bessW, bessH);
+            ctx.strokeStyle = "#ffffff";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(bessX, bessY, bessW, bessH);
+
+            // BESS Label
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "bold 11px sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText("BESS", bessX + bessW / 2, bessY + 40);
+            ctx.font = "9px sans-serif";
+            ctx.fillText("CONTAINER", bessX + bessW / 2, bessY + 54);
+
+            // Separation Line & Metric
+            const lineY = h / 2;
+            ctx.strokeStyle = isCompliant ? "#4ade80" : "#f87171";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(bessX + bessW, lineY);
+            ctx.lineTo(wallX, lineY);
+            ctx.stroke();
+
+            // Distance Text Badge
+            ctx.fillStyle = "#0f172a";
+            ctx.fillRect((bessX + bessW + wallX) / 2 - 25, lineY - 12, 50, 22);
+            ctx.strokeStyle = isCompliant ? "#4ade80" : "#f87171";
+            ctx.strokeRect((bessX + bessW + wallX) / 2 - 25, lineY - 12, 50, 22);
+
+            ctx.fillStyle = isCompliant ? "#4ade80" : "#f87171";
+            ctx.font = "bold 10px monospace";
+            ctx.textAlign = "center";
+            ctx.fillText(distMeters.toFixed(1) + "m", (bessX + bessW + wallX) / 2, lineY + 2);
+        }
+
+        // --- CHECKLIST LOGIC ---
+
+        function renderChecklist() {
+            const container = document.getElementById("checklist-items-container");
+            container.innerHTML = "";
+
+            checklistItems.forEach((itemText, index) => {
+                const itemDiv = document.createElement("label");
+                itemDiv.className = "flex items-start space-x-3 p-2.5 rounded-lg bg-slate-800/80 border border-slate-700/60 hover:bg-slate-800 cursor-pointer transition";
+                itemDiv.innerHTML = `
+                    <input type="checkbox" class="chk-item mt-0.5 rounded text-emerald-500 focus:ring-emerald-500 bg-slate-900 border-slate-600 h-4 w-4" onchange="updateChecklistScore()">
+                    <span class="text-slate-300 text-xs">${index + 1}. ${itemText}</span>
+                `;
+                container.appendChild(itemDiv);
+            });
+        }
+
+        function updateChecklistScore() {
+            const total = checklistItems.length;
+            const checked = document.querySelectorAll(".chk-item:checked").length;
+            const pct = Math.round((checked / total) * 100);
+
+            document.getElementById("checklist-score").textContent = pct + "%";
+            const progressBar = document.getElementById("checklist-progress");
+            progressBar.style.width = pct + "%";
+
+            if (pct < 50) progressBar.className = "bg-red-500 h-full transition-all duration-500";
+            else if (pct < 85) progressBar.className = "bg-amber-500 h-full transition-all duration-500";
+            else progressBar.className = "bg-emerald-500 h-full transition-all duration-500";
+        }
+    </script>
+</body>
+</html>

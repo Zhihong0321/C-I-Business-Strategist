@@ -1,0 +1,39 @@
+name: Knowledge gap from issue
+
+# Turns a "knowledge-gap" issue from the repo owner or a collaborator into a file in gaps/open/
+# and refreshes gaps/INDEX.md, so every AI that reads the repo sees the gap.
+
+on:
+  issues:
+    types: [opened, labeled]
+
+permissions:
+  contents: write
+
+jobs:
+  add-gap:
+    if: >-
+      contains(github.event.issue.labels.*.name, 'knowledge-gap') &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.issue.author_association)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Write gap file
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+        run: python tools/gap_from_issue.py
+
+      - name: Refresh index
+        run: python tools/build.py --index-only
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add gaps/
+          git diff --cached --quiet || git commit -m "gap: issue #${{ github.event.issue.number }}"
+          git push

@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malaysia C&I Solar PV & BESS Market Explorer (2024–2026)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Family -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            bg: '#FDFBF7',
+                            card: '#FFFFFF',
+                            text: '#1E293B',
+                            muted: '#64748B',
+                            border: '#E2E8F0',
+                            teal: '#0D9488',
+                            amber: '#D97706',
+                            indigo: '#4F46E5',
+                            emerald: '#059669',
+                            rose: '#E11D48'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #FDFBF7;
+            color: #1E293B;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 320px;
+            max-height: 380px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .tab-btn.active {
+            border-bottom: 3px solid #0D9488;
+            color: #0D9488;
+            font-weight: 700;
+            background-color: #F1F5F9;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #F1F5F9;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+    </style>
+</head>
+<!-- Chosen Palette: Warm Neutral Harmonious (Background: #FDFBF7, Card: #FFFFFF, Primary Text: #1E293B, Accents: Teal #0D9488, Amber #D97706, Indigo #4F46E5, Emerald #059669) -->
+
+<!-- Application Structure Plan:
+    1. Header & Navigation: Persistent top navigation with 6 thematic tabs (Overview & Policy, Tariff Market Sizing, Bill & BESS Simulator, Solar & BESS Deployment, Geographic Explorer, Addressable TAM & Strategy).
+    2. Executive Brief & Policy Dashboard: Top-line market KPIs, RP4 vs Legacy structural transition, and an interactive policy comparison table (Solar ATAP vs SELCO vs CRESS vs NEM 3.0).
+    3. Tariff Market Sizing: Chart.js visual distribution of 1.65M C&I accounts and 110k+ GWh consumption by RP4 segment, alongside a filterable and searchable master reconciliation table with source citations.
+    4. Interactive Bill Economics & Peak Shaving Simulator: Real-time tariff bill calculator incorporating Capacity, Network, Energy, AFA volatility, and 30-minute peak shaving / solar self-consumption ROI modeling with GITA tax incentives.
+    5. Solar & BESS Deployment Tracker: Annual MW installation charts (2022-2026), Solar ATAP rules & CAS fee calculator, and complete inventory of announced/operational C&I BESS projects in Malaysia.
+    6. Geographic Concentration Explorer: State-by-state industrial profile (Selangor, Johor, Penang, Perak, Kedah, N. Sembilan/Melaka, Pahang/Terengganu) featuring major industrial estates, subsector load characteristics, duck curve impact, and storage fit.
+    7. Addressable TAM & Strategic Synthesis: Segment-by-segment TAM breakdown (Solar MWp vs BESS MWh), payback period comparison, and strategic takeaways.
+-->
+
+<!-- Visualization & Content Choices:
+    - Account & GWh Sizing: Donut chart & Bar chart (Chart.js) -> Enables instant visual comparison of LV high-account/lower-volume vs MV/HV low-account/high-volume dominance -> Canvas implementation.
+    - Bill Component Simulator: Stacked bar chart (Chart.js) -> Visually breaks down Energy vs Capacity vs Network vs AFA costs before/after BESS peak shaving.
+    - Annual Solar Additions: Stacked Bar Chart (Chart.js) -> Shows scheme transition from NEM 3.0 to SELCO, Solar ATAP, and CRESS (2022-2026).
+    - Geographic Explorer: Dynamic state selection card list -> Provides instant subsector and estate details without cluttering the page.
+    - Confirming NO SVG elements used. Icons built with clean HTML/CSS/Unicode. NO Mermaid JS used.
+-->
+
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+<body class="min-h-screen flex flex-col">
+
+    <!-- HEADER / NAVIGATION BAR -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center py-4 border-b border-slate-100">
+                <div class="flex items-center space-x-3 mb-3 md:mb-0">
+                    <div class="w-10 h-10 rounded-xl bg-teal-600 flex items-center justify-center text-white font-black text-xl shadow-md">
+                        ⚡
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-slate-900 tracking-tight">Peninsular Malaysia C&I Solar & BESS Market Explorer</h1>
+                        <p class="text-xs text-slate-500 font-medium">Market Sizing, RP4 Tariff Analysis & Storage Economics (2024–2026)</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2 text-xs font-semibold text-slate-600 bg-slate-100 py-1.5 px-3 rounded-lg">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>TNB Supply Area | RP4 Regime Effective Jul 2025 – Dec 2027</span>
+                </div>
+            </div>
+            
+            <!-- TABS -->
+            <nav class="flex overflow-x-auto space-x-1 py-2 custom-scrollbar text-sm font-medium text-slate-600" id="main-tabs">
+                <button onclick="switchTab('overview')" id="tab-overview" class="tab-btn active px-4 py-2.5 rounded-lg whitespace-nowrap transition-all">
+                    📊 Overview & Policy
+                </button>
+                <button onclick="switchTab('tariffs')" id="tab-tariffs" class="tab-btn px-4 py-2.5 rounded-lg whitespace-nowrap transition-all">
+                    ⚡ RP4 Market Sizing
+                </button>
+                <button onclick="switchTab('calculator')" id="tab-calculator" class="tab-btn px-4 py-2.5 rounded-lg whitespace-nowrap transition-all">
+                    🧮 Bill & BESS Simulator
+                </button>
+                <button onclick="switchTab('solar-bess')" id="tab-solar-bess" class="tab-btn px-4 py-2.5 rounded-lg whitespace-nowrap transition-all">
+                    ☀️ Solar & BESS Deployment
+                </button>
+                <button onclick="switchTab('geographic')" id="tab-geographic" class="tab-btn px-4 py-2.5 rounded-lg whitespace-nowrap transition-all">
+                    🗺️ Geographic Explorer
+                </button>
+                <button onclick="switchTab('tam-strategy')" id="tab-tam-strategy" class="tab-btn px-4 py-2.5 rounded-lg whitespace-nowrap transition-all">
+                    🎯 Addressable TAM & Strategy
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- ========================================== -->
+        <!-- TAB 1: OVERVIEW & REGULATORY POLICY        -->
+        <!-- ========================================== -->
+        <section id="content-overview" class="tab-content space-y-6">
+            <!-- Introductory Context Paragraph -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <h2 class="text-lg font-bold text-slate-900 mb-2">Executive Market Synthesis & RP4 Regime Transition</h2>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    Peninsular Malaysia’s Commercial and Industrial (C&I) clean energy landscape underwent a structural regime shift between July 2025 and January 2026. Regulatory Period 4 (RP4), implemented by PETRA and Suruhanjaya Tenaga (ST), unbundled Tenaga Nasional Berhad (TNB) electricity tariffs into five distinct line items and replaced legacy codes (B, C1, C2, D, E1, E2, E3) with voltage-tiered categories (LV, MV, HV General and ToU). Concurrently, the launch of <strong>Solar ATAP</strong> and revised <strong>SELCO guidelines</strong> on 1 January 2026 eliminated multi-month solar export rollovers, enforced monthly credit forfeiture at wholesale System Marginal Price (SMP ~18–20 sen/kWh), and mandated battery storage (BESS) for self-consumption systems exceeding 1 MWac. This dashboard summarizes the macro drivers shaping C&I solar PV and storage sizing in Peninsular Malaysia.
+                </p>
+            </div>
+
+            <!-- Top Line KPI Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total C&I Accounts</p>
+                        <h3 class="text-2xl font-extrabold text-slate-900 mt-1">~1,648,000</h3>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2">LV: 98.3% | MV: 1.6% | HV: 0.04%</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">2025 C&I Energy Sales</p>
+                        <h3 class="text-2xl font-extrabold text-teal-700 mt-1">110,140 GWh</h3>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2">76.5% of Peninsular Total (143,973 GWh)</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">MV Peak Demand Charge</p>
+                        <h3 class="text-2xl font-extrabold text-rose-600 mt-1">RM89.27–97.06</h3>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2">per kW/month (+115% to +201% under RP4)</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">2026 C&I Solar Additions</p>
+                        <h3 class="text-2xl font-extrabold text-amber-600 mt-1">~710 MW</h3>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2">Across Solar ATAP, SELCO & CRESS</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Operational C&I BESS</p>
+                        <h3 class="text-2xl font-extrabold text-indigo-600 mt-1">~145–180 MWh</h3>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2">85-110 MWh commissioned by mid-2026</p>
+                </div>
+            </div>
+
+            <!-- Macro System Benchmarks Table -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center space-x-2">
+                    <span>⚡ Peninsular Malaysia Macro Electricity Anchor Indicators (2024–2026)</span>
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                                <th class="p-3">Metric / Indicator</th>
+                                <th class="p-3">Scope / Location</th>
+                                <th class="p-3">2024 Figure</th>
+                                <th class="p-3">2025 Figure</th>
+                                <th class="p-3">2026 YTD / Forecast</th>
+                                <th class="p-3">Primary Source Citation & Link</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 text-slate-700">
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-semibold text-slate-900">Total Electricity Sales / Consumption</td>
+                                <td class="p-3">Peninsular Malaysia</td>
+                                <td class="p-3">141,738 GWh</td>
+                                <td class="p-3 font-semibold text-teal-700">143,973 GWh</td>
+                                <td class="p-3">~150,500 GWh (+4.5%–7.0% YoY)</td>
+                                <td class="p-3"><a href="https://www.st.gov.my/sites/default/files/2026-03/ST_Performance-Booklet_v2i-%28ZM%29.pdf" target="_blank" class="text-teal-600 hover:underline">Suruhanjaya Tenaga Performance Booklet 2025 (2026)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-semibold text-slate-900">System Peak Demand Record</td>
+                                <td class="p-3">Peninsular Grid</td>
+                                <td class="p-3">20,066 MW</td>
+                                <td class="p-3">21,049 MW (28 May 2025)</td>
+                                <td class="p-3 font-semibold text-rose-600">21,469 MW (23 Apr 2026)</td>
+                                <td class="p-3"><a href="https://academy.apexetrade.com/filestore/research-pdf/20260526_TENAGA_1QFY26_Results.pdf" target="_blank" class="text-teal-600 hover:underline">Apex Securities 1QFY26 TNB Note (2026)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-semibold text-slate-900">Transmission-Connected Capacity</td>
+                                <td class="p-3">Peninsular Grid</td>
+                                <td class="p-3">27,446 MW</td>
+                                <td class="p-3 font-semibold">28,192 MW</td>
+                                <td class="p-3">28,192+ MW</td>
+                                <td class="p-3"><a href="https://www.st.gov.my/sites/default/files/2026-03/ST_Performance-Booklet_v2i-%28ZM%29.pdf" target="_blank" class="text-teal-600 hover:underline">Suruhanjaya Tenaga Performance Booklet 2025 (2026)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-semibold text-slate-900">Total TNB Customer Base</td>
+                                <td class="p-3">Peninsular Malaysia</td>
+                                <td class="p-3">10.41 million</td>
+                                <td class="p-3 font-semibold text-slate-900">10.66 million</td>
+                                <td class="p-3">~10.85 million</td>
+                                <td class="p-3"><a href="https://www.scribd.com/document/1046387176/TNB-IAR-2025" target="_blank" class="text-teal-600 hover:underline">TNB Integrated Annual Report 2025 (2026)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-semibold text-slate-900">Commercial Sector Sales Share</td>
+                                <td class="p-3">Peninsular Sales Share</td>
+                                <td class="p-3">~35.0%</td>
+                                <td class="p-3">37.0% (1QFY25)</td>
+                                <td class="p-3 font-semibold text-indigo-700">39.0% (1QFY26, +13.0% YoY surge)</td>
+                                <td class="p-3"><a href="https://academy.apexetrade.com/filestore/research-pdf/20260526_TENAGA_1QFY26_Results.pdf" target="_blank" class="text-teal-600 hover:underline">Apex Securities 1QFY26 Results Note (2026)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-semibold text-slate-900">Low-Voltage SME Account Base</td>
+                                <td class="p-3">Peninsular LV Non-Domestic</td>
+                                <td class="p-3">>1.60 million</td>
+                                <td class="p-3">~1.62 million</td>
+                                <td class="p-3">~1.65 million</td>
+                                <td class="p-3"><a href="https://www.tnb.com.my/assets/annual_report/TNB_Sustainability_Report_2021.pdf" target="_blank" class="text-teal-600 hover:underline">TNB Sustainability Report 2021 (2022)</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Program Comparison Matrix -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <h3 class="text-base font-bold text-slate-900 flex items-center space-x-2">
+                    <span>📋 Malaysia C&I Solar & Wheeling Programme Regulatory Comparison (2026)</span>
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold text-slate-900 text-sm">Solar ATAP</span>
+                            <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">Live 1 Jan 2026</span>
+                        </div>
+                        <ul class="space-y-2 text-slate-600">
+                            <li><strong>Target:</strong> LV & MV Commercial/Industrial</li>
+                            <li><strong>Quota Cap:</strong> <span class="text-emerald-700 font-bold">No National Cap</span> for C&I</li>
+                            <li><strong>Sizing Limit:</strong> Up to 100% MD (Max 1 MWac/account)</li>
+                            <li><strong>Export Tariff:</strong> SMP Wholesale (~18–20 sen/kWh)</li>
+                            <li><strong>Rollover:</strong> <span class="text-rose-600 font-bold">Zero Rollover</span> (Monthly forfeiture)</li>
+                            <li><strong>Application Workflow:</strong> Post-commissioning filing (Forms G & H)</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold text-slate-900 text-sm">SELCO (Self-Consumption)</span>
+                            <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-bold">Updated Jan 2026</span>
+                        </div>
+                        <ul class="space-y-2 text-slate-600">
+                            <li><strong>Target:</strong> Large MV & HV Industrial Facilities</li>
+                            <li><strong>Quota Cap:</strong> Uncapped behind-the-meter</li>
+                            <li><strong>Sizing Limit:</strong> Up to 100% MD (No MW upper limit)</li>
+                            <li><strong>Mandatory BESS:</strong> <span class="text-amber-700 font-bold">Required for >1 MWac systems</span></li>
+                            <li><strong>Standby Charge:</strong> Reduced to RM12/kWp/month (>1 MWac)</li>
+                            <li><strong>Grid Export:</strong> Strict 100% zero grid export allowed</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold text-slate-900 text-sm">CRESS (Grid Wheeling)</span>
+                            <span class="px-2 py-0.5 rounded bg-indigo-100 text-indigo-800 font-bold">Expanded Mar 2025</span>
+                        </div>
+                        <ul class="space-y-2 text-slate-600">
+                            <li><strong>Target:</strong> HV Malls, Fabs & Hyperscale Data Centres</li>
+                            <li><strong>Pipeline:</strong> <span class="text-indigo-700 font-bold">>3,000 MW Allocated</span></li>
+                            <li><strong>Min Project Size:</strong> 30 MW off-site renewable farm</li>
+                            <li><strong>Access Fee (SAC):</strong> 20 sen/kWh (Firm) vs 40 sen (Non-firm)</li>
+                            <li><strong>Wheeling Model:</strong> Direct off-take via TNB grid infrastructure</li>
+                            <li><strong>Execution Lead:</strong> 18–24 months (PSS Stage 1 & 2)</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold text-slate-900 text-sm">NEM 3.0 (NEM NOVA)</span>
+                            <span class="px-2 py-0.5 rounded bg-slate-200 text-slate-700 font-bold">Closed 30 Jun 2025</span>
+                        </div>
+                        <ul class="space-y-2 text-slate-600">
+                            <li><strong>Target:</strong> Legacy C&I Solar Rooftop</li>
+                            <li><strong>Final Subscribed:</strong> 1,417.31 MW (out of 1,700 MW cap)</li>
+                            <li><strong>Unsubscribed:</strong> 282.69 MW remaining at closure</li>
+                            <li><strong>Export Settlement:</strong> SMP offset against net electricity bill</li>
+                            <li><strong>Offset Scope:</strong> System Marginal Price off-set with 3-mo rollover</li>
+                            <li><strong>Status:</strong> COD tail of ~165 MW completing in 2026</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 2: RP4 TARIFF MARKET SIZING            -->
+        <!-- ========================================== -->
+        <section id="content-tariffs" class="tab-content space-y-6 hidden">
+            <!-- Introductory Context Paragraph -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <h2 class="text-lg font-bold text-slate-900 mb-2">Granular RP4 Tariff Category Sizing & Legacy Reconciliation</h2>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    On 1 July 2025, TNB consolidated 11 legacy non-domestic tariffs into six core RP4 categories structured by voltage level (Low Voltage 230V/400V, Medium Voltage 11kV/33kV, High Voltage 66kV–275kV) and time-of-use metering. Because official utility publications state sales at the macro sectoral level (Commercial vs Industrial vs Domestic), this interactive breakdown synthesizes bottom-up substation data, ST electricity statistics, and TNB customer reports to map all ~1.648 million C&I customer accounts and 110,140 GWh of annual electricity consumption.
+                </p>
+            </div>
+
+            <!-- Visual Charts Row -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Chart 1: Customer Accounts -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="text-base font-bold text-slate-900">Active C&I Customer Accounts by Tariff Segment</h3>
+                            <span class="text-xs text-slate-500 font-medium">Total: ~1,648,000 Accounts</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mb-4">LV represents 98.3% of accounts, but MV and HV hold the bulk of energy load.</p>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="accountsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 2: Annual GWh Consumption -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="text-base font-bold text-slate-900">Annual Electricity Consumption (GWh)</h3>
+                            <span class="text-xs text-slate-500 font-medium">Total: ~110,140 GWh (2025)</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mb-4">Medium Voltage accounts for 45.3% of total Peninsular electricity demand.</p>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="gwhChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Master Reconciliation Table with Source Citations -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900">RP4 Non-Domestic Category Market Sizing & Legacy Mapping</h3>
+                        <p class="text-xs text-slate-500">Includes active account count estimates, 2025 GWh consumption, voltage tier, and mapped pre-July 2025 legacy tariffs.</p>
+                    </div>
+                    <input type="text" id="tariffSearch" onkeyup="filterTariffTable()" placeholder="Search tariff, voltage, legacy code..." class="text-xs border border-slate-300 rounded-lg px-3 py-2 w-full md:w-64 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs" id="tariffMasterTable">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                                <th class="p-3">RP4 Tariff Category</th>
+                                <th class="p-3">Mapped Legacy Tariffs (Pre-Jul 2025)</th>
+                                <th class="p-3">Voltage Tier</th>
+                                <th class="p-3">Est. Active Accounts</th>
+                                <th class="p-3">2025 Energy Sales (GWh)</th>
+                                <th class="p-3">% Peninsular Grid GWh</th>
+                                <th class="p-3">Primary Source Citation & Link</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 text-slate-700">
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-900">Non-Domestic LV General</td>
+                                <td class="p-3"><strong>Tariff B</strong> (Commercial: ~1.56M accts); <strong>Tariff D</strong> (Industrial: ~42k accts); <strong>Tariff F</strong> (Mining: ~300)</td>
+                                <td class="p-3">400V / 230V (1-Ph & 3-Ph)</td>
+                                <td class="p-3 font-semibold">~1,602,300</td>
+                                <td class="p-3 font-semibold text-teal-700">26,940 GWh</td>
+                                <td class="p-3">18.7%</td>
+                                <td class="p-3"><a href="https://www.mytnb.com.my/business/understand-your-bill" target="_blank" class="text-teal-600 hover:underline">TNB Tariff Mapping & ST Statistics (2026)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-900">Non-Domestic LV ToU</td>
+                                <td class="p-3">Optional ToU opt-in from legacy <strong>Tariffs B, D, F</strong> (Expanded to LV under RP4)</td>
+                                <td class="p-3">400V / 230V (1-Ph & 3-Ph)</td>
+                                <td class="p-3 font-semibold">~18,500</td>
+                                <td class="p-3 font-semibold text-teal-700">1,460 GWh</td>
+                                <td class="p-3">1.0%</td>
+                                <td class="p-3"><a href="https://acccimserc.com/images/researchpdf/2025/20250709%20Malaysias%20Electricity%20Tariffs%20Reform%20(Completed).pdf" target="_blank" class="text-teal-600 hover:underline">ACCCIM SERC Tariff Reform Report (2025)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 bg-amber-50/40">
+                                <td class="p-3 font-bold text-slate-900">Non-Domestic MV General</td>
+                                <td class="p-3"><strong>Tariff C1</strong> (MV Gen Comm: ~11.2k accts); <strong>Tariff E1</strong> (MV Gen Ind: ~7.8k accts); <strong>Tariff F1</strong> (~120 accts)</td>
+                                <td class="p-3">11 kV / 33 kV</td>
+                                <td class="p-3 font-semibold text-amber-900">~19,120</td>
+                                <td class="p-3 font-bold text-amber-700">34,550 GWh</td>
+                                <td class="p-3 font-bold">24.0%</td>
+                                <td class="p-3"><a href="https://trexon.my/guides/tnb-medium-voltage-tariff-rp4" target="_blank" class="text-teal-600 hover:underline">Trexon Energy RP4 Guide & Cobler (2025)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 bg-amber-50/40">
+                                <td class="p-3 font-bold text-slate-900">Non-Domestic MV ToU</td>
+                                <td class="p-3"><strong>Tariff C2</strong> (MV Peak/Off-Peak Comm: ~2.9k); <strong>Tariff E2</strong> (MV Peak/Off-Peak Ind: ~4.4k); <strong>Tariff F2</strong> (~80)</td>
+                                <td class="p-3">11 kV / 33 kV</td>
+                                <td class="p-3 font-semibold text-amber-900">~7,380</td>
+                                <td class="p-3 font-bold text-amber-700">30,640 GWh</td>
+                                <td class="p-3 font-bold">21.3%</td>
+                                <td class="p-3"><a href="https://acccimserc.com/images/researchpdf/2025/20250709%20Malaysias%20Electricity%20Tariffs%20Reform%20(Completed).pdf" target="_blank" class="text-teal-600 hover:underline">ACCCIM SERC & TNB Business (2025)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-900">Non-Domestic HV General</td>
+                                <td class="p-3"><strong>Tariff C3</strong> (HV General Commercial, Bulk Malls & Data Centre base)</td>
+                                <td class="p-3">66 kV / 132 kV / 275 kV</td>
+                                <td class="p-3 font-semibold">~110</td>
+                                <td class="p-3 font-semibold text-indigo-700">3,250 GWh</td>
+                                <td class="p-3">2.3%</td>
+                                <td class="p-3"><a href="https://www.plusxnergy.com/july-2025-tnb-tariff-update-what-malaysian-businesses-need-to-know/" target="_blank" class="text-teal-600 hover:underline">Plus Xnergy July 2025 Tariff Analysis (2025)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-900">Non-Domestic HV ToU</td>
+                                <td class="p-3"><strong>Tariff C4</strong> (HV Peak/Off-Peak Comm: ~90 accts); <strong>Tariff E3</strong> (HV Peak/Off-Peak Ind: ~500 accts)</td>
+                                <td class="p-3">66 kV / 132 kV / 275 kV</td>
+                                <td class="p-3 font-semibold">~590</td>
+                                <td class="p-3 font-semibold text-indigo-700">13,300 GWh</td>
+                                <td class="p-3">9.2%</td>
+                                <td class="p-3"><a href="https://acccimserc.com/images/researchpdf/2025/20250709%20Malaysias%20Electricity%20Tariffs%20Reform%20(Completed).pdf" target="_blank" class="text-teal-600 hover:underline">ACCCIM SERC & TNB Bill Mechanics (2025)</a></td>
+                            </tr>
+                            <tr class="bg-slate-200 font-extrabold text-slate-900">
+                                <td class="p-3">TOTAL C&I NON-DOMESTIC</td>
+                                <td class="p-3">Legacy B, D, F, C1, C2, E1, E2, F1, F2, C3, C4, E3</td>
+                                <td class="p-3">All Voltages</td>
+                                <td class="p-3">~1,648,000</td>
+                                <td class="p-3 text-teal-800">110,140 GWh</td>
+                                <td class="p-3">76.5%</td>
+                                <td class="p-3">ST Performance Booklet 2025 / TNB IAR 2025</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 3: BILL & BESS SIMULATOR               -->
+        <!-- ========================================== -->
+        <section id="content-calculator" class="tab-content space-y-6 hidden">
+            <!-- Introductory Context Paragraph -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <h2 class="text-lg font-bold text-slate-900 mb-2">Interactive RP4 Monthly Bill & 30-Minute Peak Shaving Simulator</h2>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    Under RP4, TNB introduced unbundled charges for Capacity (RM/kW or sen/kWh), Network (RM/kW or sen/kWh), Energy (sen/kWh), Retail (RM20–250/mo), and a volatile monthly Automatic Fuel Adjustment (AFA). On Medium Voltage (MV General & ToU), Maximum Demand (MD) is billed on the single highest 30-minute average load interval recorded during the billing cycle. Standalone rooftop solar cannot guarantee MD savings because a passing cloud exposes the facility to full demand charges (RM89.27–97.06/kW). Use this tool to simulate monthly bill line items, analyze BESS peak shaving ROI, and factor in GITA 100% tax allowance savings.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Inputs Column -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <h3 class="text-base font-bold text-slate-900 pb-2 border-b border-slate-200 flex items-center justify-between">
+                        <span>⚙️ Facility Inputs</span>
+                        <span class="text-xs font-normal text-slate-500">RP4 Rates (2025-2027)</span>
+                    </h3>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">RP4 Tariff Category</label>
+                        <select id="simCategory" onchange="runSimulation()" class="w-full text-xs border border-slate-300 rounded-lg p-2.5 bg-slate-50 focus:ring-2 focus:ring-teal-500">
+                            <option value="LV_GEN">LV General (Legacy B, D, F)</option>
+                            <option value="LV_TOU">LV ToU (Optional Opt-In)</option>
+                            <option value="MV_GEN" selected>MV General (Legacy C1, E1, F1) - 24/7 MD</option>
+                            <option value="MV_TOU">MV ToU (Legacy C2, E2, F2) - 2pm-10pm MD</option>
+                            <option value="HV_GEN">HV General (Legacy C3)</option>
+                            <option value="HV_TOU">HV ToU (Legacy C4, E3)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                            <span>Recorded Peak Demand (kW)</span>
+                            <span id="valPeakDemand" class="text-teal-700 font-bold">800 kW</span>
+                        </div>
+                        <input type="range" id="simPeakDemand" min="50" max="5000" step="50" value="800" oninput="runSimulation()" class="w-full accent-teal-600">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                            <span>Monthly Consumption (kWh)</span>
+                            <span id="valMonthlyKwh" class="text-teal-700 font-bold">250,000 kWh</span>
+                        </div>
+                        <input type="range" id="simMonthlyKwh" min="10000" max="1500000" step="10000" value="250000" oninput="runSimulation()" class="w-full accent-teal-600">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                            <span>BESS Peak Shaving Target (kW)</span>
+                            <span id="valBessKw" class="text-indigo-600 font-bold">250 kW Shaved</span>
+                        </div>
+                        <input type="range" id="simBessKw" min="0" max="1500" step="25" value="250" oninput="runSimulation()" class="w-full accent-indigo-600">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                            <span>Monthly AFA Rate (sen/kWh)</span>
+                            <span id="valAfaRate" class="text-amber-600 font-bold">+3.61 sen (Oct 2026)</span>
+                        </div>
+                        <input type="range" id="simAfaRate" min="-5.0" max="8.0" step="0.5" value="3.61" oninput="runSimulation()" class="w-full accent-amber-600">
+                    </div>
+
+                    <div class="pt-2 border-t border-slate-200 text-xs text-slate-500 space-y-1">
+                        <p><strong>Note:</strong> MD charge on MV General is RM89.27/kW (24/7). On MV ToU, MD charge is RM97.06/kW (2pm–10pm weekdays only).</p>
+                    </div>
+                </div>
+
+                <!-- Simulation Outputs Column -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- Results KPI Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                            <p class="text-xs font-semibold text-slate-500">Base Monthly Electricity Bill</p>
+                            <h4 id="resBaseBill" class="text-xl font-extrabold text-slate-900 mt-1">RM 135,420</h4>
+                            <p class="text-xs text-slate-500 mt-1">Without BESS Peak Shaving</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                            <p class="text-xs font-semibold text-slate-500">Monthly Bill With BESS</p>
+                            <h4 id="resNewBill" class="text-xl font-extrabold text-teal-700 mt-1">RM 113,102</h4>
+                            <p class="text-xs text-teal-600 mt-1">Includes demand shaving & AFA</p>
+                        </div>
+                        <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200 shadow-sm">
+                            <p class="text-xs font-bold text-emerald-800">Annual BESS Utility Savings</p>
+                            <h4 id="resAnnualSavings" class="text-2xl font-black text-emerald-700 mt-1">RM 267,810</h4>
+                            <p id="resPayback" class="text-xs font-semibold text-emerald-800 mt-1">Est. Payback: ~3.2 Years (w/ GITA)</p>
+                        </div>
+                    </div>
+
+                    <!-- Chart: Monthly Bill Breakdown -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <h3 class="text-base font-bold text-slate-900 mb-2">RP4 Bill Component Breakdown: Standard vs BESS Optimized</h3>
+                        <p class="text-xs text-slate-500 mb-4">Shows how BESS directly slashes the unbundled Capacity & Network Maximum Demand lines.</p>
+                        <div class="chart-container">
+                            <canvas id="billBreakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Published Benchmark Archetype Table -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <h3 class="text-base font-bold text-slate-900">RP4 Rate Structure & Benchmark Customer Archetypes</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                                <th class="p-3">RP4 Category</th>
+                                <th class="p-3">Base Energy Rate</th>
+                                <th class="p-3">Capacity + Network MD Rate</th>
+                                <th class="p-3">Retail Fee</th>
+                                <th class="p-3">Typical MD Range</th>
+                                <th class="p-3">Typical Monthly Usage</th>
+                                <th class="p-3">Typical Monthly Bill Range</th>
+                                <th class="p-3">Benchmark Archetype & Source</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 text-slate-700">
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-900">LV General</td>
+                                <td class="p-3">27.03 sen/kWh</td>
+                                <td class="p-3">23.65 sen/kWh (Volumetric)</td>
+                                <td class="p-3">RM20/mo</td>
+                                <td class="p-3">5 kW – 180 kW</td>
+                                <td class="p-3">1,500 – 200,000 kWh</td>
+                                <td class="p-3 font-semibold text-teal-700">RM800 – RM105,000</td>
+                                <td class="p-3"><a href="https://cobler.io/blog/your-tnb-bill-line-by-line" target="_blank" class="text-teal-600 hover:underline">Shoplot Café (8,000 kWh): RM4,430 (Cobler 2025)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-900">LV ToU</td>
+                                <td class="p-3">28.52 / 24.43 sen</td>
+                                <td class="p-3">23.65 sen/kWh (Volumetric)</td>
+                                <td class="p-3">RM20/mo</td>
+                                <td class="p-3">15 kW – 180 kW</td>
+                                <td class="p-3">5,000 – 200,000 kWh</td>
+                                <td class="p-3 font-semibold text-teal-700">RM2,500 – RM102,000</td>
+                                <td class="p-3"><a href="https://acccimserc.com/images/researchpdf/2025/20250709%20Malaysias%20Electricity%20Tariffs%20Reform%20(Completed).pdf" target="_blank" class="text-teal-600 hover:underline">Standard Office SME (10,073 kWh): RM5,103 (ACCCIM 2025)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 bg-amber-50/40">
+                                <td class="p-3 font-bold text-slate-900">MV General</td>
+                                <td class="p-3">29.83 sen/kWh</td>
+                                <td class="p-3 font-bold text-rose-600">RM89.27 / kW (24/7)</td>
+                                <td class="p-3">RM200/mo</td>
+                                <td class="p-3 font-semibold">150 kW – 5,000 kW</td>
+                                <td class="p-3">50,000 – 2.5M kWh</td>
+                                <td class="p-3 font-bold text-amber-800">RM30,000 – RM1,300,000</td>
+                                <td class="p-3"><a href="https://trexon.my/guides/tnb-medium-voltage-tariff-rp4" target="_blank" class="text-teal-600 hover:underline">Medium Factory (500 kW MD): RM106,600 (Trexon 2025)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 bg-amber-50/40">
+                                <td class="p-3 font-bold text-slate-900">MV ToU</td>
+                                <td class="p-3">31.32 / 27.23 sen</td>
+                                <td class="p-3 font-bold text-rose-600">RM97.06 / kW (2-10pm)</td>
+                                <td class="p-3">RM200/mo</td>
+                                <td class="p-3 font-semibold">300 kW – 10,000 kW</td>
+                                <td class="p-3">150,000 – 5.5M kWh</td>
+                                <td class="p-3 font-bold text-amber-800">RM80,000 – RM2,600,000</td>
+                                <td class="p-3"><a href="https://www.plusxnergy.com/july-2025-tnb-tariff-update-what-malaysian-businesses-need-to-know/" target="_blank" class="text-teal-600 hover:underline">24-Hr Plant (1M kWh): RM484,895 (Plus Xnergy 2025)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-900">HV General</td>
+                                <td class="p-3">43.03 sen/kWh</td>
+                                <td class="p-3">RM31.21 / kW</td>
+                                <td class="p-3">RM250/mo</td>
+                                <td class="p-3">5 MW – 50 MW</td>
+                                <td class="p-3">2.5M – 30M kWh</td>
+                                <td class="p-3 font-semibold text-indigo-700">RM1.3M – RM15,000,000</td>
+                                <td class="p-3"><a href="https://arusenerg.com/tnb-tariff-malaysia/" target="_blank" class="text-teal-600 hover:underline">Campus / Bulk Mall (10 MW MD): ~RM2.92M (ArusEnerg 2025)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-900">HV ToU</td>
+                                <td class="p-3">44.52 / 40.43 sen</td>
+                                <td class="p-3">RM44.82 / kW</td>
+                                <td class="p-3">RM250/mo</td>
+                                <td class="p-3">10 MW – 150+ MW</td>
+                                <td class="p-3">5M – 90M+ kWh</td>
+                                <td class="p-3 font-semibold text-indigo-700">RM2.5M – RM45,000,000+</td>
+                                <td class="p-3"><a href="https://acccimserc.com/images/researchpdf/2025/20250709%20Malaysias%20Electricity%20Tariffs%20Reform%20(Completed).pdf" target="_blank" class="text-teal-600 hover:underline">Hyperscale Facility (120 MW MD): RM41.83M (ACCCIM 2025)</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 4: SOLAR & BESS DEPLOYMENT             -->
+        <!-- ========================================== -->
+        <section id="content-solar-bess" class="tab-content space-y-6 hidden">
+            <!-- Introductory Context Paragraph -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <h2 class="text-lg font-bold text-slate-900 mb-2">C&I Solar PV Additions (2022–2026) & BESS Project Inventory</h2>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    Rooftop solar installation in Peninsular Malaysia has transitioned from quota-capped net energy metering (NEM NOVA) to open self-consumption (SELCO) and post-commissioning registration under <strong>Solar ATAP</strong>. With over 2,280 MW of cumulative C&I solar added between 2022 and 2026, corporate adopters are pairing solar PV with battery storage to mitigate the RP4 demand charge shock and avoid non-export credit forfeiture. This tab tracks annual MW deployment by regulatory scheme, details the Solar ATAP Connection Assessment Study (CAS) fee schedule, and compiles an inventory of operational C&I BESS installations in Malaysia.
+                </p>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Chart 3: Annual Solar Additions -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900 mb-1">Annual C&I Solar PV Capacity Additions (MW)</h3>
+                        <p class="text-xs text-slate-500 mb-4">Split by NEM 3.0 (NOVA), SELCO, Solar ATAP, and CRESS (2022–2026).</p>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="solarAdditionsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Solar ATAP CAS Fee Schedule Card -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-4">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900 mb-1">Solar ATAP Regulatory Mechanics & CAS Fee Schedule</h3>
+                        <p class="text-xs text-slate-500">Effective 1 January 2026 (`GP/ST/No. 60/2025`). Post-COD filing via `atap.seda.gov.my`.</p>
+                    </div>
+
+                    <div class="space-y-2 text-xs">
+                        <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 flex justify-between items-center">
+                            <span><strong>1 kW to 72 kW</strong> (Micro & SME Sweet Spot)</span>
+                            <span class="font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">RM 0 (Zero CAS Fee)</span>
+                        </div>
+                        <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 flex justify-between items-center">
+                            <span><strong>>72 kW to 180 kW</strong> (Connection Study)</span>
+                            <span class="font-bold text-slate-900">RM 1,000 Study Fee</span>
+                        </div>
+                        <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 flex justify-between items-center">
+                            <span><strong>>180 kW to 425 kW</strong> (Medium System Study)</span>
+                            <span class="font-bold text-slate-900">RM 5,000 Study Fee</span>
+                        </div>
+                        <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 flex justify-between items-center">
+                            <span><strong>>425 kW to 1,000 kW (1 MW)</strong> (Fault Current Analysis)</span>
+                            <span class="font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded">RM 8,000 Study Fee</span>
+                        </div>
+                        <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 flex justify-between items-center">
+                            <span><strong>High Voltage (HV) Connection</strong> (Power System Study)</span>
+                            <span class="font-bold text-indigo-700 bg-indigo-100 px-2 py-0.5 rounded">RM 15,000 Study Fee</span>
+                        </div>
+                    </div>
+
+                    <p class="text-xs text-slate-500 italic">
+                        *Note: The widely publicized 250 MW / RM150M SuRIA Home quota applies strictly to domestic residential accounts (RM600/kW rebate). C&I businesses use the MIDA GITA Asset 100% Investment Tax Allowance instead.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Solar Deployment Table -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <h3 class="text-base font-bold text-slate-900">C&I Solar PV Capacity Breakdown by Regulatory Scheme (2022–2026)</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                                <th class="p-3">Programme / Scheme</th>
+                                <th class="p-3">2022 (MW)</th>
+                                <th class="p-3">2023 (MW)</th>
+                                <th class="p-3">2024 (MW)</th>
+                                <th class="p-3">2025 (MW)</th>
+                                <th class="p-3">2026 Forecast</th>
+                                <th class="p-3">Cumulative 2022–26</th>
+                                <th class="p-3">Total Quota / Scheme Cap</th>
+                                <th class="p-3">Primary Source & Link</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 text-slate-700">
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-900">NEM 3.0 (NEM NOVA C&I)</td>
+                                <td class="p-3">~145 MW</td>
+                                <td class="p-3">~240 MW</td>
+                                <td class="p-3">~380 MW</td>
+                                <td class="p-3">~440 MW</td>
+                                <td class="p-3">~165 MW</td>
+                                <td class="p-3 font-bold text-teal-700">~1,370 MW</td>
+                                <td class="p-3">1,417.31 MW Subscribed (1,700 MW Cap)</td>
+                                <td class="p-3"><a href="https://www.seda.gov.my/reportal/nem/" target="_blank" class="text-teal-600 hover:underline">SEDA NEM Portal & IET Research (2025)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-900">SELCO (C&I Self-Consumption)</td>
+                                <td class="p-3">~45 MW</td>
+                                <td class="p-3">~65 MW</td>
+                                <td class="p-3">~95 MW</td>
+                                <td class="p-3 font-semibold">~160 MW</td>
+                                <td class="p-3 font-bold text-amber-700">~210 MW</td>
+                                <td class="p-3 font-bold text-amber-800">~575 MW</td>
+                                <td class="p-3 font-semibold">Uncapped (100% MD Sizing)</td>
+                                <td class="p-3"><a href="https://www.st.gov.my/sites/default/files/2026-03/ST_Strategic-Plan_Inlay_v1_Mockup_Digital.pdf" target="_blank" class="text-teal-600 hover:underline">ST Strategic Plan 2026–2030 (2026)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-900">Solar ATAP (C&I Non-Domestic)</td>
+                                <td class="p-3">0 MW</td>
+                                <td class="p-3">0 MW</td>
+                                <td class="p-3">0 MW</td>
+                                <td class="p-3">0 MW</td>
+                                <td class="p-3 font-bold text-emerald-700">~185 MW</td>
+                                <td class="p-3 font-bold text-emerald-800">~185 MW</td>
+                                <td class="p-3 font-semibold">No National Cap (Max 1 MW/acct)</td>
+                                <td class="p-3"><a href="https://www.seda.gov.my/reportal/atap/" target="_blank" class="text-teal-600 hover:underline">SEDA Solar ATAP Portal (2026)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-900">CRESS (Corporate Grid Wheeling)</td>
+                                <td class="p-3">0 MW</td>
+                                <td class="p-3">0 MW</td>
+                                <td class="p-3">0 MW</td>
+                                <td class="p-3">0 MW</td>
+                                <td class="p-3 font-semibold text-indigo-700">~150 MW</td>
+                                <td class="p-3 font-bold text-indigo-800">~150 MW</td>
+                                <td class="p-3 font-semibold text-indigo-700">>3,000 MW Allocated Pipeline</td>
+                                <td class="p-3"><a href="https://farizalpartners.com/f/malaysias-renewable-energy-schemes-in-2026" target="_blank" class="text-teal-600 hover:underline">Farizal Partners RE Review (2026)</a></td>
+                            </tr>
+                            <tr class="bg-slate-200 font-extrabold text-slate-900">
+                                <td class="p-3">TOTAL C&I SOLAR ADDITIONS</td>
+                                <td class="p-3">~190 MW</td>
+                                <td class="p-3">~305 MW</td>
+                                <td class="p-3">~475 MW</td>
+                                <td class="p-3">~600 MW</td>
+                                <td class="p-3 text-teal-800">~710 MW</td>
+                                <td class="p-3 text-teal-800">~2,280 MW</td>
+                                <td class="p-3">>4,417 MW Subscribed / Pipeline</td>
+                                <td class="p-3">ST Strategic Plan & SEDA Reports</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Project Level BESS Inventory Table -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900">Malaysia Announced & Operational C&I BESS Project Inventory (2024–2026)</h3>
+                        <p class="text-xs text-slate-500">Cumulative market capacity stands at ~145–180 MWh (~85–110 MWh physically commissioned).</p>
+                    </div>
+                    <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 font-bold text-xs">Plus Xnergy Leader: 100 MWh Portfolio</span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                                <th class="p-3">Project / Integrator & Partner</th>
+                                <th class="p-3">Facility / Sector</th>
+                                <th class="p-3">Capacity (MW / MWh)</th>
+                                <th class="p-3">Application & Tariff Dynamics</th>
+                                <th class="p-3">Status & COD</th>
+                                <th class="p-3">Primary Source Citation & Link</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 text-slate-700">
+                            <tr class="hover:bg-slate-50 bg-emerald-50/30">
+                                <td class="p-3 font-bold text-slate-900">Plus Xnergy & HyperStrong Flagship</td>
+                                <td class="p-3">Grain & Food Processing Industrial Park</td>
+                                <td class="p-3 font-extrabold text-emerald-700">20.0 MWh (Single-Site)</td>
+                                <td class="p-3">SELCO solar self-consumption, MD peak shaving & demand response</td>
+                                <td class="p-3 font-bold text-emerald-700">Operational (Jun 2026)</td>
+                                <td class="p-3"><a href="https://www.plusxnergy.com/plus-xnergy-deploys-one-of-malaysias-largest-ci-self-consumption-bess/" target="_blank" class="text-teal-600 hover:underline">Plus Xnergy Official Release (2026)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-900">Plus Xnergy Cumulative Portfolio</td>
+                                <td class="p-3">Multi-site C&I manufacturing & logistics</td>
+                                <td class="p-3 font-bold text-indigo-700">100.0 MWh Total</td>
+                                <td class="p-3">RP4 MD peak shaving (~RM1.25M/yr savings per 10 MWh BESS)</td>
+                                <td class="p-3 font-semibold">Completed & Ongoing (2026)</td>
+                                <td class="p-3"><a href="https://www.plusxnergy.com/plus-xnergy-deploys-one-of-malaysias-largest-ci-self-consumption-bess/" target="_blank" class="text-teal-600 hover:underline">Plus Xnergy Portfolio Release (2026)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-900">HO Energy Power Industrial BESS</td>
+                                <td class="p-3">Shipbuilding & Marine Engineering Park</td>
+                                <td class="p-3 font-semibold">4.3 MW / 8.36 MWh</td>
+                                <td class="p-3">C&I peak demand shaving, crane/welding spike smoothing & backup</td>
+                                <td class="p-3 font-semibold">Deployed Case Study (2025/26)</td>
+                                <td class="p-3"><a href="https://www.hoenergypower.com/ci-bess-project-selection/" target="_blank" class="text-teal-600 hover:underline">HO Energy BESS Project Selection (2026)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-900">Elecod AC-Coupled C&I BESS</td>
+                                <td class="p-3">Aerospace Component Manufacturing Park</td>
+                                <td class="p-3 font-semibold">1.5 MW / 2.60 MWh</td>
+                                <td class="p-3">AC-coupled storage engineered to cap TNB 30-min peak demand</td>
+                                <td class="p-3 font-semibold">Operational (2025/26)</td>
+                                <td class="p-3"><a href="https://www.elecod.com/news/elecod-1.5mw-2.6mwh-c-i-bess-for-demand-charge-in-malaysia" target="_blank" class="text-teal-600 hover:underline">Elecod News Case Study (2025)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-900">Plus Xnergy Pioneer Sodium BESS</td>
+                                <td class="p-3">Solar Farm / Industrial Reference Plant</td>
+                                <td class="p-3 font-semibold">1.45 MWh (NaS Battery)</td>
+                                <td class="p-3">Load shifting, renewable firming & sodium chemistry benchmark</td>
+                                <td class="p-3 font-semibold">Operational (2024/25)</td>
+                                <td class="p-3"><a href="https://www.plusxnergy.com/battery-energy-storage-systems-a-comprehensive-guide-for-businesses-to-understand-and-leverage-bess-in-malaysia/" target="_blank" class="text-teal-600 hover:underline">Plus Xnergy BESS Guide (2025)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-900">LVK Power Auto-Stamping BESS</td>
+                                <td class="p-3">Automotive Stamping Workshop</td>
+                                <td class="p-3 font-semibold">250 kW / 522 kWh</td>
+                                <td class="p-3">Industrial press load spike shaving & ToU peak/off-peak arbitrage</td>
+                                <td class="p-3 font-semibold">Operational (2025/26)</td>
+                                <td class="p-3"><a href="https://www.lvkpower.com/case-studies/industrial-battery-energy-storage-solution-for-an-auto-parts-stamping-workshop-in-malaysia/" target="_blank" class="text-teal-600 hover:underline">LVK Power Case Study (2025)</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 5: GEOGRAPHIC EXPLORER                 -->
+        <!-- ========================================== -->
+        <section id="content-geographic" class="tab-content space-y-6 hidden">
+            <!-- Introductory Context Paragraph -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <h2 class="text-lg font-bold text-slate-900 mb-2">Geographic Concentration of Medium Voltage Industrial Customers</h2>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    Peninsular Malaysia’s ~12,200 Medium Voltage (11 kV & 33 kV) industrial manufacturing customers are heavily concentrated along the West Coast manufacturing belt and the southern Johor growth corridor. State-level electricity consumption statistics from Suruhanjaya Tenaga confirm that <strong>Selangor (33–35%)</strong> and <strong>Johor (21–23%)</strong> account for over half of total MV industrial load. High rooftop solar penetration in these regions has depressed midday wholesale electricity prices (System Marginal Price), creating a pronounced "duck curve" and making BESS mandatory for local factories looking to capture peak shaving value.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- State Selection List -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                    <h3 class="text-base font-bold text-slate-900 mb-2">Select State Industrial Hub</h3>
+                    <div id="stateList" class="space-y-2 text-xs">
+                        <!-- JS populated -->
+                    </div>
+                </div>
+
+                <!-- State Detail Card -->
+                <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" id="stateDetailBox">
+                    <!-- JS populated state details -->
+                </div>
+            </div>
+
+            <!-- Full State Distribution Table -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <h3 class="text-base font-bold text-slate-900">State-Level MV Industrial Customer Ranking & Grid Characteristics</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                                <th class="p-3">Rank & State</th>
+                                <th class="p-3">Est. Share of MV Industrial Accounts & GWh</th>
+                                <th class="p-3">Key Industrial Estates & Free Zones (FIZ)</th>
+                                <th class="p-3">Dominant Industrial Subsectors</th>
+                                <th class="p-3">RP4 & BESS Market Dynamics</th>
+                                <th class="p-3">Primary Source Citation & Link</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 text-slate-700">
+                            <tr class="hover:bg-slate-50 bg-amber-50/30">
+                                <td class="p-3 font-bold text-slate-900">1. Selangor</td>
+                                <td class="p-3 font-bold text-amber-700">33% – 35% (#1 Peninsular State)</td>
+                                <td class="p-3">Shah Alam (Sec 15, 16, 21-23, Hicom), Klang / Port Klang, Subang Hi-Tech, Bangi, Rawang</td>
+                                <td class="p-3">F&B, automotive, plastics, gloves, cold storage, logistics</td>
+                                <td class="p-3">Highest density of 500kW–5MW MV factories. Severe midday SMP suppression drives 1–20 MWh BESS demand.</td>
+                                <td class="p-3"><a href="https://st.gov.my/sites/default/files/2026-02/Performance_Statistical_Information_on_the_Malaysian_Electricity_Supply_Industry_2018.pdf" target="_blank" class="text-teal-600 hover:underline">ST State Statistics & IET Report (2026)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 bg-amber-50/30">
+                                <td class="p-3 font-bold text-slate-900">2. Johor</td>
+                                <td class="p-3 font-bold text-amber-700">21% – 23% (#2 State, #1 Growth)</td>
+                                <td class="p-3">Pasir Gudang, Tanjung Langsat, Senai Airport City, Kulai / Sedenak Tech Park, SILC Iskandar</td>
+                                <td class="p-3">Oleochemicals, petrochemicals, electronics, hyperscale data centres</td>
+                                <td class="p-3">Fastest demand growth in Malaysia. High demand for MV SELCO + BESS alongside HV CRESS off-take.</td>
+                                <td class="p-3"><a href="https://farizalpartners.com/f/malaysias-renewable-energy-schemes-in-2026" target="_blank" class="text-teal-600 hover:underline">Farizal Partners & LSS6 Directives (2026)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-900">3. Penang</td>
+                                <td class="p-3 font-bold text-teal-700">14% – 16% (High 24/7 Load)</td>
+                                <td class="p-3">Bayan Lepas FIZ I–IV, Perai Industrial Estate, Batu Kawan Industrial Park (BKIP), Penang Science Park</td>
+                                <td class="p-3">Semiconductors, OSAT, medical devices, aerospace components</td>
+                                <td class="p-3">Dominated by 24/7 plants on MV/HV ToU. Cleanroom chiller baseloads favor >1 MWac SELCO + BESS.</td>
+                                <td class="p-3"><a href="https://www.elecod.com/news/elecod-1.5mw-2.6mwh-c-i-bess-for-demand-charge-in-malaysia" target="_blank" class="text-teal-600 hover:underline">ST MAISPEM & Elecod Case Study (2025)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-900">4. Perak</td>
+                                <td class="p-3 font-semibold">7% – 8%</td>
+                                <td class="p-3">Ipoh (Tasek, Pengkalan), Kamunting / Taiping, Tanjung Malim (Automotive High-Tech Valley), Lumut</td>
+                                <td class="p-3">Cement, limestone, gloves, foundries, marine fabrication</td>
+                                <td class="p-3">High concentration of peaky motor loads. RM89.27/kW MD charge reduction via BESS critical for margins.</td>
+                                <td class="p-3"><a href="https://academy.apexetrade.com/filestore/research-pdf/20260526_TENAGA_1QFY26_Results.pdf" target="_blank" class="text-teal-600 hover:underline">ST Statistics & Apex Securities (2026)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-900">5. Kedah</td>
+                                <td class="p-3 font-semibold">6% – 7%</td>
+                                <td class="p-3">Kulim Hi-Tech Park (KHTP 1–4), Sungai Petani (Bakar Arang), Gurun Industrial Estate</td>
+                                <td class="p-3">Wafer fabs, solar PV modules, EV batteries, automotive</td>
+                                <td class="p-3">KHTP hosts major HV/MV ToU plants with RE100 mandates, driving ground SELCO + BESS & CRESS wheeling.</td>
+                                <td class="p-3"><a href="https://www.mida.gov.my/wp-content/uploads/2026/03/MIDA_IPR.2025.pdf" target="_blank" class="text-teal-600 hover:underline">MIDA Investment Performance Report (2026)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-900">6. Negeri Sembilan & Melaka</td>
+                                <td class="p-3 font-semibold">8% – 10% Combined</td>
+                                <td class="p-3">Sendayan TechValley, Nilai, Techpark @ Enstek, Batu Berendam FTZ, Pegoh / Alor Gajah</td>
+                                <td class="p-3">Semiconductors, automotive assembly, F&B halal hubs, specialty chemicals</td>
+                                <td class="p-3">Modern single-storey plants with unshaded roofs ideal for 1–5 MWp SELCO + BESS setups.</td>
+                                <td class="p-3"><a href="https://raygosolar.com/solar-panel-installation-cost-malaysia/" target="_blank" class="text-teal-600 hover:underline">ST MAISPEM & Raygo Solar Analysis (2026)</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 6: ADDRESSABLE TAM & STRATEGY         -->
+        <!-- ========================================== -->
+        <section id="content-tam-strategy" class="tab-content space-y-6 hidden">
+            <!-- Introductory Context Paragraph -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <h2 class="text-lg font-bold text-slate-900 mb-2">Addressable Total Addressable Market (TAM) & Strategic Roadmap</h2>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    By combining TNB’s RP4 tariff rates, SEDA/ST regulatory boundaries, and customer load archetypes, this matrix quantifies the Total Addressable Market (TAM) for C&I solar PV and BESS across Peninsular Malaysia over the 2026–2030 horizon. The Medium Voltage (MV) segment represents the core behind-the-meter sweet spot, offering an addressable solar PV TAM of <strong>6,500–8,500 MWp</strong> and a storage TAM of <strong>3,500–5,500 MWh</strong>, accelerated by the 31 December 2026 sunset of MIDA’s GITA 100% tax allowance.
+                </p>
+            </div>
+
+            <!-- Segment TAM Overview Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- LV TAM -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-base font-bold text-slate-900">Low Voltage (LV) Segment</h3>
+                        <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-800 font-bold text-xs">~1.62M Accounts</span>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-xl space-y-1">
+                        <p class="text-xs text-slate-500">Solar PV TAM (MWp)</p>
+                        <h4 class="text-xl font-extrabold text-teal-700">2,500 – 3,200 MWp</h4>
+                        <p class="text-xs text-slate-500">Top 8-10% SME roofs (130k-160k premises)</p>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-xl space-y-1">
+                        <p class="text-xs text-slate-500">BESS Storage TAM (MWh)</p>
+                        <h4 class="text-xl font-extrabold text-indigo-700">50 – 100 MWh</h4>
+                        <p class="text-xs text-slate-500">Niche solar self-consumption shifting</p>
+                    </div>
+                    <ul class="text-xs text-slate-600 space-y-1 pt-2">
+                        <li>• <strong>Dominant Scheme:</strong> Solar ATAP (&le;72 kW zero CAS)</li>
+                        <li>• <strong>Savings Driver:</strong> Offsets 50.68 sen base + AFA (~54.3 sen)</li>
+                        <li>• <strong>Target Payback:</strong> 3.5 – 5.0 Years</li>
+                    </ul>
+                </div>
+
+                <!-- MV TAM -->
+                <div class="bg-white p-6 rounded-2xl border border-amber-300 shadow-sm space-y-3 bg-amber-50/20">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-base font-bold text-amber-900">Medium Voltage (MV) Sweet Spot</h3>
+                        <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-bold text-xs">~26,500 Accounts</span>
+                    </div>
+                    <div class="p-3 bg-amber-100/50 rounded-xl space-y-1">
+                        <p class="text-xs text-amber-800 font-semibold">Solar PV TAM (MWp)</p>
+                        <h4 class="text-2xl font-black text-amber-700">6,500 – 8,500 MWp</h4>
+                        <p class="text-xs text-amber-900">100% MD sizing on factories & malls</p>
+                    </div>
+                    <div class="p-3 bg-amber-100/50 rounded-xl space-y-1">
+                        <p class="text-xs text-amber-800 font-semibold">BESS Storage TAM (MWh)</p>
+                        <h4 class="text-2xl font-black text-amber-800">3,500 – 5,500 MWh</h4>
+                        <p class="text-xs text-amber-900">30-min peak shaving + >1 MWac SELCO mandate</p>
+                    </div>
+                    <ul class="text-xs text-slate-700 space-y-1 pt-2 font-medium">
+                        <li>• <strong>Dominant Scheme:</strong> SELCO + BESS (>1 MW) & Solar ATAP</li>
+                        <li>• <strong>Savings Driver:</strong> Shaves RM89.27–97.06/kW MD charges</li>
+                        <li>• <strong>Target Payback:</strong> 3.0 – 4.5 Years (w/ GITA 100%)</li>
+                    </ul>
+                </div>
+
+                <!-- HV TAM -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-base font-bold text-slate-900">High Voltage (HV) Segment</h3>
+                        <span class="px-2 py-0.5 rounded bg-indigo-100 text-indigo-800 font-bold text-xs">~700 Accounts</span>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-xl space-y-1">
+                        <p class="text-xs text-slate-500">Solar PV TAM (MWp)</p>
+                        <h4 class="text-xl font-extrabold text-indigo-700">>3,000 MW CRESS + 1,000 MW Onsite</h4>
+                        <p class="text-xs text-slate-500">Off-site grid wheeling + ground SELCO</p>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-xl space-y-1">
+                        <p class="text-xs text-slate-500">BESS Storage TAM (MWh)</p>
+                        <h4 class="text-xl font-extrabold text-indigo-700">1,500 – 2,500 MWh BTM</h4>
+                        <p class="text-xs text-slate-500">Plus >3,000 MWh off-site CRESS firming BESS</p>
+                    </div>
+                    <ul class="text-xs text-slate-600 space-y-1 pt-2">
+                        <li>• <strong>Dominant Scheme:</strong> CRESS Wheeling + Multi-MW SELCO</li>
+                        <li>• <strong>Savings Driver:</strong> Volumetric energy rate (40.43–44.52 sen)</li>
+                        <li>• <strong>Target Payback:</strong> 3.5 – 5.5 Years</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Full Addressable TAM Table -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <h3 class="text-base font-bold text-slate-900">Strategic TAM Matrix by RP4 Voltage Tier in Peninsular Malaysia</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                                <th class="p-3">RP4 Segment</th>
+                                <th class="p-3">Active Accounts</th>
+                                <th class="p-3">2025 Energy Demand</th>
+                                <th class="p-3">Solar PV TAM (MWp)</th>
+                                <th class="p-3">BESS Storage TAM (MWh)</th>
+                                <th class="p-3">Dominant Scheme & Setup</th>
+                                <th class="p-3">Target Payback (w/ GITA & GTFS 5.0)</th>
+                                <th class="p-3">Primary Source Citation & Link</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 text-slate-700">
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-900">LV General & LV ToU</td>
+                                <td class="p-3">~1,620,800</td>
+                                <td class="p-3">~28,400 GWh</td>
+                                <td class="p-3 font-semibold text-teal-700">2,500 – 3,200 MWp</td>
+                                <td class="p-3 font-semibold text-indigo-700">50 – 100 MWh</td>
+                                <td class="p-3"><strong>Solar ATAP</strong> (&le;72 kW zero-CAS sweet spot & 72–180 kW SMEs)</td>
+                                <td class="p-3 font-semibold">3.5 – 5.0 Years</td>
+                                <td class="p-3"><a href="https://amiya.energy/solar-in-malaysia-2026-guide/" target="_blank" class="text-teal-600 hover:underline">Amiya Energy & SEDA Portal (2026)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 bg-amber-50/40">
+                                <td class="p-3 font-bold text-slate-900">MV General & MV ToU</td>
+                                <td class="p-3 font-bold text-amber-900">~26,500</td>
+                                <td class="p-3 font-bold text-amber-800">~65,190 GWh</td>
+                                <td class="p-3 font-extrabold text-amber-700">6,500 – 8,500 MWp</td>
+                                <td class="p-3 font-extrabold text-amber-800">3,500 – 5,500 MWh</td>
+                                <td class="p-3"><strong>SELCO + BESS</strong> (>1 MWac mandate) & <strong>Solar ATAP + BESS</strong> (&le;1 MW)</td>
+                                <td class="p-3 font-bold text-emerald-700">3.0 – 4.5 Years</td>
+                                <td class="p-3"><a href="https://www.plusxnergy.com/plus-xnergy-deploys-one-of-malaysias-largest-ci-self-consumption-bess/" target="_blank" class="text-teal-600 hover:underline">Trexon & Plus Xnergy Releases (2026)</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-900">HV General & HV ToU</td>
+                                <td class="p-3">~700</td>
+                                <td class="p-3">~16,550 GWh</td>
+                                <td class="p-3 font-semibold text-indigo-700">>3,000 MW CRESS + 800–1,200 MW Onsite</td>
+                                <td class="p-3 font-semibold text-indigo-700">1,500 – 2,500 MWh BTM (+3 GWh CRESS)</td>
+                                <td class="p-3"><strong>CRESS Grid Wheeling</strong> (20 sen SAC) + <strong>Multi-MW SELCO + BESS</strong></td>
+                                <td class="p-3 font-semibold">3.5 – 5.5 Years</td>
+                                <td class="p-3"><a href="https://farizalpartners.com/f/malaysias-renewable-energy-schemes-in-2026" target="_blank" class="text-teal-600 hover:underline">Farizal Partners & Legal 500 RE (2026)</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+                <p class="font-semibold text-slate-700">Peninsular Malaysia C&I Solar PV & BESS Market Explorer (2024–2026)</p>
+                <p>Data Sources: Suruhanjaya Tenaga (ST), Tenaga Nasional Berhad (TNB), SEDA Malaysia, PETRA & Industry Reports.</p>
+            </div>
+            <div class="text-right">
+                <p>RP4 Tariff Schedule: July 2025 – December 2027</p>
+                <p class="text-slate-400">Single-Page Interactive Application</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT APPLICATION LOGIC -->
+    <script>
+        // Data Store for State Geographic Information
+        const stateData = [
+            {
+                id: 'selangor',
+                name: '1. Selangor',
+                share: '~33%–35% of MV Ind. Accounts',
+                estates: 'Shah Alam (Sec 15, 16, 21-23, Hicom-Glenmarie), Klang/Port Klang (Bukit Raja, Meru, Kapar, Telok Gong), Subang Hi-Tech, Petaling Jaya, Bangi, Rawang',
+                subsectors: 'Food & beverage (F&B), automotive assembly & stamping, plastics, rubber gloves, cold storage logistics, pharmaceuticals',
+                dynamics: 'Highest density of 500 kW–5 MW factories on MV General & ToU. Severe midday SMP duck-curve suppression and rapid Q1 2026 Solar ATAP uptake make Selangor the #1 market for 1–20 MWh SELCO + BESS peak shaving.'
+            },
+            {
+                id: 'johor',
+                name: '2. Johor',
+                share: '~21%–23% of MV Ind. Accounts',
+                estates: 'Pasir Gudang, Tanjung Langsat, Senai Industrial Park & Airport City, Kulai / Sedenak Tech Park (STeP), SILC Iskandar Puteri, Tebrau',
+                subsectors: 'Oleochemicals, petrochemicals, palm oil refining, precision engineering, EMS electronics, steel fabrication, hyperscale data centres',
+                dynamics: 'Fastest demand growth in Peninsular Malaysia. PETRA directed LSS6 BESS siting toward the south. High MV SELCO + BESS demand alongside HV CRESS off-take.'
+            },
+            {
+                id: 'penang',
+                name: '3. Pulau Pinang (Penang)',
+                share: '~14%–16% of MV Ind. Accounts',
+                estates: 'Bayan Lepas FIZ (Phases I–IV), Perai Industrial Estate, Batu Kawan Industrial Park (BKIP), Penang Science Park, Bukit Minyak',
+                subsectors: 'Semiconductor wafer fab, OSAT, medical devices, automated test equipment (ATE), aerospace components, LED optoelectronics',
+                dynamics: 'Dominated by 24-hour MNC plants on MV/HV ToU. High cleanroom chiller baseloads favor 100%-demand SELCO + BESS (>1 MWac) and precision MD peak shaving.'
+            },
+            {
+                id: 'perak',
+                name: '4. Perak',
+                share: '~7%–8% of MV Ind. Accounts',
+                estates: 'Ipoh / Kinta (Tasek, Pengkalan, Jelapang), Kamunting / Taiping, Tanjung Malim (Automotive High-Tech Valley / Proton City), Lumut Port',
+                subsectors: 'Cement & limestone quarrying, rubber gloves, ceramics, foundry & metal casting, shipbuilding/marine, automotive assembly',
+                dynamics: 'High concentration of peaky motor and furnace loads in Ipoh/Kamunting. RM89.27/kW MD reduction via BESS critical for margin preservation.'
+            },
+            {
+                id: 'kedah',
+                name: '5. Kedah',
+                share: '~6%–7% of MV Ind. Accounts',
+                estates: 'Kulim Hi-Tech Park (KHTP Phases 1–4), Sungai Petani (Bakar Arang, Tikam Batu), Gurun Heavy Industrial Estate',
+                subsectors: 'Wafer fabs, solar PV modules, EV batteries, automotive assembly, wood & rubber processing',
+                dynamics: 'KHTP hosts massive HV ToU and 33 kV MV ToU plants with RE100 mandates, driving large ground SELCO + BESS and CRESS off-take.'
+            },
+            {
+                id: 'ns_melaka',
+                name: '6. Negeri Sembilan & Melaka',
+                share: '~8%–10% Combined MV Accounts',
+                estates: 'Sendayan TechValley, Techpark @ Enstek, Nilai, Batu Berendam FTZ, Pegoh / Alor Gajah, Tangga Batu',
+                subsectors: 'Semiconductors, automotive assembly, F&B halal hubs, textiles, specialty chemicals',
+                dynamics: 'Modern single-storey factories in Sendayan and Alor Gajah feature large, unshaded roofs ideal for 1–5 MWp SELCO + BESS installations.'
+            }
+        ];
+
+        // Chart Instance References
+        let accountsChartObj = null;
+        let gwhChartObj = null;
+        let billBreakdownChartObj = null;
+        let solarAdditionsChartObj = null;
+
+        // TAB SWITCHING LOGIC
+        function switchTab(tabId) {
+            // Update Tab Button Styles
+            document.querySelectorAll('#main-tabs button').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+
+            // Show selected tab content
+            const targetContent = document.getElementById(`content-${tabId}`);
+            if (targetContent) targetContent.classList.remove('hidden');
+
+            // Trigger Chart Render / Resize on tab view
+            if (tabId === 'tariffs') {
+                renderTariffCharts();
+            } else if (tabId === 'calculator') {
+                runSimulation();
+            } else if (tabId === 'solar-bess') {
+                renderSolarCharts();
+            } else if (tabId === 'geographic') {
+                renderGeographicTab();
+            }
+        }
+
+        // TAB 2 CHARTS: ACCOUNTS & GWH
+        function renderTariffCharts() {
+            if (accountsChartObj) accountsChartObj.destroy();
+            if (gwhChartObj) gwhChartObj.destroy();
+
+            // Accounts Donut Chart
+            const ctxAccounts = document.getElementById('accountsChart').getContext('2d');
+            accountsChartObj = new Chart(ctxAccounts, {
+                type: 'doughnut',
+                data: {
+                    labels: ['LV General', 'LV ToU', 'MV General', 'MV ToU', 'HV General', 'HV ToU'],
+                    datasets: [{
+                        data: [1602300, 18500, 19120, 7380, 110, 590],
+                        backgroundColor: ['#0D9488', '#14B8A6', '#D97706', '#F59E0B', '#4F46E5', '#6366F1']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { boxWidth: 12, font: { size: 10 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    let val = context.raw || 0;
+                                    return label + ': ' + val.toLocaleString() + ' accounts';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // GWh Bar Chart
+            const ctxGwh = document.getElementById('gwhChart').getContext('2d');
+            gwhChartObj = new Chart(ctxGwh, {
+                type: 'bar',
+                data: {
+                    labels: ['LV Gen', 'LV ToU', 'MV Gen', 'MV ToU', 'HV Gen', 'HV ToU'],
+                    datasets: [{
+                        label: '2025 Energy Sales (GWh)',
+                        data: [26940, 1460, 34550, 30640, 3250, 13300],
+                        backgroundColor: ['#0D9488', '#14B8A6', '#D97706', '#F59E0B', '#4F46E5', '#6366F1']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.raw.toLocaleString() + ' GWh (' + ((context.raw / 110140) * 100).toFixed(1) + '%)';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'GWh', font: { size: 10 } } }
+                    }
+                }
+            });
+        }
+
+        // FILTER TARIFF MASTER TABLE
+        function filterTariffTable() {
+            const input = document.getElementById('tariffSearch').value.toUpperCase();
+            const tr = document.getElementById('tariffMasterTable').getElementsByTagName('tr');
+
+            for (let i = 1; i < tr.length - 1; i++) {
+                let text = tr[i].innerText || tr[i].textContent;
+                if (text.toUpperCase().indexOf(input) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+
+        // TAB 3: BILL & BESS SIMULATOR LOGIC
+        function runSimulation() {
+            const cat = document.getElementById('simCategory').value;
+            const peakDemand = parseFloat(document.getElementById('simPeakDemand').value);
+            const monthlyKwh = parseFloat(document.getElementById('simMonthlyKwh').value);
+            const bessKw = parseFloat(document.getElementById('simBessKw').value);
+            const afaRate = parseFloat(document.getElementById('simAfaRate').value) / 100; // sen to RM
+
+            // Update UI Labels
+            document.getElementById('valPeakDemand').innerText = peakDemand + ' kW';
+            document.getElementById('valMonthlyKwh').innerText = monthlyKwh.toLocaleString() + ' kWh';
+            document.getElementById('valBessKw').innerText = bessKw + ' kW Shaved';
+            document.getElementById('valAfaRate').innerText = (afaRate >= 0 ? '+' : '') + (afaRate * 100).toFixed(2) + ' sen/kWh';
+
+            // Tariff Rates Mapping
+            let energyRate = 0; // RM / kWh
+            let mdRate = 0; // RM / kW
+            let isVolumetricMd = false;
+            let volumetricCapNet = 0; // RM / kWh
+            let retailFee = 20;
+
+            if (cat === 'LV_GEN') {
+                energyRate = 0.2703;
+                isVolumetricMd = true;
+                volumetricCapNet = 0.2365; // 8.83 sen Capacity + 14.82 sen Network
+                retailFee = 20;
+            } else if (cat === 'LV_TOU') {
+                energyRate = 0.2647.toFixed(4); // avg peak/off-peak
+                isVolumetricMd = true;
+                volumetricCapNet = 0.2365;
+                retailFee = 20;
+            } else if (cat === 'MV_GEN') {
+                energyRate = 0.2983;
+                mdRate = 89.27; // 29.43 Cap + 59.84 Net
+                retailFee = 200;
+            } else if (cat === 'MV_TOU') {
+                energyRate = 0.2927; // avg peak/off-peak
+                mdRate = 97.06; // 30.19 Cap + 66.87 Net
+                retailFee = 200;
+            } else if (cat === 'HV_GEN') {
+                energyRate = 0.4303;
+                mdRate = 31.21;
+                retailFee = 250;
+            } else if (cat === 'HV_TOU') {
+                energyRate = 0.4247;
+                mdRate = 44.82;
+                retailFee = 250;
+            }
+
+            // Calculations WITHOUT BESS
+            let baseEnergyCost = monthlyKwh * energyRate;
+            let baseMdCost = isVolumetricMd ? (monthlyKwh * volumetricCapNet) : (peakDemand * mdRate);
+            let baseAfaCost = monthlyKwh * afaRate;
+            let baseSubtotal = baseEnergyCost + baseMdCost + retailFee;
+            let baseKwtbb = baseSubtotal * 0.016; // 1.6% levy on usage
+            let totalBaseBill = baseSubtotal + baseAfaCost + baseKwtbb;
+
+            // Calculations WITH BESS (Shaving Peak Demand)
+            let newDemand = Math.max(0, peakDemand - bessKw);
+            let newMdCost = isVolumetricMd ? (monthlyKwh * volumetricCapNet) : (newDemand * mdRate);
+            let newSubtotal = baseEnergyCost + newMdCost + retailFee;
+            let newKwtbb = newSubtotal * 0.016;
+            let totalNewBill = newSubtotal + baseAfaCost + newKwtbb;
+
+            let monthlySavings = totalBaseBill - totalNewBill;
+            let annualSavings = monthlySavings * 12;
+
+            // Simple BESS Capex & Payback Model (RM 1,800 per kWh installed, assume 2-hr storage)
+            let bessKwhNeeded = bessKw * 2;
+            let bessGrossCapex = bessKwhNeeded * 1800;
+            let bessNetCapexWithGita = bessGrossCapex * 0.60; // 40% net tax benefit via GITA + CA
+            let paybackYears = annualSavings > 0 ? (bessNetCapexWithGita / annualSavings).toFixed(1) : 'N/A';
+
+            // Display Results
+            document.getElementById('resBaseBill').innerText = 'RM ' + Math.round(totalBaseBill).toLocaleString();
+            document.getElementById('resNewBill').innerText = 'RM ' + Math.round(totalNewBill).toLocaleString();
+            document.getElementById('resAnnualSavings').innerText = 'RM ' + Math.round(annualSavings).toLocaleString();
+            document.getElementById('resPayback').innerText = 'Est. Payback: ~' + paybackYears + ' Years (w/ GITA Tax Allowance)';
+
+            // Render Stacked Bar Chart
+            renderBillChart(baseEnergyCost, baseMdCost, baseAfaCost, baseKwtbb + retailFee, newMdCost);
+        }
+
+        function renderBillChart(energy, baseMd, afa, fees, newMd) {
+            if (billBreakdownChartObj) billBreakdownChartObj.destroy();
+
+            const ctx = document.getElementById('billBreakdownChart').getContext('2d');
+            billBreakdownChartObj = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Standard Bill', 'With BESS Peak Shaving'],
+                    datasets: [
+                        {
+                            label: 'Energy Charge',
+                            data: [energy, energy],
+                            backgroundColor: '#0D9488'
+                        },
+                        {
+                            label: 'Capacity + Network MD Charge',
+                            data: [baseMd, newMd],
+                            backgroundColor: '#E11D48'
+                        },
+                        {
+                            label: 'AFA Adjustment',
+                            data: [afa, afa],
+                            backgroundColor: '#D97706'
+                        },
+                        {
+                            label: 'Retail & KWTBB Levy',
+                            data: [fees, fees],
+                            backgroundColor: '#64748B'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(c) {
+                                    return c.dataset.label + ': RM ' + Math.round(c.raw).toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { stacked: true },
+                        y: { stacked: true, title: { display: true, text: 'Monthly Bill (RM)', font: { size: 10 } } }
+                    }
+                }
+            });
+        }
+
+        // TAB 4 CHARTS: SOLAR ADDITIONS
+        function renderSolarCharts() {
+            if (solarAdditionsChartObj) solarAdditionsChartObj.destroy();
+
+            const ctx = document.getElementById('solarAdditionsChart').getContext('2d');
+            solarAdditionsChartObj = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['2022', '2023', '2024', '2025', '2026 Forecast'],
+                    datasets: [
+                        {
+                            label: 'NEM 3.0 (NOVA)',
+                            data: [145, 240, 380, 440, 165],
+                            backgroundColor: '#0D9488'
+                        },
+                        {
+                            label: 'SELCO (Self-Consumption)',
+                            data: [45, 65, 95, 160, 210],
+                            backgroundColor: '#D97706'
+                        },
+                        {
+                            label: 'Solar ATAP',
+                            data: [0, 0, 0, 0, 185],
+                            backgroundColor: '#059669'
+                        },
+                        {
+                            label: 'CRESS (Wheeling)',
+                            data: [0, 0, 0, 0, 150],
+                            backgroundColor: '#4F46E5'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(c) {
+                                    return c.dataset.label + ': ' + c.raw + ' MW';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { stacked: true },
+                        y: { stacked: true, title: { display: true, text: 'MW Installed', font: { size: 10 } } }
+                    }
+                }
+            });
+        }
+
+        // TAB 5: GEOGRAPHIC EXPLORER TAB LOGIC
+        function renderGeographicTab() {
+            const listEl = document.getElementById('stateList');
+            listEl.innerHTML = '';
+
+            stateData.forEach((st, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-3 rounded-xl border border-slate-200 transition-all ${idx === 0 ? 'bg-teal-50 border-teal-500 font-bold' : 'bg-slate-50 hover:bg-slate-100'}`;
+                btn.onclick = () => selectState(st.id, btn);
+                btn.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-900">${st.name}</span>
+                        <span class="text-xs text-teal-700 font-semibold">${st.share}</span>
+                    </div>
+                `;
+                listEl.appendChild(btn);
+            });
+
+            // Default select Selangor
+            selectState('selangor', listEl.children[0]);
+        }
+
+        function selectState(id, btnElement) {
+            // Highlight selected button
+            const buttons = document.getElementById('stateList').children;
+            for (let b of buttons) {
+                b.className = 'w-full text-left p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 transition-all text-xs';
+            }
+            if (btnElement) {
+                btnElement.className = 'w-full text-left p-3 rounded-xl border border-teal-500 bg-teal-50 font-bold transition-all text-xs';
+            }
+
+            const st = stateData.find(s => s.id === id);
+            const box = document.getElementById('stateDetailBox');
+
+            box.innerHTML = `
+                <div class="flex justify-between items-start border-b border-slate-200 pb-3">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">${st.name}</h3>
+                        <p class="text-xs text-teal-700 font-semibold mt-0.5">${st.share}</p>
+                    </div>
+                    <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 font-bold text-xs">Major Solar + BESS Target</span>
+                </div>
+
+                <div class="space-y-3 text-xs">
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-sm">Key Industrial Estates & Free Zones:</h4>
+                        <p class="text-slate-600 leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-200 mt-1">${st.estates}</p>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-sm">Dominant MV Industrial Subsectors:</h4>
+                        <p class="text-slate-600 leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-200 mt-1">${st.subsectors}</p>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-sm">RP4 Tariff & Grid Market Dynamics:</h4>
+                        <p class="text-slate-700 leading-relaxed bg-amber-50 p-3 rounded-lg border border-amber-200 mt-1">${st.dynamics}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // INITIALIZE APP ON LOAD
+        window.addEventListener('DOMContentLoaded', () => {
+            switchTab('overview');
+        });
+    </script>
+</body>
+</html>

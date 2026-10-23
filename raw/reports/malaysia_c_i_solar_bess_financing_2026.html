@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Chosen Palette: Warm Neutral & Sustainable Slate (Base: #FAF9F6, Cards: #FFFFFF, Primary Text: #1E293B, Emerald Accent: #059669, Amber Accent: #D97706, Indigo Accent: #4F46E5) -->
+    <!-- Application Structure Plan: Designed as a multi-tab interactive intelligence dashboard for corporate energy managers, financiers, and CFOs in Malaysia. Structure includes: 1) Executive Summary & Regulatory Context with TNB Tariff Shift Visualizer; 2) Bank Debt & GTFS 5.0 Explorer with dynamic facility filtering; 3) Zero-Capex vs Outright Analysis with PPA/Lease Comparison and Dynamic Financial Model; 4) BESS Risk & Warranty Matrix with interactive MD Miss Liquidated Damages Calculator; 5) Decision Engine & Segment Benchmark tailored by company size and tax status. This non-linear structure allows decision-makers to evaluate financial, regulatory, and technical trade-offs dynamically. -->
+    <!-- Visualization & Content Choices: 
+        - TNB Tariff Increase: Goal -> Compare RP3 vs RP4 charges. Method -> Chart.js Bar Chart.
+        - Cumulative Financial Returns: Goal -> Compare 25-yr financial yields. Method -> Chart.js Multi-line Chart with interactive system size inputs.
+        - BESS Warranty Tiers: Goal -> Organize risk/cost trade-offs across 3 tiers. Method -> Styled interactive HTML Cards + Chart.js Bar Chart.
+        - Customer Preferences: Goal -> Display preferences by size. Method -> Chart.js Stacked Bar Chart.
+        - MD Miss Liability: Goal -> Interactive risk calculation. Method -> HTML Sliders + Live Chart.js update.
+        Confirming NO SVG graphics or Mermaid JS used. HTML/CSS styling, Unicode icons, and Canvas render all visuals. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malaysia C&I Solar PV & BESS Financing Intelligence (2026)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 360px;
+            }
+        }
+        .tab-active {
+            border-bottom: 3px solid #059669;
+            color: #059669;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Header Section -->
+    <header class="bg-slate-900 text-white shadow-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-900/60 text-emerald-300 border border-emerald-700/50 mb-2">
+                        <span>⚡ MALAYSIA ENERGY TRANSITION 2026</span>
+                    </div>
+                    <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-stone-100">C&I Solar PV & BESS Financing Intelligence Platform</h1>
+                    <p class="mt-1 text-sm text-slate-400">Navigating RP4 Tariffs, Solar ATAP, GTFS 5.0, Zero-Capex Models & BESS Guarantees</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-xs text-slate-400">Effective Framework: <strong class="text-stone-200">RP4 (2025–2027) & Solar ATAP</strong></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Key Metrics Highlight Ribbon -->
+    <section class="bg-stone-100 border-b border-stone-200 py-3">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div class="bg-white p-3 rounded-lg border border-stone-200 shadow-sm">
+                    <span class="block text-xs font-medium text-slate-500 uppercase tracking-wider">MV Peak MD Tariff</span>
+                    <span class="text-lg md:text-xl font-bold text-amber-600">RM97.06 / kW</span>
+                    <span class="block text-[10px] text-slate-400">+162% vs RP3 Baseline</span>
+                </div>
+                <div class="bg-white p-3 rounded-lg border border-stone-200 shadow-sm">
+                    <span class="block text-xs font-medium text-slate-500 uppercase tracking-wider">Solar ATAP Export Credit</span>
+                    <span class="text-lg md:text-xl font-bold text-slate-700">~RM0.1881 / kWh</span>
+                    <span class="block text-[10px] text-slate-400">SMP Wholesale Rate (Monthly Forfeiture)</span>
+                </div>
+                <div class="bg-white p-3 rounded-lg border border-stone-200 shadow-sm">
+                    <span class="block text-xs font-medium text-slate-500 uppercase tracking-wider">BNM Concessionary Debt</span>
+                    <span class="text-lg md:text-xl font-bold text-emerald-600">3.5% – 5.0% p.a.</span>
+                    <span class="block text-[10px] text-slate-400">HTG & LCTF Facilities</span>
+                </div>
+                <div class="bg-white p-3 rounded-lg border border-stone-200 shadow-sm">
+                    <span class="block text-xs font-medium text-slate-500 uppercase tracking-wider">LFP BESS Turnkey Cost</span>
+                    <span class="text-lg md:text-xl font-bold text-indigo-600">RM1,150 – RM1,600 / kWh</span>
+                    <span class="block text-[10px] text-slate-400">Commercial Containerized Storage</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navigation Tabs -->
+    <nav class="bg-white border-b border-stone-200 sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex space-x-6 overflow-x-auto no-scrollbar text-sm font-medium text-slate-600" id="nav-tabs">
+                <button onclick="switchTab('tab-regulatory')" id="btn-tab-regulatory" class="py-4 px-1 tab-active transition-colors whitespace-nowrap flex items-center gap-2">
+                    <span>📊</span> 1. Tariff & Regulatory Context
+                </button>
+                <button onclick="switchTab('tab-banking')" id="btn-tab-banking" class="py-4 px-1 hover:text-emerald-600 transition-colors whitespace-nowrap flex items-center gap-2">
+                    <span>🏛️</span> 2. Bank Financing & GTFS 5.0
+                </button>
+                <button onclick="switchTab('tab-zerocapex')" id="btn-tab-zerocapex" class="py-4 px-1 hover:text-emerald-600 transition-colors whitespace-nowrap flex items-center gap-2">
+                    <span>📋</span> 3. Zero-Capex & Tax Incentives
+                </button>
+                <button onclick="switchTab('tab-bessrisk')" id="btn-tab-bessrisk" class="py-4 px-1 hover:text-emerald-600 transition-colors whitespace-nowrap flex items-center gap-2">
+                    <span>🔋</span> 4. BESS Guarantees & Penalties
+                </button>
+                <button onclick="switchTab('tab-recommender')" id="btn-tab-recommender" class="py-4 px-1 hover:text-emerald-600 transition-colors whitespace-nowrap flex items-center gap-2">
+                    <span>💡</span> 5. Strategy Engine & Benchmarks
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- TAB 1: Tariff & Regulatory Context -->
+        <div id="tab-regulatory" class="tab-content space-y-8">
+            <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+                <h2 class="text-xl font-bold text-slate-900 mb-2">The 2026 Regulatory and Tariff Inflection Point</h2>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                    Commercial and industrial energy procurement in Malaysia underwent a structural shift on 1 January 2026. Two simultaneous regulatory updates—Tenaga Nasional Berhad's (TNB) Regulatory Period 4 (RP4, 2025–2027) tariff structure and the replacement of NEM 3.0 with the Solar Accelerated Transition Action Programme (Solar ATAP)—fundamentally altered the underlying economics of rooftop solar PV and Battery Energy Storage Systems (BESS). Below, explore how punitive Maximum Demand (MD) charges make BESS-driven peak shaving the primary financial lever for C&I facilities.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Visualizing Tariff Increase -->
+                <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg font-semibold text-slate-900 mb-1">TNB Demand Charge Surge: RP3 vs RP4</h3>
+                        <p class="text-xs text-slate-500 mb-4">Comparison of combined Capacity and Network Charges for Medium Voltage (MV) C&I users.</p>
+                        <div class="chart-container">
+                            <canvas id="tariffChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="mt-4 p-3 bg-amber-50 rounded-lg border border-amber-200 text-xs text-amber-900">
+                        <strong>Billing Spike Rule:</strong> TNB records Maximum Demand based on the single highest 30-minute average kW draw in a billing month. A single 30-minute operational spike locks in a RM89.27 to RM97.06/kW charge across the entire billing cycle, accounting for 35% to 45% of an industrial electricity bill.
+                    </div>
+                </div>
+
+                <!-- Solar ATAP & SELCO Dynamics -->
+                <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg font-semibold text-slate-900 mb-3">Solar ATAP & SELCO Regulatory Rules</h3>
+                        <div class="space-y-4 text-sm text-slate-600">
+                            <div class="p-3 bg-stone-50 rounded-lg border border-stone-200">
+                                <span class="font-semibold text-slate-800 block mb-1">Solar ATAP (Rooftop Allocation)</span>
+                                <ul class="list-disc list-inside space-y-1 text-xs text-slate-600">
+                                    <li>National quota ceilings removed; installation allowed up to 100% of 12-month average MD (max 1,000 kWac / 1 MWac).</li>
+                                    <li>Eliminated 1-to-1 retail tariff offsets for export.</li>
+                                    <li>Surplus exports credited at Average System Marginal Price (SMP) (~RM0.1881/kWh) vs grid purchase up to RM0.3132/kWh.</li>
+                                    <li class="text-rose-700 font-medium">Unused export credits expire at month-end without rollover.</li>
+                                </ul>
+                            </div>
+                            <div class="p-3 bg-stone-50 rounded-lg border border-stone-200">
+                                <span class="font-semibold text-slate-800 block mb-1">Revised SELCO Framework (Effective Jan 2026)</span>
+                                <ul class="list-disc list-inside space-y-1 text-xs text-slate-600">
+                                    <li>Mandatory BESS requirement and RM12/kWp standby charge threshold raised from 72 kWp to <strong>>1 MWac</strong>.</li>
+                                    <li>Large installations (>1 MWac) must integrate BESS and pay standby fees, driving adoption of EaaS/PPA bundles.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Interactive Spike Impact Calculator -->
+                    <div class="mt-4 p-4 bg-slate-900 text-white rounded-lg">
+                        <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-2">30-Minute Peak Spike Calculator</h4>
+                        <div class="flex items-center gap-4 text-sm">
+                            <label for="spikeKw" class="text-xs text-slate-300">Unmitigated Peak Spike (kW):</label>
+                            <input type="range" id="spikeKw" min="100" max="2000" step="50" value="500" class="w-full accent-emerald-500" oninput="calculateSpikeCost()">
+                            <span id="spikeKwVal" class="font-bold text-emerald-300 w-16 text-right">500 kW</span>
+                        </div>
+                        <div class="mt-2 text-xs flex justify-between border-t border-slate-700 pt-2 text-slate-300">
+                            <span>Locked TNB Monthly Charge (MV ToU):</span>
+                            <span id="spikeCostResult" class="font-bold text-amber-400 text-sm">RM 48,530 / month</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: Bank Green Financing & GTFS 5.0 -->
+        <div id="tab-banking" class="tab-content hidden space-y-8">
+            <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+                <h2 class="text-xl font-bold text-slate-900 mb-2">Bank Debt Facilities, GTFS 5.0, and Central Bank Funds</h2>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                    Malaysian commercial and Islamic banks distribute low-cost debt via Bank Negara Malaysia (BNM) facilities and sovereign credit guarantees under GTFS 5.0. Notably under GTFS 5.0, the government eliminated the interest rate rebate entirely, pivoting the program strictly into a loss-given-default credit risk-sharing vehicle (60% to 80% guarantee coverage).
+                </p>
+            </div>
+
+            <!-- BNM Concessionary Debt Comparison -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="font-bold text-slate-900">BNM Low Carbon Transition Facility (LCTF)</h3>
+                        <span class="px-2 py-0.5 text-xs font-semibold bg-emerald-100 text-emerald-800 rounded">Cap: 5.0% p.a.</span>
+                    </div>
+                    <ul class="text-xs text-slate-600 space-y-2">
+                        <li><strong>Target:</strong> Malaysian SMEs (Sales ≤RM50M manufacturing or ≤RM20M services).</li>
+                        <li><strong>Financing Quantum:</strong> Capped at RM2.5M (turnover ≤RM25M) or RM10.0M (turnover >RM25M).</li>
+                        <li><strong>Tenure:</strong> Up to 10 years.</li>
+                        <li><strong>Scope:</strong> Rooftop solar PV, energy efficiency retrofits, low-carbon machinery.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="font-bold text-slate-900">BNM High Tech and Green Facility (HTG)</h3>
+                        <span class="px-2 py-0.5 text-xs font-semibold bg-indigo-100 text-indigo-800 rounded">Cap: 3.5% - 5.0% p.a.</span>
+                    </div>
+                    <ul class="text-xs text-slate-600 space-y-2">
+                        <li><strong>Target:</strong> Strategic manufacturing/services (E&E, chemicals, aerospace) or green tech providers (≥51% Malaysian ownership).</li>
+                        <li><strong>Financing Quantum:</strong> Up to RM10.0 million.</li>
+                        <li><strong>Tenure:</strong> Up to 10 years.</li>
+                        <li><strong>Lowest Debt Cost:</strong> Capped at 3.5% p.a. (unsecured) or 5.0% p.a. (with CGC guarantee).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- GTFS 5.0 Structure Table -->
+            <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+                <h3 class="text-lg font-bold text-slate-900 mb-2">GTFS 5.0 Sovereign Guarantee Matrix (RM1.0B Allocation until 31 Dec 2026)</h3>
+                <p class="text-xs text-slate-500 mb-4">Note: Interest rebate is 0%. Technical criteria for 'User' category exclude standalone solar PV, prioritizing industrial EE and BESS.</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 border-b border-slate-200 text-slate-700 uppercase font-semibold">
+                                <th class="p-3">Applicant Category</th>
+                                <th class="p-3">Max Limit (Group Exposure)</th>
+                                <th class="p-3">Max Tenure</th>
+                                <th class="p-3">CGC Guarantee %</th>
+                                <th class="p-3">Interest Rebate</th>
+                                <th class="p-3">Key Technical Scope</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-stone-200 text-slate-600">
+                            <tr class="hover:bg-stone-50">
+                                <td class="p-3 font-semibold text-slate-800">Producer of Green Tech</td>
+                                <td class="p-3">RM 100 Million</td>
+                                <td class="p-3">15 Years</td>
+                                <td class="p-3">60% (80% Waste)</td>
+                                <td class="p-3 text-rose-600 font-bold">0% (None)</td>
+                                <td class="p-3">Production of green products; excludes LSS and rooftop solar PV.</td>
+                            </tr>
+                            <tr class="hover:bg-stone-50">
+                                <td class="p-3 font-semibold text-slate-800">User of Green Tech</td>
+                                <td class="p-3">RM 50 Million</td>
+                                <td class="p-3">10 Years</td>
+                                <td class="p-3">60% (80% Waste)</td>
+                                <td class="p-3 text-rose-600 font-bold">0% (None)</td>
+                                <td class="p-3">Industrial EE retrofits, plant modernization. Excludes standalone solar.</td>
+                            </tr>
+                            <tr class="hover:bg-stone-50">
+                                <td class="p-3 font-semibold text-slate-800">ESCO (Energy Service Co)</td>
+                                <td class="p-3">RM 25 Million</td>
+                                <td class="p-3">10 Years</td>
+                                <td class="p-3">60%</td>
+                                <td class="p-3 text-rose-600 font-bold">0% (None)</td>
+                                <td class="p-3">Financing EE assets & EPC contracts. Requires ST registration.</td>
+                            </tr>
+                            <tr class="hover:bg-stone-50">
+                                <td class="p-3 font-semibold text-slate-800">Housing Developer</td>
+                                <td class="p-3">RM 100 Million</td>
+                                <td class="p-3">5 Years</td>
+                                <td class="p-3">60%</td>
+                                <td class="p-3 text-rose-600 font-bold">0% (None)</td>
+                                <td class="p-3">Green residential builds (selling price RM350k-RM450k).</td>
+                            </tr>
+                            <tr class="hover:bg-stone-50">
+                                <td class="p-3 font-semibold text-slate-800">Mobility Infrastructure</td>
+                                <td class="p-3">RM 50 Million</td>
+                                <td class="p-3">5 Years</td>
+                                <td class="p-3">60%</td>
+                                <td class="p-3 text-rose-600 font-bold">0% (None)</td>
+                                <td class="p-3">EV charging infrastructure deployment by Charge Point Operators.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Major Malaysian Commercial Bank Offerings -->
+            <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+                <h3 class="text-lg font-bold text-slate-900 mb-4">Commercial & Islamic Bank C&I Offerings (2026)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-4 rounded-lg border border-stone-200 bg-stone-50">
+                        <span class="font-bold text-slate-800 block">Maybank / Maybank Islamic</span>
+                        <p class="text-xs text-slate-600 mt-1">LCTF/-i (up to RM10M) & SME Property Bundled Financing (up to 20 yrs). 0% Credit Card EPP up to 60 months with 6 solar partners.</p>
+                    </div>
+                    <div class="p-4 rounded-lg border border-stone-200 bg-stone-50">
+                        <span class="font-bold text-slate-800 block">CIMB / CIMB Islamic</span>
+                        <p class="text-xs text-slate-600 mt-1">SME RE Financing-i (up to 100% margin). RM3B Sustainability-Linked Financing (SLF) offering up to <strong>0.50% p.a. interest rebate</strong> tied to BEI / GHG targets.</p>
+                    </div>
+                    <div class="p-4 rounded-lg border border-stone-200 bg-stone-50">
+                        <span class="font-bold text-slate-800 block">RHB / RHB Islamic</span>
+                        <p class="text-xs text-slate-600 mt-1">RHB SME Green RE & CAPEX Financing with <strong>100% Margin of Financing</strong> at rates as low as 4.50% p.a. structured via Industrial Hire Purchase or Commodity Murabahah.</p>
+                    </div>
+                    <div class="p-4 rounded-lg border border-stone-200 bg-stone-50">
+                        <span class="font-bold text-slate-800 block">UOB Malaysia</span>
+                        <p class="text-xs text-slate-600 mt-1">U-Solar 2.0 platform integrated with HTG/LCTF. Bundling Tier-1 hardware (Huawei, Sungrow, Longi, Trina) with free civil studies and 1-3 yrs free O&M.</p>
+                    </div>
+                    <div class="p-4 rounded-lg border border-stone-200 bg-stone-50">
+                        <span class="font-bold text-slate-800 block">Bank Islam</span>
+                        <p class="text-xs text-slate-600 mt-1">Business Financing-i (Tawarruq) & Finance Lease-i. Lead arranger for solar/BESS Sukuk Wakalah (e.g., Ditrolic Energy RM150M Sukuk).</p>
+                    </div>
+                    <div class="p-4 rounded-lg border border-stone-200 bg-stone-50">
+                        <span class="font-bold text-slate-800 block">OCBC & Alliance Bank</span>
+                        <p class="text-xs text-slate-600 mt-1">OCBC SME Sustainable Financing explicitly finances energy storage (BESS) under Energy Efficiency without requiring prior green certifications.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: Zero-Capex Models & Tax Incentives -->
+        <div id="tab-zerocapex" class="tab-content hidden space-y-8">
+            <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+                <h2 class="text-xl font-bold text-slate-900 mb-2">Zero-Capex PPA, Lease, Shared-Savings & Tax Framework</h2>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                    Off-takers seeking off-balance-sheet structures choose between Tripartite SARE, Private Bilateral PPAs, CRESS, Operating Leases, and Shared-Savings EPCs. Concurrently, tax incentives undergo a major policy shift: Budget 2027 terminates standalone solar GITA on 31 Dec 2026, mandating integrated BESS for 100% GITA Tier 1 starting 2027.
+                </p>
+            </div>
+
+            <!-- Comparison Matrix Table -->
+            <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+                <h3 class="text-lg font-bold text-slate-900 mb-3">On-Site & Off-Site Zero-Capex PPA Architectures</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 border-b border-slate-200 text-slate-700 uppercase font-semibold">
+                                <th class="p-3">Dimension</th>
+                                <th class="p-3">Tripartite SARE (TNBX)</th>
+                                <th class="p-3">Private Bilateral PPA</th>
+                                <th class="p-3">Off-Site CRESS (2026 Reform)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-stone-200 text-slate-600">
+                            <tr class="hover:bg-stone-50">
+                                <td class="p-3 font-semibold text-slate-800">Parties Involved</td>
+                                <td class="p-3">Tripartite: TNB, RPVI (Investor), Host</td>
+                                <td class="p-3">Bilateral: RPVI & Host directly</td>
+                                <td class="p-3">RE Developer, Green Consumer & TNB Grid</td>
+                            </tr>
+                            <tr class="hover:bg-stone-50">
+                                <td class="p-3 font-semibold text-slate-800">Typical Tenure</td>
+                                <td class="p-3 font-bold text-emerald-700">21 Years Standard</td>
+                                <td class="p-3">15 to 21 Years</td>
+                                <td class="p-3">10 to 21 Years</td>
+                            </tr>
+                            <tr class="hover:bg-stone-50">
+                                <td class="p-3 font-semibold text-slate-800">2026 Pricing Structure</td>
+                                <td class="p-3">Fixed/escalated ~25 sen/kWh+</td>
+                                <td class="p-3">10%–30% discount to TNB rate</td>
+                                <td class="p-3">~26 sen generation + System Access Charge (SAC)</td>
+                            </tr>
+                            <tr class="hover:bg-stone-50">
+                                <td class="p-3 font-semibold text-slate-800">Grid Access Charge (SAC)</td>
+                                <td class="p-3">N/A (On-site behind meter)</td>
+                                <td class="p-3">N/A (On-site behind meter)</td>
+                                <td class="p-3 font-bold text-indigo-700">20 sen/kWh (Firm w/ BESS) / 40 sen (Non-firm)</td>
+                            </tr>
+                            <tr class="hover:bg-stone-50">
+                                <td class="p-3 font-semibold text-slate-800">Default Enforcement</td>
+                                <td class="p-3 text-rose-700 font-bold">TNB can disconnect main grid electricity supply (ESA 1990 Sec 29)</td>
+                                <td class="p-3">Contractual remedies, arbitration, system shut-off</td>
+                                <td class="p-3">Governed by BESC & CRESA security terms</td>
+                            </tr>
+                            <tr class="hover:bg-stone-50">
+                                <td class="p-3 font-semibold text-slate-800">End-of-Term Asset Transfer</td>
+                                <td class="p-3">Automatic transfer to customer</td>
+                                <td class="p-3">Negotiated (Transfer or Buyout)</td>
+                                <td class="p-3">Developer retains remote solar farm/BESS</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- BESS Zero-Capex Shaving Models & Tax Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- BESS MD Shaving Business Models -->
+                <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm space-y-4">
+                    <h3 class="text-lg font-bold text-slate-900">BESS Maximum Demand Shaving Zero-Capex Models</h3>
+                    
+                    <div class="p-3 bg-stone-50 rounded-lg border border-stone-200">
+                        <span class="font-bold text-slate-800 text-sm block">1. Shared-Savings IPMVP EPC</span>
+                        <p class="text-xs text-slate-600 mt-1">
+                            ESCO finances 100% of BESS + AI-EMS. Verified monthly demand savings split on a <strong>75:25 or 80:20 basis</strong> (ESCO : Host). ESCO carries cash-flow and performance risk. Contract tenure 5 to 10 years (7 years standard).
+                        </p>
+                    </div>
+
+                    <div class="p-3 bg-stone-50 rounded-lg border border-stone-200">
+                        <span class="font-bold text-slate-800 text-sm block">2. Discounted MD Rate Model (Plus Xnergy)</span>
+                        <p class="text-xs text-slate-600 mt-1">
+                            Zero upfront cost. Provider charges an effective MD rate of <strong>RM82.50/kW</strong> on the shaved peak portion—offering a fixed <strong>15% discount</strong> below TNB's RM97.06/kW MV ToU peak charge. Eliminates monthly baseline disputes.
+                        </p>
+                    </div>
+
+                    <div class="p-3 bg-stone-50 rounded-lg border border-stone-200">
+                        <span class="font-bold text-slate-800 text-sm block">3. Vendor Hybrid & Operating Leases (Solarvest / UniBess)</span>
+                        <p class="text-xs text-slate-600 mt-1">
+                            Solarvest Powervest (Powerflex Lite: 7-yr payment for 20% downpayment equity; customer claims GITA). UniBess EaaS / Lease: 7-to-10-year operating lease structured so monthly lease fee < monthly MD savings.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Statutory Tax Landscape -->
+                <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm space-y-4">
+                    <h3 class="text-lg font-bold text-slate-900">Statutory Tax Guidelines & Budget 2027 Pivot</h3>
+
+                    <div class="p-3 bg-emerald-50 rounded-lg border border-emerald-200">
+                        <span class="font-bold text-emerald-900 text-sm block">GITA Asset Allowance (Own Consumption)</span>
+                        <ul class="list-disc list-inside text-xs text-emerald-800 mt-1 space-y-1">
+                            <li><strong>2026 Rules:</strong> 60% GITA (Tier 2) on Standalone Solar; 100% GITA (Tier 1) on BESS.</li>
+                            <li><strong>2027–2030 Rules:</strong> Standalone Solar PV is <strong>0% (Removed)</strong>. Integrated Solar PV + BESS receives <strong>100% GITA (Tier 1)</strong>.</li>
+                        </ul>
+                    </div>
+
+                    <div class="p-3 bg-amber-50 rounded-lg border border-amber-200">
+                        <span class="font-bold text-amber-900 text-sm block">Tax Mutual Exclusivity Warning (MIDA Sec 3.1e)</span>
+                        <p class="text-xs text-amber-800 mt-1">
+                            Companies holding <strong>Pioneer Status</strong>, claiming <strong>Investment Tax Allowance (ITA)</strong> under PIA 1986, or claiming <strong>Reinvestment Allowance (RA)</strong> under Schedule 7A are legally barred from claiming GITA. These firms strongly prefer Zero-Capex PPAs.
+                        </p>
+                    </div>
+
+                    <div class="p-3 bg-stone-50 rounded-lg border border-stone-200">
+                        <span class="font-bold text-slate-800 text-sm block">GITE Solar Leasing (For Investors)</span>
+                        <p class="text-xs text-slate-600 mt-1">
+                            70% tax exemption on statutory income for 5-10 yrs for SEDA-registered RPVIs. Requires ≥60% local Malaysian equity. Deadline: 31 Dec 2026.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic 25-Year Financial Return Visualizer -->
+            <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">25-Year Cumulative Cashflow Simulator</h3>
+                        <p class="text-xs text-slate-500">Compare Outright Financed Purchase (with GITA) vs Zero-Capex SARE PPA vs Operating Lease for a 500 kWp system.</p>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="cashflowChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: BESS Risk & Warranty Hierarchy -->
+        <div id="tab-bessrisk" class="tab-content hidden space-y-8">
+            <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+                <h2 class="text-xl font-bold text-slate-900 mb-2">BESS Contractual Risk Allocation & Performance Guarantees</h2>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                    Unlike solar PV where revenue is linear with sunlight, BESS peak shaving is binary: because TNB bills Maximum Demand on the single highest 30-minute peak in a month, a single 30-minute battery failure during peak hours (14:00–22:00) destroys 100% of that month's demand charge savings. Contracts manage this through a 3-tiered guarantee hierarchy.
+                </p>
+            </div>
+
+            <!-- 3-Tier Warranty Hierarchy Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Tier 1 -->
+                <div class="bg-white p-5 rounded-xl border-t-4 border-slate-400 border-x border-b border-stone-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Tier 1 Warranty</span>
+                            <span class="px-2 py-0.5 text-[10px] font-bold bg-slate-100 text-slate-700 rounded">+2%-3% CAPEX</span>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-base mb-2">Hardware Capacity Retention & RTE</h3>
+                        <p class="text-xs text-slate-600 mb-3">OEM / EPCC warranty. Warrants LFP cell capacity retention (e.g. 80% SoH at Yr 10) & Round-Trip Efficiency (85% down to 78%).</p>
+                        <div class="p-2.5 bg-rose-50 text-rose-900 rounded text-[11px] font-medium border border-rose-200">
+                            <strong>Remedy Limitation:</strong> Supplier provides free cell replacement/augmentation but explicitly excludes liability for missed TNB demand savings.
+                        </div>
+                    </div>
+                    <span class="mt-4 text-[10px] text-slate-400 block border-t pt-2">Standard in Outright CAPEX Purchases</span>
+                </div>
+
+                <!-- Tier 2 -->
+                <div class="bg-white p-5 rounded-xl border-t-4 border-amber-500 border-x border-b border-stone-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-amber-600">Tier 2 Warranty</span>
+                            <span class="px-2 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-800 rounded">+3%-5% CAPEX</span>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-base mb-2">Peak-Window Availability Guarantee</h3>
+                        <p class="text-xs text-slate-600 mb-3">Embedded in O&M and Operating Leases. Guarantees <strong>≥97% system uptime specifically during peak hours (08:00–22:00)</strong>.</p>
+                        <div class="p-2.5 bg-amber-50 text-amber-900 rounded text-[11px] font-medium border border-amber-200">
+                            <strong>Service Level:</strong> Backed by 24/7 remote NOC monitoring and mandatory 6-hour on-site emergency engineering response in Peninsular Malaysia.
+                        </div>
+                    </div>
+                    <span class="mt-4 text-[10px] text-slate-400 block border-t pt-2">Standard in Storage Service Agreements</span>
+                </div>
+
+                <!-- Tier 3 -->
+                <div class="bg-white p-5 rounded-xl border-t-4 border-emerald-600 border-x border-b border-stone-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-600">Tier 3 Guarantee</span>
+                            <span class="px-2 py-0.5 text-[10px] font-bold bg-emerald-100 text-emerald-800 rounded">+5%-8% CAPEX</span>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-base mb-2">Binding MD Reduction & Savings Target</h3>
+                        <p class="text-xs text-slate-600 mb-3">Full performance wrap. Contract specifies a binding numeric Maximum Demand kW reduction target or RM savings floor.</p>
+                        <div class="p-2.5 bg-emerald-50 text-emerald-900 rounded text-[11px] font-medium border border-emerald-200">
+                            <strong>Penalties:</strong> Shortfall results in direct Liquidated Damages equal to missed TNB charges or 100% monthly fee forfeiture.
+                        </div>
+                    </div>
+                    <span class="mt-4 text-[10px] text-slate-400 block border-t pt-2">Required for Project Finance / Shared-Savings</span>
+                </div>
+            </div>
+
+            <!-- Liquidated Damages Simulator -->
+            <div class="bg-slate-900 text-white p-6 rounded-xl border border-slate-800">
+                <h3 class="text-lg font-bold text-emerald-400 mb-1">Interactive BESS Missed Peak Shortfall Penalty Calculator</h3>
+                <p class="text-xs text-slate-400 mb-4">Formula: Shortfall Penalty (RM) = (Guaranteed MD Reduction - Actual MD Reduction) × TNB RP4 ToU Rate (RM97.06/kW)</p>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+                    <div class="space-y-4 text-sm">
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-300 mb-1">
+                                <span>Guaranteed MD Peak Shaving Target:</span>
+                                <span id="guaranteedKwText" class="font-bold text-emerald-400">300 kW</span>
+                            </div>
+                            <input type="range" id="guaranteedKw" min="100" max="1000" step="50" value="300" class="w-full accent-emerald-500" oninput="calculateLD()">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-300 mb-1">
+                                <span>Actual Achieved MD Reduction (BESS Tripped/Depleted):</span>
+                                <span id="actualKwText" class="font-bold text-rose-400">100 kW</span>
+                            </div>
+                            <input type="range" id="actualKw" min="0" max="1000" step="50" value="100" class="w-full accent-rose-500" oninput="calculateLD()">
+                        </div>
+
+                        <div class="p-3 bg-slate-800 rounded-lg border border-slate-700 text-xs space-y-1">
+                            <div class="flex justify-between text-slate-300">
+                                <span>Missed Shaving Headroom:</span>
+                                <span id="missedKwText" class="font-bold text-amber-400">200 kW</span>
+                            </div>
+                            <div class="flex justify-between text-stone-100 font-bold border-t border-slate-700 pt-1 text-sm">
+                                <span>Monthly Liquidated Damages (LD) Liability:</span>
+                                <span id="ldResult" class="text-rose-400">RM 19,412.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="ldChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Load Breach Carve-Out Note -->
+            <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm text-xs text-slate-600 space-y-2">
+                <h4 class="font-bold text-slate-900 text-sm">IPMVP Baseline Normalization & "Customer Load Breach" Carve-Out</h4>
+                <p>
+                    Because a BESS is sized to a specific baseline envelope, it cannot suppress unscheduled spikes if factory personnel turn on unmodeled machinery lines. Advanced EMS platforms (e.g., Tanand EasiEMS) issue early Telegram alerts when rolling demand reaches 750 kW against an 800 kW ceiling.
+                </p>
+                <p>
+                    If immutable BMS/EMS telemetry proves a missed peak was caused by EMS algorithm latency or battery trip, the <strong>ESCO bears 100% of LDs</strong>. If telemetry proves site load exceeded the contracted kW/kWh baseline envelope or personnel manually bypassed load controls, it is classified as an <strong>excused Customer Load Breach</strong>, relieving the provider of liability.
+                </p>
+            </div>
+        </div>
+
+        <!-- TAB 5: Strategy Engine & Benchmarks -->
+        <div id="tab-recommender" class="tab-content hidden space-y-8">
+            <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+                <h2 class="text-xl font-bold text-slate-900 mb-2">2026 Customer Strategy Engine & Benchmark by Size</h2>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                    Customer choices in Malaysia stratify sharply across company size, tax residency, balance-sheet sensitivity, and whether the asset is solar PV or BESS. Use the benchmark chart below or run the interactive strategy decision engine to find the optimal financing pathway.
+                </p>
+            </div>
+
+            <!-- Stacked Bar Benchmark Chart -->
+            <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+                <h3 class="text-lg font-bold text-slate-900 mb-1">2026 Procurement Model Preference Distribution by Company Segment</h3>
+                <p class="text-xs text-slate-500 mb-4">Percentage breakdown of preferred financing structures across Malaysian C&I off-takers.</p>
+                <div class="chart-container">
+                    <canvas id="preferenceChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Interactive Strategy Recommendation Tool -->
+            <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+                <h3 class="text-lg font-bold text-slate-900 mb-4">Interactive C&I Financing Recommendation Engine</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 text-xs">
+                    <div>
+                        <label for="companySize" class="block font-semibold text-slate-700 mb-1">Company Scale:</label>
+                        <select id="companySize" class="w-full p-2 border border-stone-300 rounded bg-stone-50 font-medium" onchange="runRecommender()">
+                            <option value="sme">SME (50 kWp – 200 kWp)</option>
+                            <option value="mid" selected>Mid-Market (200 kWp – 1 MWp)</option>
+                            <option value="large">Large Enterprise / MNC (1 MWp – 10 MWp+)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="taxStatus" class="block font-semibold text-slate-700 mb-1">Tax Status:</label>
+                        <select id="taxStatus" class="w-full p-2 border border-stone-300 rounded bg-stone-50 font-medium" onchange="runRecommender()">
+                            <option value="standard" selected>Standard Corporate Tax Payer (24%)</option>
+                            <option value="pioneer">Pioneer Status / ITA / RA Exemption</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="premises" class="block font-semibold text-slate-700 mb-1">Premises Status:</label>
+                        <select id="premises" class="w-full p-2 border border-stone-300 rounded bg-stone-50 font-medium" onchange="runRecommender()">
+                            <option value="owner" selected>Owner-Occupier</option>
+                            <option value="tenant">Tenant / Leaseholder</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="assetTarget" class="block font-semibold text-slate-700 mb-1">Scope of Procurement:</label>
+                        <select id="assetTarget" class="w-full p-2 border border-stone-300 rounded bg-stone-50 font-medium" onchange="runRecommender()">
+                            <option value="solar">Rooftop Solar PV Only</option>
+                            <option value="hybrid" selected>Integrated Solar PV + BESS</option>
+                            <option value="bess">Standalone BESS (Peak Shaving)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Recommendation Output Card -->
+                <div id="recOutput" class="p-5 rounded-xl bg-slate-900 text-stone-100 space-y-3">
+                    <!-- Dynamic JS content rendered here -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 text-xs py-6 border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <p class="font-semibold text-slate-300">Malaysia C&I Solar PV & BESS Financing Intelligence (2026)</p>
+                <p class="text-[11px] text-slate-500">Based on TNB RP4 Tariffs, Solar ATAP, GTFS 5.0 Guidelines & MIDA/SEDA Frameworks</p>
+            </div>
+            <p class="text-[10px] text-slate-500 text-center md:text-right">Generated for Corporate Energy Managers, Financiers & ESCO Developers.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Tab Switcher Logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.querySelectorAll('#nav-tabs button').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('hover:text-emerald-600');
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.add('tab-active');
+            activeBtn.classList.remove('hover:text-emerald-600');
+        }
+
+        // 1. Peak Spike Calculator (Tab 1)
+        function calculateSpikeCost() {
+            const kw = parseFloat(document.getElementById('spikeKw').value);
+            document.getElementById('spikeKwVal').innerText = kw + ' kW';
+            const cost = kw * 97.06; // MV ToU Peak Rate
+            document.getElementById('spikeCostResult').innerText = 'RM ' + cost.toLocaleString('en-US', {maximumFractionDigits: 0}) + ' / month';
+        }
+
+        // 2. Liquidated Damages Calculator (Tab 4)
+        let ldChartInstance = null;
+        function calculateLD() {
+            const guaranteed = parseFloat(document.getElementById('guaranteedKw').value);
+            const actual = parseFloat(document.getElementById('actualKw').value);
+            
+            document.getElementById('guaranteedKwText').innerText = guaranteed + ' kW';
+            document.getElementById('actualKwText').innerText = actual + ' kW';
+
+            const missed = Math.max(0, guaranteed - actual);
+            document.getElementById('missedKwText').innerText = missed + ' kW';
+
+            const penalty = missed * 97.06;
+            document.getElementById('ldResult').innerText = 'RM ' + penalty.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+            // Update LD Chart
+            if (ldChartInstance) {
+                ldChartInstance.data.datasets[0].data = [guaranteed, actual, missed];
+                ldChartInstance.update();
+            }
+        }
+
+        // 3. Recommender Engine Logic (Tab 5)
+        function runRecommender() {
+            const size = document.getElementById('companySize').value;
+            const tax = document.getElementById('taxStatus').value;
+            const premises = document.getElementById('premises').value;
+            const asset = document.getElementById('assetTarget').value;
+
+            const recBox = document.getElementById('recOutput');
+            let primaryRec = "";
+            let debtRoute = "";
+            let taxWarning = "";
+            let lifetimeBenefit = "";
+
+            if (tax === "pioneer") {
+                taxWarning = "<span class='text-amber-400 font-bold'>⚠️ Pioneer Status Exclusivity Alert:</span> Because your company enjoys Pioneer Status, ITA, or Reinvestment Allowance, MIDA Sec 3.1(e) legally prohibits direct GITA claims. You should opt for a <strong>Zero-Capex PPA (SARE or Bilateral)</strong> where the RPVI investor claims tax shields and passes them down via lower tariffs (~25 sen/kWh).";
+            } else if (asset === "hybrid" || asset === "solar") {
+                taxWarning = "<span class='text-emerald-400 font-bold'>💡 GITA Strategy Notice:</span> Under Budget 2027 rules, standalone solar receives 0% GITA after 31 Dec 2026. Coupling your solar with a BESS unlocks <strong>100% GITA Tier 1 allowance</strong> on the entire combined capital expenditure, worth a 24% tax savings shield.";
+            }
+
+            if (size === "sme") {
+                if (premises === "tenant") {
+                    primaryRec = "5-to-10 Year Solar Operating Lease";
+                    debtRoute = "Avoid outright capital expenditure due to tenancy relocation risk. Select a vendor operating lease (e.g. Powervest or UniBess).";
+                } else {
+                    primaryRec = "Financed Outright Purchase via BNM Low Carbon Transition Facility (LCTF)";
+                    debtRoute = "Borrow via CIMB, Maybank, or RHB under BNM LCTF (capped at 5.0% p.a.) or HTG (3.5% p.a.). Leverage Solarvest Powerflex Lite to bridge any 20% downpayment equity requirement.";
+                }
+                lifetimeBenefit = "Owner-occupier SMEs capture 2x to 3x higher lifetime financial benefit (RM950k–RM1.6M over 25 yrs) via outright ownership than under a PPA.";
+            } else if (size === "mid") {
+                if (asset === "bess" || asset === "hybrid") {
+                    primaryRec = "Split Asset Model: Outright Loan for Solar PV + Zero-Capex Shared-Savings for BESS";
+                    debtRoute = "Finance Solar PV using GTFS 5.0 (60% CGC guarantee) or bank green loan to claim GITA. Put BESS under an IPMVP Shared-Savings EPC (75:25 ESCO split) or Plus Xnergy Discounted MD Rate (RM82.50/kW) to shift peak-miss risk to the ESCO.";
+                } else {
+                    primaryRec = "GTFS 5.0 Green Debt Financed Outright Purchase";
+                    debtRoute = "Secure commercial bank green loan backed by GTFS 5.0. IRR expected at 17%–30% with 4.0–6.0 year payback.";
+                }
+                lifetimeBenefit = "Combines high PV return with total risk insulation against TNB Maximum Demand penalty spikes.";
+            } else { // large
+                primaryRec = "Tripartite SARE PPA or Off-Site CRESS Bilateral Contract";
+                debtRoute = "Preserve corporate balance sheet and avoid HQ capex freezes. Execute a 21-year SARE PPA (or CRESS wheeling at 20 sen/kWh firm SAC if rooftop space is constrained).";
+                lifetimeBenefit = "Delivers immediate 10%–30% OPEX tariff savings with zero balance-sheet liability and bundled Scope 2 RECs.";
+            }
+
+            recBox.innerHTML = `
+                <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+                    <span class="text-xs uppercase tracking-wider text-emerald-400 font-bold">Recommended Pathway</span>
+                    <span class="px-2.5 py-1 rounded bg-emerald-900/80 text-emerald-300 font-semibold text-xs border border-emerald-700/50">${primaryRec}</span>
+                </div>
+                <div class="text-xs text-slate-300 space-y-2 pt-1">
+                    <p><strong>Debt & Commercial Route:</strong> ${debtRoute}</p>
+                    <p><strong>Expected Benefit:</strong> ${lifetimeBenefit}</p>
+                    ${taxWarning ? `<div class="p-3 bg-slate-800 rounded border border-slate-700 text-xs mt-2">${taxWarning}</div>` : ''}
+                </div>
+            `;
+        }
+
+        // Chart Initialization on Window Load
+        window.addEventListener('load', function() {
+            // 1. Tariff Chart (Tab 1)
+            const ctxTariff = document.getElementById('tariffChart').getContext('2d');
+            new Chart(ctxTariff, {
+                type: 'bar',
+                data: {
+                    labels: ['RP3 Baseline', 'RP4 MV General', 'RP4 MV ToU Peak'],
+                    datasets: [{
+                        label: 'TNB Monthly MD Charge (RM/kW)',
+                        data: [37.00, 89.27, 97.06],
+                        backgroundColor: ['#94A3B8', '#D97706', '#DC2626'],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' Charge: RM ' + context.raw.toFixed(2) + ' / kW / month';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'RM / kW / Month', font: { size: 11 } }
+                        }
+                    }
+                }
+            });
+
+            // 2. Cumulative Cashflow Chart (Tab 3)
+            const ctxCashflow = document.getElementById('cashflowChart').getContext('2d');
+            const years = Array.from({length: 25}, (_, i) => 'Yr ' + (i + 1));
+            
+            // Simplified illustrative model for 500 kWp system
+            const outrightCashflow = years.map((_, i) => {
+                if (i === 0) return -1200000; // Capital outlay
+                if (i === 1) return -1200000 + 280000 + 196000; // Year 1 + GITA
+                return -1200000 + 476000 + (i * 190000);
+            });
+
+            const ppaCashflow = years.map((_, i) => (i + 1) * 60000); // Net monthly savings stacked
+            const leaseCashflow = years.map((_, i) => (i + 1) * 102000);
+
+            new Chart(ctxCashflow, {
+                type: 'line',
+                data: {
+                    labels: years,
+                    datasets: [
+                        {
+                            label: 'Financed Outright Purchase (w/ GITA)',
+                            data: outrightCashflow,
+                            borderColor: '#059669',
+                            backgroundColor: 'rgba(5, 150, 105, 0.1)',
+                            fill: true,
+                            borderWidth: 2,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Solar Lease (15-Yr Operating)',
+                            data: leaseCashflow,
+                            borderColor: '#D97706',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.3
+                        },
+                        {
+                            label: 'SARE PPA (Zero-Capex)',
+                            data: ppaCashflow,
+                            borderColor: '#4F46E5',
+                            borderWidth: 2,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': RM ' + context.raw.toLocaleString('en-US');
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            title: { display: true, text: 'Cumulative Net Benefit (RM)', font: { size: 11 } }
+                        }
+                    }
+                }
+            });
+
+            // 3. Liquidated Damages Chart (Tab 4)
+            const ctxLD = document.getElementById('ldChart').getContext('2d');
+            ldChartInstance = new Chart(ctxLD, {
+                type: 'bar',
+                data: {
+                    labels: ['Target kW', 'Actual kW', 'Missed kW'],
+                    datasets: [{
+                        label: 'Kilowatts (kW)',
+                        data: [300, 100, 200],
+                        backgroundColor: ['#10B981', '#F59E0B', '#EF4444'],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Kilowatts (kW)', font: { size: 10 } } }
+                    }
+                }
+            });
+
+            // 4. Customer Preferences Stacked Bar Chart (Tab 5)
+            const ctxPref = document.getElementById('preferenceChart').getContext('2d');
+            new Chart(ctxPref, {
+                type: 'bar',
+                data: {
+                    labels: ['SMEs (50-200 kWp)', 'Mid-Market (200 kWp - 1 MWp)', 'Large / MNCs (1-10 MWp+)'],
+                    datasets: [
+                        {
+                            label: 'Outright Bank Debt (LCTF/HTG/GTFS)',
+                            data: [80, 55, 10],
+                            backgroundColor: '#059669'
+                        },
+                        {
+                            label: 'Solar Operating Lease / Vendor Hybrid',
+                            data: [15, 25, 20],
+                            backgroundColor: '#D97706'
+                        },
+                        {
+                            label: 'Zero-Capex PPA (SARE / Bilateral)',
+                            data: [5, 20, 70],
+                            backgroundColor: '#4F46E5'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true },
+                        y: {
+                            stacked: true,
+                            max: 100,
+                            title: { display: true, text: 'Share of Off-Takers (%)', font: { size: 11 } }
+                        }
+                    }
+                }
+            });
+
+            // Run initial calculations
+            calculateSpikeCost();
+            calculateLD();
+            runRecommender();
+        });
+    </script>
+</body>
+</html>

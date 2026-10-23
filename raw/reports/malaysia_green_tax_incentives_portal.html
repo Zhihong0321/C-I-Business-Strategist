@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malaysia Green Tax Incentives Framework (Post-Budget 2027)</title>
+    <!-- Chosen Palette: Warm Forest & Slate Neutral -->
+    <!-- Application Structure Plan: Executive SPA layout with 7 functional tabs, dynamic tax calculator engine, interactive rate comparison matrix, milestone cutoff tool, and unconfirmed items tracker. Designed for C&I CFOs, energy developers, and tax advisors to explore Post-Budget 2027 green tax rules without non-linear friction. -->
+    <!-- Visualization & Content Choices: Source Report -> Interactive SPA Dashboard -> Canvas Charts (Chart.js), Interactive Data Filters, Multi-Year Tax Benefit Engine -> Pure HTML/CSS & Vanilla JS -> Justification: Ensures rapid, interactive synthesis of complex tax codes and decision rules without external dependencies or forbidden SVG/Mermaid JS. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 360px;
+            }
+        }
+        .tab-btn.active {
+            border-bottom-color: #059669;
+            color: #065f46;
+            font-weight: 600;
+            background-color: #f0fdf4;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <span class="text-2xl">⚡</span>
+                    <div>
+                        <h1 class="font-bold text-lg leading-tight">Malaysia Green Tax Incentives Portal</h1>
+                        <p class="text-xs text-slate-400">Post-Budget 2027 Regulatory & Financial Decision Framework (As of Oct 2026)</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-2">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                        Budget 2027 Enacted
+                    </span>
+                    <span class="text-xs text-slate-400">Coverage: 2024–2030 Rules</span>
+                </div>
+            </div>
+            <!-- Navigation Tabs Bar -->
+            <nav class="flex space-x-1 overflow-x-auto border-t border-slate-800 text-xs sm:text-sm py-1" id="tabContainer">
+                <button onclick="switchTab('overview')" id="tab-overview" class="tab-btn active px-3 py-2 rounded-t-md text-slate-300 hover:text-white transition">1. Overview & Policy Pivot</button>
+                <button onclick="switchTab('matrix')" id="tab-matrix" class="tab-btn px-3 py-2 rounded-t-md text-slate-300 hover:text-white transition">2. Rate Matrix (2027–2030)</button>
+                <button onclick="switchTab('deadline')" id="tab-deadline" class="tab-btn px-3 py-2 rounded-t-md text-slate-300 hover:text-white transition">3. 31 Dec 2026 Deadline</button>
+                <button onclick="switchTab('gite')" id="tab-gite" class="tab-btn px-3 py-2 rounded-t-md text-slate-300 hover:text-white transition">4. GITE Leasing Phase-Out</button>
+                <button onclick="switchTab('mechanics')" id="tab-mechanics" class="tab-btn px-3 py-2 rounded-t-md text-slate-300 hover:text-white transition">5. Tax & ROI Engine</button>
+                <button onclick="switchTab('alternatives')" id="tab-alternatives" class="tab-btn px-3 py-2 rounded-t-md text-slate-300 hover:text-white transition">6. EE & Finance Options</button>
+                <button onclick="switchTab('compliance')" id="tab-compliance" class="tab-btn px-3 py-2 rounded-t-md text-slate-300 hover:text-white transition">7. Unconfirmed Items & Audit</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- TAB 1: OVERVIEW & POLICY PIVOT -->
+        <section id="sec-overview" class="space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-900 mb-2">Executive Summary: The Budget 2027 Green Tax Restructuring</h2>
+                <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                    Tabled on 9 October 2026 by Prime Minister and Finance Minister Datuk Seri Anwar Ibrahim via the official Ministry of Finance (MOF) portal (<code class="bg-slate-100 px-1 rounded text-slate-700">bs27.pdf</code>), Budget 2027 extends Malaysia's Green Investment Tax Allowance (GITA) framework by four years until <strong>31 December 2030</strong>. However, the governing statutory annex—<strong>Appendix 25: Review of Green Technology Tax Incentive</strong>—fundamentally restructures asset and project eligibility. The corporate tax code now shifts fiscal support exclusively toward <strong>integrated renewable energy and battery storage systems (Solar + BESS/ESS)</strong> to tackle Peninsular Malaysia grid intermittency and peak demand, while withdrawing tax subsidies from standalone behind-the-meter solar, standalone energy efficiency equipment, and third-party solar leasing providers after 31 December 2026.
+                </p>
+                
+                <!-- KPI Key Highlights Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+                    <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-lg">
+                        <div class="text-xs font-semibold text-emerald-800 uppercase tracking-wider">Integrated RE + BESS</div>
+                        <div class="text-2xl font-extrabold text-emerald-900 mt-1">100% GITA</div>
+                        <div class="text-xs text-emerald-700 mt-1">Tier 1b (2027–2030) | Own Use</div>
+                        <p class="text-[11px] text-emerald-600 mt-2">Upgraded from 60% split. Offsets up to 70% Statutory Income.</p>
+                    </div>
+
+                    <div class="bg-amber-50 border border-amber-200 p-4 rounded-lg">
+                        <div class="text-xs font-semibold text-amber-800 uppercase tracking-wider">Standalone C&I Solar PV</div>
+                        <div class="text-2xl font-extrabold text-amber-900 mt-1">0% GITA</div>
+                        <div class="text-xs text-amber-700 mt-1">Effective 1 Jan 2027</div>
+                        <p class="text-[11px] text-amber-600 mt-2">Omitted from Tier 2b RE list. Must be integrated with BESS/ESS.</p>
+                    </div>
+
+                    <div class="bg-rose-50 border border-rose-200 p-4 rounded-lg">
+                        <div class="text-xs font-semibold text-rose-800 uppercase tracking-wider">GITE Solar Leasing</div>
+                        <div class="text-2xl font-extrabold text-rose-900 mt-1">EXPIRED</div>
+                        <div class="text-xs text-rose-700 mt-1">Cutoff: 31 Dec 2026</div>
+                        <p class="text-[11px] text-rose-600 mt-2">70% Income Tax Exemption for RPVIs/PPAs not extended into 2027.</p>
+                    </div>
+
+                    <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                        <div class="text-xs font-semibold text-blue-800 uppercase tracking-wider">Mandatory MGTC Window</div>
+                        <div class="text-2xl font-extrabold text-blue-900 mt-1">24 Months</div>
+                        <div class="text-xs text-blue-700 mt-1">Post-Purchase Requirement</div>
+                        <p class="text-[11px] text-blue-600 mt-2">Applications must be submitted to MGTC within 24 months of invoice date.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visual Policy Pivot Chart & Context -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-md font-bold text-slate-900 mb-2">The Policy Shift: Standalone vs Integrated Asset Treatment</h3>
+                        <p class="text-xs text-slate-600 mb-4">
+                            Comparison of qualifying tax allowance rates under the current regime (2024–2026) vs the enacted Budget 2027 regime (2027–2030).
+                        </p>
+                        <div class="chart-container">
+                            <canvas id="chartOverviewShift"></canvas>
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-slate-500 italic mt-3">Source: MOF Appendix 25 (tax-measures.pdf) & MIDA Belanjawan 2027 Release (12 Oct 2026).</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-md font-bold text-slate-900 mb-3">Core Strategic Takeaways for Commercial & Industrial Energy Users</h3>
+                        <div class="space-y-3 text-xs text-slate-700">
+                            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                                <span class="font-bold text-slate-900 block mb-1">1. Battery Storage (BESS) is Now Mandatory for Solar Tax Relief</span>
+                                C&I taxpayers installing solar PV arrays for own consumption on or after 1 January 2027 must co-deploy BESS/ESS to claim the 100% GITA Asset allowance under Tier 1b. Standalone solar capex receives 0% GITA.
+                            </div>
+                            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                                <span class="font-bold text-slate-900 block mb-1">2. Third-Party PPA / Leasing Models Lose Fiscal Parity</span>
+                                Solar leasing companies (RPVIs) lose the 70% GITE tax exemption after 31 December 2026. Project finance will pivot sharply toward host-owned balance-sheet capital expenditure or bank hire purchase.
+                            </div>
+                            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                                <span class="font-bold text-slate-900 block mb-1">3. Standalone Energy Efficiency Shifted to Accelerated Capital Allowance</span>
+                                Direct GITA for standalone energy efficiency assets (chillers, boilers, LED) expires on 31 Dec 2026. Users must pivot to the extended Accelerated Capital Allowance (ACA) under Appendix 28 (100% write-off over 2 years).
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-900">
+                        <strong>Urgent Pre-2027 Action:</strong> Projects seeking standalone 60% GITA solar or 70% GITE leasing must be fully commissioned and submitted to MGTC/MIDA on or before <strong>31 December 2026</strong>.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: RATE MATRIX (2027-2030) -->
+        <section id="sec-matrix" class="space-y-6 hidden">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">GITA Asset & Project Rates Comparison Matrix (2027–2030)</h2>
+                        <p class="text-xs text-slate-600 mt-1">Detailed regulatory comparison across statutory tiers defined in MOF Appendix 25 and Lampiran 25.</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs text-slate-500 font-medium">Filter Category:</span>
+                        <select id="matrixFilter" onchange="filterMatrixTable()" class="bg-slate-100 border border-slate-300 rounded-md text-xs px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            <option value="all">All Green Asset Categories</option>
+                            <option value="asset">GITA Assets (Own Consumption - MGTC)</option>
+                            <option value="project">GITA Projects (Business Purpose - MIDA)</option>
+                            <option value="leasing">GITE Leasing (RPVI / PPA - SEDA/MIDA)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Interactive Comparison Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-slate-800 text-white uppercase tracking-wider text-[11px]">
+                                <th class="p-3 rounded-tl-lg">Green Technology Category</th>
+                                <th class="p-3">Current Regime (2024–2026)</th>
+                                <th class="p-3">Enacted Budget 2027 Regime (2027–2030)</th>
+                                <th class="p-3">SI Set-Off Cap</th>
+                                <th class="p-3 rounded-tr-lg">Administering Agency & Citations</th>
+                            </tr>
+                        </thead>
+                        <tbody id="matrixTableBody" class="divide-y divide-slate-200 border-b border-slate-200">
+                            <!-- JS injected rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Full Tier Breakdown Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="text-md font-bold text-slate-900 mb-3 border-b border-slate-200 pb-2">GITA Assets (Own Consumption) Statutory Tiers</h3>
+                    <ul class="space-y-3 text-xs text-slate-700">
+                        <li class="p-3 bg-emerald-50 rounded-lg border border-emerald-200">
+                            <strong class="text-emerald-900 block text-sm">Tier 1b: 100% GITA (70% SI Set-Off)</strong>
+                            <p class="mt-1">Renewable Energy Integrated System (Biomass, Biogas, Mini Hydro, Solar, Geothermal, Wind) + Battery Energy Storage System (BESS) / Energy Storage System (ESS).</p>
+                        </li>
+                        <li class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                            <strong class="text-slate-900 block text-sm">Tier 1a: 100% GITA (70% SI Set-Off) — Locally Produced</strong>
+                            <p class="mt-1">EV infrastructure, waste composting/recycling systems, wastewater/rainwater systems manufactured locally ("keluaran tempatan").</p>
+                        </li>
+                        <li class="p-3 bg-amber-50 rounded-lg border border-amber-200">
+                            <strong class="text-amber-900 block text-sm">Tier 2a/2b: 60% GITA (70% SI Set-Off)</strong>
+                            <p class="mt-1">Tier 2a: Non-local EV/waste/water systems. Tier 2b: Standalone RE (Biomass, Biogas, Mini Hydro, Geothermal, Wind). <em>Note: Standalone Solar & EE explicitly excluded.</em></p>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="text-md font-bold text-slate-900 mb-3 border-b border-slate-200 pb-2">GITA Projects & GITE Leasing Breakdown</h3>
+                    <ul class="space-y-3 text-xs text-slate-700">
+                        <li class="p-3 bg-purple-50 rounded-lg border border-purple-200">
+                            <strong class="text-purple-900 block text-sm">GITA Project Tier 1: 100% GITA for 5+5 Years</strong>
+                            <p class="mt-1">Green Hydrogen Production and Ocean Thermal Energy Conversion (OTEC). Set off against 100% or 70% Statutory Income.</p>
+                        </li>
+                        <li class="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                            <strong class="text-blue-900 block text-sm">GITA Project Tier 2: 60% GITA for 5 Years</strong>
+                            <p class="mt-1">EV Charging Stations (business purpose) & Non-Solar RE projects. SI set-off ceiling reduced from 100% to 70% starting 1 Jan 2027.</p>
+                        </li>
+                        <li class="p-3 bg-rose-50 rounded-lg border border-rose-200">
+                            <strong class="text-rose-900 block text-sm">Discontinued / Expired Tracks (0%)</strong>
+                            <p class="mt-1">GITA Project Tier 3 (Commercial Solar Projects) is abolished. GITE Solar Leasing (70% Tax Exemption for RPVIs) expires 31 Dec 2026.</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: 31 DEC 2026 DEADLINE -->
+        <section id="sec-deadline" class="space-y-6 hidden">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-900 mb-2">The 31 December 2026 Regulatory Cliff: Exact Milestone Requirements</h2>
+                <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                    Despite the headline extension of GITA to 2030, <strong>31 December 2026</strong> remains a strict statutory cutoff for six major green incentive categories. Taxpayers attempting to claim pre-2027 rules (such as 60% standalone solar GITA or 70% GITE leasing) must satisfy three overlapping requirements across MGTC Guidelines, LHDN Public Rulings, and MOF Appendix 25.
+                </p>
+
+                <!-- Milestone Process Steps -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
+                    <div class="bg-slate-50 border border-slate-300 p-4 rounded-lg relative">
+                        <div class="text-xs font-bold text-slate-500 uppercase">Step 1: Supplier Invoicing & QCE</div>
+                        <div class="text-sm font-bold text-slate-900 mt-1">CAPEX Incurred Date</div>
+                        <p class="text-xs text-slate-600 mt-2">
+                            Supplier invoice date defines purchase timing. Per LHDN Public Ruling 4/2023 & ITA Schedule 3, plant/machinery capex is legally incurred when capable of business use.
+                        </p>
+                        <div class="mt-3 text-[11px] font-semibold text-emerald-700">Must be on/before 31 Dec 2026</div>
+                    </div>
+
+                    <div class="bg-slate-50 border border-slate-300 p-4 rounded-lg relative">
+                        <div class="text-xs font-bold text-slate-500 uppercase">Step 2: Physical COD</div>
+                        <div class="text-sm font-bold text-slate-900 mt-1">Full Commissioning</div>
+                        <p class="text-xs text-slate-600 mt-2">
+                            Under MGTC Guideline REC-GTGT-007 Sec 3(d), GITA Asset applications can only be filed <em>after</em> the asset/project is fully commissioned and operational.
+                        </p>
+                        <div class="mt-3 text-[11px] font-semibold text-emerald-700">Must be completed by 31 Dec 2026</div>
+                    </div>
+
+                    <div class="bg-slate-50 border border-slate-300 p-4 rounded-lg relative">
+                        <div class="text-xs font-bold text-slate-500 uppercase">Step 3: Verification Cutoff</div>
+                        <div class="text-sm font-bold text-slate-900 mt-1">MGTC Application Receipt</div>
+                        <p class="text-xs text-slate-600 mt-2">
+                            Section 7 of MGTC Guideline restricts eligibility to "applications received by MGTC from 1 Jan 2024 until 31 Dec 2026". Submissions after 31 Dec fall under 2027 rules.
+                        </p>
+                        <div class="mt-3 text-[11px] font-semibold text-rose-700">Received by MGTC on/before 31 Dec 2026</div>
+                    </div>
+                </div>
+
+                <!-- Interactive Cutoff Readiness Audit Checklist -->
+                <div class="bg-slate-900 text-white p-6 rounded-xl mt-6">
+                    <h3 class="text-md font-bold text-white mb-2">Interactive Cutoff Readiness Audit Checklist</h3>
+                    <p class="text-xs text-slate-300 mb-4">Check your project milestones below to verify whether your asset qualifies for the 2024–2026 regime or must transition to the 2027–2030 rules:</p>
+                    
+                    <div class="space-y-3 text-xs" id="auditChecklist">
+                        <label class="flex items-start space-x-3 cursor-pointer p-2 rounded hover:bg-slate-800">
+                            <input type="checkbox" id="chkInvoice" onchange="runAuditCheck()" class="mt-0.5 rounded text-emerald-600 focus:ring-emerald-500">
+                            <span><strong>1. Purchase Invoice Issued & Deposit Paid:</strong> Taxpayer received supplier invoice and incurred qualifying capex on or before 31 December 2026.</span>
+                        </label>
+                        <label class="flex items-start space-x-3 cursor-pointer p-2 rounded hover:bg-slate-800">
+                            <input type="checkbox" id="chkCommissioned" onchange="runAuditCheck()" class="mt-0.5 rounded text-emerald-600 focus:ring-emerald-500">
+                            <span><strong>2. Physical Installation & Commissioning (COD):</strong> Solar PV or EE system is fully installed, grid-connected, and commissioned on or before 31 December 2026.</span>
+                        </label>
+                        <label class="flex items-start space-x-3 cursor-pointer p-2 rounded hover:bg-slate-800">
+                            <input type="checkbox" id="chkSubmitted" onchange="runAuditCheck()" class="mt-0.5 rounded text-emerald-600 focus:ring-emerald-500">
+                            <span><strong>3. Application Received by MGTC / MIDA:</strong> Formal GITA GITA/A application received by MGTC or online submission logged at MIDA on or before 31 December 2026.</span>
+                        </label>
+                        <label class="flex items-start space-x-3 cursor-pointer p-2 rounded hover:bg-slate-800">
+                            <input type="checkbox" id="chkIntegrated" onchange="runAuditCheck()" class="mt-0.5 rounded text-emerald-600 focus:ring-emerald-500">
+                            <span><strong>4. BESS Integration Status:</strong> System includes co-deployed Battery Energy Storage System (BESS) or Energy Storage System (ESS).</span>
+                        </label>
+                    </div>
+
+                    <!-- Live Audit Result Display -->
+                    <div id="auditResultBox" class="mt-4 p-4 rounded-lg bg-slate-800 border border-slate-700 text-xs font-mono">
+                        Status: Pending selection above...
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: GITE LEASING PHASE-OUT -->
+        <section id="sec-gite" class="space-y-6 hidden">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-900 mb-2">GITE for Solar Leasing Phase-Out & C&I Project Finance Restructuring</h2>
+                <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                    Under the 2024–2026 framework, Registered Solar PV Investors (RPVIs) operating solar PPAs enjoyed a <strong>70% Income Tax Exemption</strong> for 5 to 10 years under <code>P.U. (A) 247/2024</code>. Budget 2027 explicitly <strong>omits GITE Solar Leasing</strong> from the 2027–2030 extension in Appendix 25. This creates a seismic shift in C&I solar project finance across Peninsular Malaysia.
+                </p>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                    <!-- Historical PPA vs Post-2027 Own Capex -->
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                        <h3 class="text-sm font-bold text-slate-900 mb-3 border-b border-slate-300 pb-2">Pre-2027 Third-Party PPA Model (Expired)</h3>
+                        <ul class="space-y-2 text-xs text-slate-700">
+                            <li class="flex items-start"><span class="text-red-500 mr-2">❌</span><span>RPVI receives 0% GITE on leasing revenue starting 1 Jan 2027.</span></li>
+                            <li class="flex items-start"><span class="text-red-500 mr-2">❌</span><span>GITA Project Tier 3 (100% GITA for solar projects) is abolished.</span></li>
+                            <li class="flex items-start"><span class="text-slate-500 mr-2">▪</span><span>Host company receives zero capital allowances (off-balance sheet asset).</span></li>
+                            <li class="flex items-start"><span class="text-slate-500 mr-2">▪</span><span>Requires RPVI to maintain 60% Malaysian equity & 5 full-time local staff.</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-emerald-50 p-5 rounded-xl border border-emerald-200">
+                        <h3 class="text-sm font-bold text-emerald-900 mb-3 border-b border-emerald-300 pb-2">Post-2027 Host-Owned Integrated Capex Model (Recommended)</h3>
+                        <ul class="space-y-2 text-xs text-emerald-800">
+                            <li class="flex items-start"><span class="text-emerald-600 mr-2">✓</span><span>Host company claims <strong>100% GITA Asset (Tier 1b)</strong> on Solar + BESS capex.</span></li>
+                            <li class="flex items-start"><span class="text-emerald-600 mr-2">✓</span><span>Host company claims <strong>100% Schedule 3 Capital Allowances</strong> (200% combined tax shield).</span></li>
+                            <li class="flex items-start"><span class="text-emerald-600 mr-2">✓</span><span>BESS shaves monthly Maximum Demand (MD) charges during TNB peak tariff hours.</span></li>
+                            <li class="flex items-start"><span class="text-emerald-600 mr-2">✓</span><span>Eligible for <strong>Green Sustainability Fund 2.0</strong> (1% p.a. interest subsidy for 5 yrs).</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Pre-31 Dec 2026 RPVI Prerequisites Table -->
+                <div class="mt-6">
+                    <h3 class="text-sm font-bold text-slate-900 mb-2">Strict Prerequisites for RPVIs Locking In Pre-2027 GITE before Cutoff</h3>
+                    <p class="text-xs text-slate-600 mb-3">RPVIs seeking to register before 31 December 2026 must adhere to MIDA 2024 Guidelines & P.U. (A) 247/2024 Para 5(3):</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                        <div class="bg-white p-3 rounded border border-slate-200">
+                            <strong class="text-slate-900 block mb-1">Min 3MW COD Threshold</strong>
+                            Must achieve aggregated minimum 3MW installed capacity under NEM or SelCo with SEDA verification letter.
+                        </div>
+                        <div class="bg-white p-3 rounded border border-slate-200">
+                            <strong class="text-slate-900 block mb-1">First Sales Invoice Rule</strong>
+                            Application MUST be received by MIDA <em>before</em> issuing the first sales/energy invoice to off-taker.
+                        </div>
+                        <div class="bg-white p-3 rounded border border-slate-200">
+                            <strong class="text-slate-900 block mb-1">Substance & Equity Criteria</strong>
+                            Min 60% Malaysian equity, 5 full-time employees (2 competent green personnel), and 1 entity per corporate group.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: TAX & ROI ENGINE -->
+        <section id="sec-mechanics" class="space-y-6 hidden">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-900 mb-2">GITA Utilization Mechanics & Interactive ROI Tax Calculator Engine</h2>
+                <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                    GITA is granted <strong>in addition to</strong> standard Schedule 3 Capital Allowances (CA). A company acquiring a Tier 1b asset (100% GITA) receives 100% CA + 100% GITA = <strong>200% total tax deduction on qualifying capex</strong>. Per <code>P.U. (A) 243/2024</code> Para 6(1), deducting Schedule 3 CA first is legally mandatory. GITA then exempts Statutory Income up to a maximum cap of <strong>70% per Year of Assessment (YA)</strong>, with unutilised GITA carried forward <strong>indefinitely</strong> under Para 6(4).
+                </p>
+
+                <!-- Financial Calculator Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-slate-50 p-6 rounded-xl border border-slate-200">
+                    <!-- Left: Form Inputs -->
+                    <div class="lg:col-span-5 space-y-4 text-xs">
+                        <h3 class="text-sm font-bold text-slate-900 border-b border-slate-300 pb-2">Financial & Tax Inputs</h3>
+                        
+                        <div>
+                            <label class="block text-slate-700 font-semibold mb-1">Qualifying Capital Expenditure (QCE - RM):</label>
+                            <input type="number" id="calcCapex" value="2000000" step="50000" oninput="calculateTaxBenefits()" class="w-full bg-white border border-slate-300 rounded p-2 text-slate-900 focus:ring-2 focus:ring-emerald-500 font-mono">
+                        </div>
+
+                        <div>
+                            <label class="block text-slate-700 font-semibold mb-1">Annual Statutory Income (SI - RM):</label>
+                            <input type="number" id="calcStatIncome" value="1500000" step="50000" oninput="calculateTaxBenefits()" class="w-full bg-white border border-slate-300 rounded p-2 text-slate-900 focus:ring-2 focus:ring-emerald-500 font-mono">
+                        </div>
+
+                        <div>
+                            <label class="block text-slate-700 font-semibold mb-1">Asset Incentive Category:</label>
+                            <select id="calcCategory" onchange="calculateTaxBenefits()" class="w-full bg-white border border-slate-300 rounded p-2 text-slate-900 focus:ring-2 focus:ring-emerald-500">
+                                <option value="tier1b">2027 Integrated Solar + BESS (100% GITA Tier 1b)</option>
+                                <option value="standalone2026">Pre-2027 Standalone Solar PV (60% GITA Tier 2)</option>
+                                <option value="aca2027">2027 EE Equipment (100% ACA - 2-Year Write-Off)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-slate-700 font-semibold mb-1">Corporate Income Tax Rate:</label>
+                            <select id="calcTaxRate" onchange="calculateTaxBenefits()" class="w-full bg-white border border-slate-300 rounded p-2 text-slate-900 focus:ring-2 focus:ring-emerald-500">
+                                <option value="0.24">24% Standard Corporate Rate</option>
+                                <option value="0.15">15% MSME Preferential Rate</option>
+                            </select>
+                        </div>
+
+                        <div class="p-3 bg-emerald-100/60 border border-emerald-300 rounded text-emerald-900 text-[11px]">
+                            <strong>Combined Shield Formula:</strong> Total Tax Shield = Capex × (CA % + GITA %) × Tax Rate. Under Tier 1b (200%), cash tax savings equals <strong>48.0% of capex</strong> at the 24% tax rate.
+                        </div>
+                    </div>
+
+                    <!-- Right: Live Output Metrics & Chart -->
+                    <div class="lg:col-span-7 flex flex-col justify-between space-y-4">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                            <div class="bg-white p-3 rounded border border-slate-200">
+                                <div class="text-slate-500 font-medium">Year 1 Schedule 3 CA</div>
+                                <div id="resCaYear1" class="text-base font-extrabold text-slate-900 mt-1">RM 0</div>
+                                <div class="text-[10px] text-slate-500">20% IA + 14% AA (34%)</div>
+                            </div>
+                            <div class="bg-white p-3 rounded border border-slate-200">
+                                <div class="text-slate-500 font-medium">Year 1 GITA Utilized</div>
+                                <div id="resGitaYear1" class="text-base font-extrabold text-emerald-700 mt-1">RM 0</div>
+                                <div class="text-[10px] text-slate-500">Capped at 70% Statutory Inc</div>
+                            </div>
+                            <div class="bg-white p-3 rounded border border-slate-200 col-span-2 sm:col-span-1">
+                                <div class="text-slate-500 font-medium">Carry-Forward GITA</div>
+                                <div id="resGitaCarry" class="text-base font-extrabold text-amber-700 mt-1">RM 0</div>
+                                <div class="text-[10px] text-slate-500">Indefinite carry-forward</div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-lg border border-slate-200">
+                            <h4 class="text-xs font-bold text-slate-900 mb-2">5-Year Cumulative Tax Benefit & Cash Flow Simulation</h4>
+                            <div class="chart-container">
+                                <canvas id="chartTaxBenefit"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 6: EE ALTERNATIVES & FINANCE -->
+        <section id="sec-alternatives" class="space-y-6 hidden">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-900 mb-2">Alternative Budget 2027 Instruments for Energy Efficiency & Green Finance</h2>
+                <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                    While Budget 2027 removed direct GITA from standalone energy efficiency equipment, MOF deployed four complementary fiscal, capital allowance, and concessional debt instruments to support C&I energy management and demand reduction.
+                </p>
+
+                <!-- Instrument Cards Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">Appendix 28</span>
+                                <span class="text-xs text-slate-500">Effective: 2027–2030</span>
+                            </div>
+                            <h3 class="text-md font-bold text-slate-900 mb-1">Extended Accelerated Capital Allowance (ACA)</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                Grants a 100% tax write-off over <strong>2 years</strong> (20% Initial Allowance + 40% Annual Allowance) for:
+                            </p>
+                            <ul class="list-disc list-inside text-xs text-slate-700 mt-2 space-y-1">
+                                <li>Procurement of plant and machinery from local manufacturers</li>
+                                <li>ICT equipment, custom software, and AI Energy Management Systems (EMS/BMS)</li>
+                            </ul>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-200 text-xs text-slate-500">
+                            <em>Primary substitute tax shield for energy efficiency retrofits after GITA removal.</em>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold text-blue-800 bg-blue-100 px-2.5 py-0.5 rounded-full">Appendix 12</span>
+                                <span class="text-xs text-slate-500">Effective: YA 2027</span>
+                            </div>
+                            <h3 class="text-md font-bold text-slate-900 mb-1">Expanded Small Value Assets (SVA) Write-Off</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                Increases the 100% immediate Year-1 write-off thresholds for low-cost operational assets:
+                            </p>
+                            <ul class="list-disc list-inside text-xs text-slate-700 mt-2 space-y-1">
+                                <li>Per-asset cap raised from <strong>RM2,000 to RM3,000</strong></li>
+                                <li>Non-MSME annual cap raised from <strong>RM20,000 to RM30,000</strong> (Unlimited for MSMEs)</li>
+                            </ul>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-200 text-xs text-slate-500">
+                            <em>Covers IoT energy sensors, smart sub-meters, and VFD drives under RM3,000 per unit.</em>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full">Touchpoints Page 14</span>
+                                <span class="text-xs text-slate-500">Fund Size: RM2 Billion</span>
+                            </div>
+                            <h3 class="text-md font-bold text-slate-900 mb-1">Green Sustainability Fund 2.0</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                Concessional debt facility administered via commercial banking institutions to subsidize decarbonization capex:
+                            </p>
+                            <ul class="list-disc list-inside text-xs text-slate-700 mt-2 space-y-1">
+                                <li><strong>1% p.a. profit/interest rate subsidy</strong> for the first 5 years</li>
+                                <li>Financing tenure up to 10 years for C&I low-carbon transition projects</li>
+                            </ul>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-200 text-xs text-slate-500">
+                            <em>Directly lowers borrowing costs for corporate Solar + BESS capital expenditure.</em>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold text-purple-800 bg-purple-100 px-2.5 py-0.5 rounded-full">Budget Speech Para 112</span>
+                                <span class="text-xs text-slate-500">Macro Grid & Sukuk</span>
+                            </div>
+                            <h3 class="text-md font-bold text-slate-900 mb-1">Utility Grid & Sukuk PRISMA Framework</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                Supporting infrastructure commitments and capital market tax deductions:
+                            </p>
+                            <ul class="list-disc list-inside text-xs text-slate-700 mt-2 space-y-1">
+                                <li>TNB RM15 Billion investment to upgrade national grid flexibility</li>
+                                <li>Appendix 15: Income tax deduction on issuance costs for Sukuk PRISMA</li>
+                                <li>KWAP Dana Iklim RM1 Billion allocation for green infrastructure</li>
+                            </ul>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-200 text-xs text-slate-500">
+                            <em>Strengthens grid capacity to absorb high penetration of industrial solar + BESS.</em>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 7: UNCONFIRMED ITEMS & COMPLIANCE -->
+        <section id="sec-compliance" class="space-y-6 hidden">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-900 mb-2">Unconfirmed Items & Operational Compliance Safeguards</h2>
+                <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                    In accordance with strict evidentiary standards, five regulatory items could not be independently confirmed as of October 2026 pending gazettement of official Exemption Orders by MOF, AGC, LHDN, or MGTC.
+                </p>
+
+                <!-- Unconfirmed Items Accordion List -->
+                <div class="space-y-3 text-xs mb-6">
+                    <div class="p-4 bg-amber-50 rounded-lg border border-amber-200">
+                        <strong class="text-amber-900 block text-sm mb-1">1. Gazettement Status of 2024–2026 & 2027–2030 Exemption Orders</strong>
+                        <p class="text-amber-800">
+                            While <code>P.U. (A) 243/2024</code> covers historical GITA Assets up to 31 Dec 2023, LHDN's Joint Memorandum response confirms that the draft Gazette Order for the 2024–2026 and 2027–2030 GITA Asset framework remains in drafting stage ("Draf GITA Asset sedang dimuktamadkan").
+                        </p>
+                    </div>
+
+                    <div class="p-4 bg-amber-50 rounded-lg border border-amber-200">
+                        <strong class="text-amber-900 block text-sm mb-1">2. Transitional Treatment for Late-2026 Invoices Commissioned in 2027</strong>
+                        <p class="text-amber-800">
+                            It cannot be confirmed whether MOF will grant transitional grandfathering for standalone solar PV invoiced in late 2026 but commissioned/verified by MGTC in early 2027. Under published guidelines, MGTC verification date strictly governs eligibility.
+                        </p>
+                    </div>
+
+                    <div class="p-4 bg-amber-50 rounded-lg border border-amber-200">
+                        <strong class="text-amber-900 block text-sm mb-1">3. Minimum BESS Sizing Ratio & Retrofit Rules for Tier 1b</strong>
+                        <p class="text-amber-800">
+                            Pending publication of MGTC's 2027–2030 Guidelines, the mandatory minimum battery storage capacity ratio (kWh BESS per kWp solar) and whether retrofitting BESS onto an existing pre-2027 solar array qualifies for Tier 1b remain unconfirmed.
+                        </p>
+                    </div>
+
+                    <div class="p-4 bg-amber-50 rounded-lg border border-amber-200">
+                        <strong class="text-amber-900 block text-sm mb-1">4. Budget 2026 Proposal for 100% GITA on General MyHIJAU Products</strong>
+                        <p class="text-amber-800">
+                            Budget 2027 codifies the "locally produced" 100% Tier 1 distinction specifically for EV, waste, and water systems. Whether general MyHIJAU local mark products retain 100% GITA without statutory restriction remains unconfirmed.
+                        </p>
+                    </div>
+
+                    <div class="p-4 bg-amber-50 rounded-lg border border-amber-200">
+                        <strong class="text-amber-900 block text-sm mb-1">5. Body Text of Appendix 15 (Sukuk PRISMA)</strong>
+                        <p class="text-amber-800">
+                            While listed in the Table of Contents of <code>tax-measures.pdf</code> and speech text, the full body text of Appendix 15 was truncated in public extracts and cannot be verified.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Compliance Audit Warnings -->
+                <div class="bg-slate-900 text-white p-5 rounded-xl">
+                    <h3 class="text-sm font-bold text-white mb-2">Mandatory Statutory Compliance Rules (LHDN Audit Risk)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-300">
+                        <div class="p-3 bg-slate-800 rounded border border-slate-700">
+                            <strong class="text-white block mb-1">5-Year Asset Holding Period</strong>
+                            Per <code>P.U. (A) 243/2024</code> Para 7, if a GITA asset is disposed of within 5 years of acquisition, all claimed GITA exemptions are clawed back in full.
+                        </div>
+                        <div class="p-3 bg-slate-800 rounded border border-slate-700">
+                            <strong class="text-white block mb-1">Validation Letter Prerequisite</strong>
+                            Taxpayers MUST NOT file tax returns claiming GITA before obtaining MGTC's formal Validation Letter (Subject to LHDN audit penalties).
+                        </div>
+                        <div class="p-3 bg-slate-800 rounded border border-slate-700">
+                            <strong class="text-white block mb-1">Hire Purchase Instalment Basis</strong>
+                            Per LHDN PR 4/2023, for hire purchase assets, QCE is claimed progressively based strictly on the capital principal portion paid during the basis period.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 text-slate-400 text-xs py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+            <p>Malaysia Green Tax Incentives Analytical Portal — Post-Budget 2027 Regulatory Assessment</p>
+            <p class="text-slate-500">Primary Legal Sources: MOF Speech (9 Oct 2026), MOF Appendix 25 (tax-measures.pdf), MIDA Briefing Deck (12 Oct 2026), MGTC Guidelines, LHDN PR 4/2023, P.U. (A) 243/2024 & P.U. (A) 247/2024.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic & Chart Engine -->
+    <script>
+        let chartOverviewShift = null;
+        let chartTaxBenefit = null;
+
+        const matrixData = [
+            { cat: 'asset', title: 'Standalone Solar PV (Own Use)', current: '60% GITA (Tier 2)', budget2027: '0% (Discontinued)', cap: '70% SI', agency: 'MGTC / LHDN', badge: 'bg-rose-100 text-rose-800', ref: 'App 25, Lampiran 25' },
+            { cat: 'asset', title: 'Standalone BESS (Own Use)', current: '100% GITA (Tier 1)', budget2027: '0% Standalone (Must integrate)', cap: '70% SI', agency: 'MGTC / LHDN', badge: 'bg-amber-100 text-amber-800', ref: 'App 25, Lampiran 25' },
+            { cat: 'asset', title: 'Integrated Solar PV + BESS/ESS (Own Use)', current: 'Split 60% / 100%', budget2027: '100% GITA (Tier 1b)', cap: '70% SI', agency: 'MGTC / LHDN', badge: 'bg-emerald-100 text-emerald-800', ref: 'App 25, Lampiran 25' },
+            { cat: 'asset', title: 'Energy Efficiency Assets (Chillers/Boilers)', current: '60% GITA (Tier 2)', budget2027: '0% (Shifted to ACA App 28)', cap: '70% SI', agency: 'MGTC / LHDN', badge: 'bg-rose-100 text-rose-800', ref: 'App 25, Lampiran 25' },
+            { cat: 'asset', title: 'Locally Produced EV Chargers / Waste / Water', current: '100% / 60% GITA', budget2027: '100% GITA (Tier 1a)', cap: '70% SI', agency: 'MGTC / LHDN', badge: 'bg-emerald-100 text-emerald-800', ref: 'App 25, Lampiran 25' },
+            { cat: 'asset', title: 'Imported EV Chargers / Waste / Water', current: '60% GITA', budget2027: '60% GITA (Tier 2a)', cap: '70% SI', agency: 'MGTC / LHDN', badge: 'bg-slate-100 text-slate-800', ref: 'App 25, Lampiran 25' },
+            { cat: 'project', title: 'Commercial Solar PV Project', current: '100% GITA 5 yrs (Tier 3)', budget2027: '0% (Tier 3 Abolished)', cap: '70% SI', agency: 'MIDA', badge: 'bg-rose-100 text-rose-800', ref: 'App 25, MIDA' },
+            { cat: 'project', title: 'Non-Solar RE Projects (Biomass/Hydro)', current: '100% GITA 5 yrs (Tier 3)', budget2027: '60% GITA 5 yrs (Tier 2b)', cap: '70% SI', agency: 'MIDA', badge: 'bg-amber-100 text-amber-800', ref: 'App 25, MIDA' },
+            { cat: 'project', title: 'Commercial EV Charging Stations', current: '100% GITA (100% SI)', budget2027: '60% GITA (70% SI)', cap: '70% SI', agency: 'MIDA', badge: 'bg-amber-100 text-amber-800', ref: 'App 25, MIDA' },
+            { cat: 'project', title: 'Green Hydrogen & OTEC Projects', current: '100% GITA (Green H2)', budget2027: '100% GITA 5+5 yrs (Tier 1)', cap: '100% / 70% SI', agency: 'MIDA', badge: 'bg-purple-100 text-purple-800', ref: 'App 25, MIDA' },
+            { cat: 'leasing', title: 'GITE Solar Leasing (RPVI / PPA)', current: '70% Income Exemption', budget2027: 'EXPIRED (0% Post-2026)', cap: '70% SI', agency: 'SEDA / MIDA', badge: 'bg-rose-100 text-rose-800', ref: 'App 25, P.U.(A) 247' }
+        ];
+
+        function switchTab(tabId) {
+            document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById('sec-' + tabId).classList.remove('hidden');
+            document.getElementById('tab-' + tabId).classList.add('active');
+
+            if (tabId === 'overview' && chartOverviewShift) chartOverviewShift.resize();
+            if (tabId === 'mechanics') {
+                calculateTaxBenefits();
+                if (chartTaxBenefit) chartTaxBenefit.resize();
+            }
+        }
+
+        function renderMatrixTable(filter = 'all') {
+            const tbody = document.getElementById('matrixTableBody');
+            tbody.innerHTML = '';
+
+            const filtered = filter === 'all' ? matrixData : matrixData.filter(d => d.cat === filter);
+
+            filtered.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-50 transition border-b border-slate-100';
+                tr.innerHTML = `
+                    <td class="p-3 font-semibold text-slate-900">${row.title}</td>
+                    <td class="p-3 text-slate-600">${row.current}</td>
+                    <td class="p-3 font-bold"><span class="inline-block px-2 py-0.5 rounded text-[11px] ${row.badge}">${row.budget2027}</span></td>
+                    <td class="p-3 text-slate-600 font-mono text-[11px]">${row.cap}</td>
+                    <td class="p-3 text-slate-500 text-[11px]">${row.agency} <br><span class="text-[10px] text-slate-400">(${row.ref})</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterMatrixTable() {
+            const val = document.getElementById('matrixFilter').value;
+            renderMatrixTable(val);
+        }
+
+        function initOverviewShiftChart() {
+            const ctx = document.getElementById('chartOverviewShift').getContext('2d');
+            chartOverviewShift = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Standalone Solar',
+                        'Standalone BESS',
+                        'Integrated Solar+BESS',
+                        'EE Assets',
+                        'EV Chargers (Local)'
+                    ],
+                    datasets: [
+                        {
+                            label: 'Current (2024–2026)',
+                            data: [60, 100, 60, 60, 100],
+                            backgroundColor: '#94a3b8'
+                        },
+                        {
+                            label: 'Budget 2027 (2027–2030)',
+                            data: [0, 0, 100, 0, 100],
+                            backgroundColor: '#059669'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: { display: true, text: 'GITA Rate (%)', font: { size: 10 } }
+                        },
+                        x: {
+                            ticks: {
+                                font: { size: 9 },
+                                callback: function(val, index) {
+                                    let label = this.getLabelForValue(index);
+                                    return label.length > 16 ? label.substr(0, 14) + '...' : label;
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'top', labels: { boxWidth: 12, font: { size: 10 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y + '% Allowance';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function calculateTaxBenefits() {
+            const QCE = parseFloat(document.getElementById('calcCapex').value) || 0;
+            const SI = parseFloat(document.getElementById('calcStatIncome').value) || 0;
+            const cat = document.getElementById('calcCategory').value;
+            const taxRate = parseFloat(document.getElementById('calcTaxRate').value) || 0.24;
+
+            let caRateYr1 = 0.34;
+            let caRateYr2Plus = 0.14;
+            let gitaRate = 0;
+
+            if (cat === 'tier1b') {
+                caRateYr1 = 0.34;
+                gitaRate = 1.0;
+            } else if (cat === 'standalone2026') {
+                caRateYr1 = 0.34;
+                gitaRate = 0.60;
+            } else if (cat === 'aca2027') {
+                caRateYr1 = 0.60;
+                caRateYr2Plus = 0.40;
+                gitaRate = 0.0;
+            }
+
+            const yr1CA = QCE * caRateYr1;
+            const adjSIYr1 = Math.max(0, SI - yr1CA);
+            
+            const totalGitaPool = QCE * gitaRate;
+            const maxGitaCapYr1 = adjSIYr1 * 0.70;
+            const gitaUsedYr1 = Math.min(totalGitaPool, maxGitaCapYr1);
+            const carryForwardGita = Math.max(0, totalGitaPool - gitaUsedYr1);
+
+            document.getElementById('resCaYear1').innerText = 'RM ' + Math.round(yr1CA).toLocaleString();
+            document.getElementById('resGitaYear1').innerText = 'RM ' + Math.round(gitaUsedYr1).toLocaleString();
+            document.getElementById('resGitaCarry').innerText = 'RM ' + Math.round(carryForwardGita).toLocaleString();
+
+            let years = ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'];
+            let cumulativeCashSaved = [];
+            let currentGitaPool = totalGitaPool;
+            let runningSavings = 0;
+
+            for (let i = 0; i < 5; i++) {
+                let caDeduction = (i === 0) ? yr1CA : (cat === 'aca2027' && i === 1 ? QCE * 0.40 : (i < 6 && cat !== 'aca2027' ? QCE * 0.14 : 0));
+                let yearAdjSI = Math.max(0, SI - caDeduction);
+                let yearGitaCap = yearAdjSI * 0.70;
+                let yearGitaUsed = Math.min(currentGitaPool, yearGitaCap);
+                currentGitaPool -= yearGitaUsed;
+
+                let taxableIncomeWithIncentives = yearAdjSI - yearGitaUsed;
+                let taxPaid = taxableIncomeWithIncentives * taxRate;
+                let baselineTaxWithoutIncentives = SI * taxRate;
+                let annualCashSaved = Math.max(0, baselineTaxWithoutIncentives - taxPaid);
+
+                runningSavings += annualCashSaved;
+                cumulativeCashSaved.push(Math.round(runningSavings));
+            }
+
+            updateBenefitChart(years, cumulativeCashSaved);
+        }
+
+        function updateBenefitChart(labels, dataSeries) {
+            const ctx = document.getElementById('chartTaxBenefit').getContext('2d');
+
+            if (chartTaxBenefit) {
+                chartTaxBenefit.data.labels = labels;
+                chartTaxBenefit.data.datasets[0].data = dataSeries;
+                chartTaxBenefit.update();
+            } else {
+                chartTaxBenefit = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Cumulative Cash Tax Savings (RM)',
+                            data: dataSeries,
+                            borderColor: '#059669',
+                            backgroundColor: 'rgba(5, 150, 105, 0.1)',
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#065f46'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Tax Savings (RM)', font: { size: 10 } },
+                                ticks: {
+                                    callback: function(val) {
+                                        return 'RM ' + (val / 1000).toFixed(0) + 'k';
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: true, position: 'top', labels: { boxWidth: 10, font: { size: 10 } } }
+                        }
+                    }
+                });
+            }
+        }
+
+        function runAuditCheck() {
+            const chkInvoice = document.getElementById('chkInvoice').checked;
+            const chkCommissioned = document.getElementById('chkCommissioned').checked;
+            const chkSubmitted = document.getElementById('chkSubmitted').checked;
+            const chkIntegrated = document.getElementById('chkIntegrated').checked;
+
+            const box = document.getElementById('auditResultBox');
+
+            if (chkInvoice && chkCommissioned && chkSubmitted) {
+                box.className = 'mt-4 p-4 rounded-lg bg-emerald-950 border border-emerald-500 text-emerald-200 text-xs font-mono';
+                box.innerHTML = '<strong>STATUS: QUALIFIED FOR PRE-2027 REGIME</strong><br>All three critical milestone events (Incurred QCE, Physical COD, Application Received) are satisfied on/before 31 Dec 2026. Eligible for 60% Standalone GITA / 70% GITE Leasing.';
+            } else if (!chkSubmitted && chkIntegrated) {
+                box.className = 'mt-4 p-4 rounded-lg bg-blue-950 border border-blue-500 text-blue-200 text-xs font-mono';
+                box.innerHTML = '<strong>STATUS: QUALIFIED FOR 2027–2030 TIER 1b REGIME</strong><br>Project will be verified on/after 1 Jan 2027. Because BESS is integrated, project qualifies for 100% GITA Asset allowance under Tier 1b.';
+            } else if (!chkSubmitted && !chkIntegrated) {
+                box.className = 'mt-4 p-4 rounded-lg bg-rose-950 border border-rose-500 text-rose-200 text-xs font-mono';
+                box.innerHTML = '<strong>STATUS: DISQUALIFIED / 0% GITA RISK</strong><br>Application will be received on/after 1 Jan 2027, but system lacks BESS integration. Standalone solar receives 0% GITA post-2026. Action Required: Integrate BESS or execute before 31 Dec 2026.';
+            } else {
+                box.className = 'mt-4 p-4 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 text-xs font-mono';
+                box.innerHTML = 'Status: Evaluating milestones... Ensure all required boxes are checked for accurate audit diagnosis.';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderMatrixTable();
+            initOverviewShiftChart();
+            calculateTaxBenefits();
+        });
+    </script>
+</body>
+</html>
