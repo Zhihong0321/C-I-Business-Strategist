@@ -2,7 +2,7 @@
 id: T03
 title: Green tax incentives — GITA Asset, GITA Project, GITE, Budget 2027 changes, alternatives
 covers: incentive rates by asset type before/after 2027, 31 Dec 2026 cutoff mechanics, how GITA is used against income, RPVI/GITE rules, compliance traps, other Budget 2027 instruments
-sources: [R1, R2, R3, R4, R5, R6, R7, R8]
+sources: [R1, R2, R3, R4, R5, R6, R7, R8, R9]
 primary_source: R7 (dedicated research; cites Budget 2027 documents)
 conflicts: [C01, C02, C14, C20]
 related: [T07, T10]
@@ -63,6 +63,7 @@ R7 tier definitions (2027–2030, GITA Assets, 70% SI set-off):
 | R4 | "31 December 2026 sunset of MIDA's GITA 100% tax allowance"; MV payback "3.0–4.5 years (w/ GITA 100%)" |
 | R6 | 2026: 60% standalone solar, 100% BESS; 2027–2030: standalone solar 0%, integrated solar + BESS 100% Tier 1; GITE deadline 31 Dec 2026 |
 | R8 | "GITA / GTFS Sunset 31 Dec 2026 — 60–100% Tax Allowance Deadline" |
+| R9 | "MIDA Tier 1 Green Investment Tax Allowance (GITA) Shield": BESS "Classified as a Tier 1 Green Asset, qualifying for 100% Investment Tax Allowance offset against up to 70% of statutory income over 3–5 years"; plus "100% Capital Allowance" at 24% → "Net ~48% CAPEX Subsidy". No dates, no Budget 2027, no standalone vs integrated split (C02, C14, C20) |
 
 ## 3. The 31 December 2026 cutoff (R7)
 Three overlapping requirements to claim pre-2027 rules (60% standalone solar GITA, 70% GITE, standalone EE GITA):

@@ -2,11 +2,11 @@
 id: T01
 title: TNB RP4 tariff structure and Maximum Demand (MD) mechanics
 covers: RP4 rates by category, legacy mapping, ToU windows, how MD is measured and billed, MD increase vs legacy, power factor surcharge, General vs ToU switch maths, typical bills
-sources: [R1, R2, R3, R4, R5, R6, R8]
+sources: [R1, R2, R3, R4, R5, R6, R8, R9]
 conflicts: [C04, C05, C09, C13, C16]
 related: [T02, T08, T10]
 updated: 2026-10-23
-confidence_note: All rate figures below agree across R2, R3 and R4 (and R1/R5/R6/R8 where quoted). None of the reports links the official ST/TNB tariff book. Treat as consistent but unverified.
+confidence_note: All rate figures below agree across R2, R3 and R4 (and R1/R5/R6/R8/R9 where quoted). None of the reports links the official ST/TNB tariff book. Treat as consistent but unverified.
 ---
 
 <!-- ai-banner -->
@@ -21,6 +21,7 @@ confidence_note: All rate figures below agree across R2, R3 and R4 (and R1/R5/R6
 - **MV and HV pay capacity + network per kW of Maximum Demand**: MV General **RM89.27/kW** (any time), MV ToU **RM97.06/kW** (14:00–22:00 weekdays only), HV General RM31.21/kW, HV ToU RM44.82/kW [R2, R3, R4].
 - **MD = 2 × the largest kWh in any 30-minute block** of the billing month (within the assessed window). One block sets the charge for the whole month [R2, R3, R6, R8].
 - MV demand charges rose roughly **+115% to +202%** vs legacy, depending on which legacy tariff is the base [C04].
+- Solar without storage cuts kWh but not MD, so the MD share of the bill rises: "from ~55% up to ~70%" (R9 claim; its own model gives 59.5% → 66.4% for a stamping plant) [R9; C05].
 
 ## 1. Regime basics
 | Item | Detail | Source |
@@ -32,7 +33,9 @@ confidence_note: All rate figures below agree across R2, R3 and R4 (and R1/R5/R6
 | Consolidation | "TNB consolidated 11 legacy non-domestic tariffs into six core RP4 categories" | R4 |
 | AFA | Monthly fuel pass-through replaced the legacy 6-month ICPT cycle | R2 |
 | AFA example | +3.61 sen/kWh (Oct 2026) — calculator default, range −5.0 to +8.0 sen | R4 |
-| KWTBB levy | 1.6%; R2's chart "Excludes 1.6% KWTBB Levy"; R4's calculator applies 1.6% to (energy + MD + retail), not to AFA | R2, R4 |
+| AFA trajectory | 3.61 sen/kWh Oct 2026; forecasts 4.27 (Nov 2026), 4.46 (Dec 2026), 7.59 (Jan 2027) — no source or method | R9 |
+| KWTBB levy | 1.6%; R2's chart "Excludes 1.6% KWTBB Levy"; R4's calculator applies 1.6% to (energy + MD + retail), not to AFA; R9 applies it to the demand rate: "Effective MD" MV General RM90.70/kW, MV ToU RM98.61/kW | R2, R4, R9 |
+| Legacy (RP3) energy rates, "E1/E2 Ref" | Peak 35.50–36.50 sen/kWh; off-peak 21.90–22.40 sen/kWh (single source, unsourced) | R9 |
 | Off-peak share | Off-peak = 128 hours/week (76.2% of all hours), "expanded by 80%" | R1, R2 |
 | Legacy peak window | 14-hour block 08:00–22:00 (pre-RP4) | R2 |
 
@@ -56,7 +59,7 @@ Blended energy rates used inside calculators (assumptions, not tariff): R3 MV To
 - **Peak: 14:00–22:00, Monday–Friday** (8 hours/day) [R1, R2, R3, R4, R5, R6, R8].
 - Off-peak: 22:00–14:00 on weekdays plus all weekend hours [R2, R3].
 - On MV/HV ToU, demand recorded outside the window carries **RM0/kW** ("Immediate savings on all morning & weekend demand spikes (billed at RM0/kW)") [R2].
-- Public holidays: **not addressed by any report** (open question).
+- Public holidays: only R9 addresses them — off-peak is "22:00–14:00 Mon–Fri, all weekends & public holidays" (single source, no citation; open gap `tou-holidays-levy-pf-base`).
 - Solar mismatch: peak solar 10:00–15:00 falls mostly in off-peak; BESS bridges to the 14:00–22:00 window [R3, R1].
 
 ## 4. How Maximum Demand is measured and billed
@@ -79,12 +82,15 @@ Real-time projection used by EMS (R2): **D_projected (kW) = 2 × [E(t_e) + P_ins
 | HV Gen (C3) | 29.20 | 31.21 |
 | HV TOU (C4/E3) | 43.60 | 44.82 |
 
-Claims: "+115% to +201%" (R1, R4); "+100% to +202%", "up to 202%" (R2); "+162%" from RP3 baseline RM37.00 (R6) / from RM30.30 (R8 text; R8 chart uses 37.00 and an unexplained "RP4 High-Peak Industrial" 98.61). HV demand charges barely moved; the shock is on **MV**.
+Claims: "+115% to +201%" (R1, R4); "+100% to +202%", "up to 202%" (R2); "+162%" from RP3 baseline RM37.00 (R6) / from RM30.30 (R8 text; R8 chart uses 37.00 and an unexplained "RP4 High-Peak Industrial" 98.61); "+115% to +162%" from "~RM37.00–RM45.10/kW" (R9). R9 shows RM98.61/kW as MV ToU RM97.06 plus the 1.6% KWTBB levy (97.06 × 1.016), which is probably what R8's 98.61 bar is. HV demand charges barely moved; the shock is on **MV**.
 
 ## 6. MD share of the bill [C05]
 - "Unbundled RP4 capacity & network charges now represent 30% to 70% of C&I monthly power bills" [R8].
 - MD "accounting for 35% to 45% of an industrial electricity bill" [R6].
 - R3 worked factory (500,000 kWh/month, 900 kW MD, MV General): MD RM80,343 vs energy RM149,150 → ~35% (derived).
+- R9 by sector (MV ToU, 1,000 kW, no solar — outputs of R9's own simulator, not measured bills): metal stamping 59.5%, office towers 56.3%, food 49.7%, malls 44.1%, plastic injection 43.1%, hotels 40.2%, cold storage 38.2%, hospitals 36.8%, textiles 35.1%, semiconductor 33.2%, rubber gloves 32.5%. The lower the load factor, the higher the MD share (T08 §8).
+- R9 "Post-Solar Load Factor Distortion Effect": after rooftop solar without storage, "the MD share of the electricity bill surges from ~55% up to ~70%", because one overcast 30-minute block or a 17:00–22:00 run still sets the month's MD. R9's simulator at its defaults (1,000 kW stamping plant, 500 kWp) gives 59.5% → 66.4%; its banner says 69.4%, which the code does not reproduce.
+- R9: MPMA plastics members are "hit with 40%+ MD bill shares from heater bands and chillers".
 
 ## 7. Power factor surcharge (R2)
 - PF = kWh / √(kWh² + kVArh²) for the month.
@@ -130,6 +136,6 @@ R5: storing surplus solar instead of exporting at SMP yields "a net spread savin
 
 ## 12. Open questions
 - Official tariff book link; HV energy rates (43.03 / 44.52 / 40.43 sen) look high relative to MV but all three reports agree.
-- Public holidays in the ToU window.
+- Public holidays in the ToU window (R9 alone says off-peak; unsourced).
 - Base of the power factor surcharge and of KWTBB.
 - RP5 tariffs from 1 January 2028 (RP4 ends 31 Dec 2027) — no report covers this.

@@ -2,9 +2,9 @@
 id: T05
 title: Competitors, zero-capex BESS providers, integrators and hardware OEMs
 covers: master list of every company named across the reports, with scale, BESS track record, business models, EMS products, financials, competitive moats and price-competition segments
-sources: [R3, R8, R6, R4, R1]
+sources: [R3, R8, R6, R4, R1, R9]
 primary_source: R8 (answers research prompt #3; no hyperlinks), R3 provider directory (no sources)
-conflicts: [C12, C18]
+conflicts: [C12, C18, C17]
 related: [T06, T07, T08]
 updated: 2026-10-23
 confidence_note: No company figure in R3 or R8 carries a link. Treat portfolio sizes, order books and project claims as leads to verify against Bursa filings and company releases.
@@ -92,4 +92,14 @@ High-moat, margin-protected:
 - HV grid interconnection — Cheeding (500 kV TNB transmission licences, ~50% GP, 28% net).
 
 ## 5. EMS as the moat (R8, R6)
-"Top contractors rely on software moats to prevent 30-minute peak-shaving failures": Solarvest AI machine-learning EPMS; Ditrolic Net-Zero Energy OS with 15-minute interval dispatch; Plus Xnergy SOURCE weekday peak shaving [R8]. Tanand EasiEMS early alerts [R6]. EVOLTS and XPERTS.NRG / EVC require 30-day to 12-month interval-meter studies before sizing [R3, R8].
+"Top contractors rely on software moats to prevent 30-minute peak-shaving failures": Solarvest AI machine-learning EPMS; Ditrolic Net-Zero Energy OS with 15-minute interval dispatch; Plus Xnergy SOURCE weekday peak shaving [R8]. Tanand EasiEMS early alerts [R6]. EVOLTS and XPERTS.NRG / EVC require 30-day to 12-month interval-meter studies before sizing [R3, R8]. R9 adds a "Predictive HAPLT Controller" field trial (CNN/LSTM/XGBoost forecasting) that kept battery charge for the critical peaks [R9].
+
+## 6. Companies named in R9's case studies (detail in T08 §9)
+| Company | R9 case | Note |
+|---|---|---|
+| Livoltek | 125 kW / 261 kWh LFP at a Malaysian factory with rooftop PV; 89.99 kW evening peak shaved; RM9,000/month | Not named in any other report |
+| Plus Xnergy | 1.5 MW / 3.0 MWh zero-capex EaaS, 15 years, RM82.50/kW | Figures repeat R8's illustrative example |
+| Solarvest | Solar ATAP + BESS reference site, 1,000 kWp + 500 kW / 1,000 kWh, RM712,000/yr | AI EPMS control |
+| Avera Energy | MV General → ToU switch + 165 kW / 330 kWh BESS, 315 kW MD cut | Not named elsewhere; RM figures repeat R3's simulator placeholder |
+| UniBess | 500 kW / 1,044 kWh (4 × 125 kW cabinets), 400 kW shaved | Elsewhere a 7–10 yr lease provider (R6, R8); RM figures repeat R1's hard-coded result |
+None of the cases has a link or date [R9; C17].

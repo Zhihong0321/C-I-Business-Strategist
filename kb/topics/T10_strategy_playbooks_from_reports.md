@@ -1,8 +1,8 @@
 ---
 id: T10
 title: Strategy playbooks proposed by the reports (client archetypes, roadmaps, segment strategies)
-covers: what each report recommends — R1 client archetypes and EPCC/RPVI playbook, R2 12-month C&I execution roadmap, R4 segment TAM strategy, R6 financing pathways, R7 post-2027 model, R8 moats and price-war segments
-sources: [R1, R2, R3, R4, R6, R7, R8]
+covers: what each report recommends — R1 client archetypes and EPCC/RPVI playbook, R2 12-month C&I execution roadmap, R4 segment TAM strategy, R6 financing pathways, R7 post-2027 model, R8 moats and price-war segments, R9 target-sector execution framework and industry associations
+sources: [R1, R2, R3, R4, R6, R7, R8, R9]
 related: [T05, T07, T08]
 updated: 2026-10-23
 note: These are the reports' own recommendations, several written before the Budget 2027 tax changes (see C01). Our planning conclusions for Eternalgy are in ../context/eternalgy_profile_and_analysis.md.
@@ -52,3 +52,24 @@ SME owner → financed outright (LCTF/HTG); SME tenant → operating lease; mid-
 ## 7. R3 — positioning statements
 - "The BESS + ToU Optimization Opportunity": under MV ToU, capacity and network are charged only on 2–10 PM weekday peaks; off-peak spikes are exempt; BESS discharges in the window.
 - "The MV ToU Tariff Trap": migrating without demand control raises the MD rate +8.7% and peak energy to 31.32 sen.
+
+## 8. R9 — target sectors, execution framework and channels
+Targets: Tier 1 spiky-load sectors (metal stamping, office towers, food processing, plastic injection), then Tier 2 (malls, hotels, hospitals; cold storage conditional); avoid standalone MD BESS for flat 24/7 loads (gloves, semiconductor fabs, textile spinning) (T08 §8, [C21]).
+"Strategic Commercial Execution Framework":
+| Step | R9 text |
+|---|---|
+| 1. Target identification | "Focus on post-solar 1–2 shift MV factories (LF = 0.28–0.55) in Shah Alam, Klang, Meru, Tebrau, and Senai." |
+| 2. Interval data audit | "Request 12 months of 15/30-minute load profile data from myTNB portal to map 14:00–22:00 peak pyramid curves." |
+| 3. Dynamic sizing | "Size PCS (kW) for top 20%–35% peak clipping with a 1.3×–1.5× energy buffer for 90% DoD and round-trip efficiency." [C22] |
+| 4. Bifurcated offer | "Present CAPEX purchase with 100% MIDA GITA tax shield (~2.5 yr payback) alongside Zero-Capex EaaS leasing." [C02, C20] |
+Two personas: **technical specifiers** (REEMs, Certified Energy Managers, facility managers) and **financial approvers** (CFO, managing director); EECA is the trigger [R9].
+Associations and events (R9, unsourced):
+| Body | Reach | Touchpoints and events |
+|---|---|---|
+| FMM (Federation of Malaysian Manufacturers) | 3,500+ member factories; state committees in Selangor, Penang, Johor | FMM Energy Efficiency & Conservation Conference; FMM ISO 50001 EnMS workshops; state branch ESG seminars |
+| MPMA (plastics manufacturers) | 800+ plastics and injection plants, "40%+ MD bill shares" | MPMA technical seminars on RP4 tariff mitigation; Mould & Die Pavilion at MIMF (MITEC KL) |
+| MAREMA & MAESCO | ST-certified REEMs and ESCOs auditing 15-min load profiles | ETCON (Energy Transition Conference by TNB); MAREMA technical dialogues and CPD workshops |
+| IEM (Institution of Engineers) | Electrical and building engineers; runs the 5-day EMTC for REEM certification | CPD talks at Wisma IEM (Petaling Jaya) and branches (Penang, JB, Ipoh) |
+| MSIA (semiconductor) | VPs of operations and facility directors at MNCs and precision machining suppliers | SEMICON Southeast Asia; MSIA Northern Corridor C-suite and facility engineering roundtables |
+| PPK / MAH / APHM (malls, hotels, private hospitals) | Asset managers, chief engineers, REITs with MV C1/C2 properties | IGEM (International Greentech & Eco Products Expo, KLCC); BMAM / PPK facility summits |
+Prompt #4 also asked about the SMI Association; R9 does not cover it.

@@ -2,7 +2,7 @@
 id: T06
 title: Pricing benchmarks, O&M rates, EPCC margins, payment milestones, paybacks
 covers: solar EPCC RM/Wp by size, BESS RM/kWh by size, cost drivers, O&M %, warranty cost adders, gross/net margins by segment, payment stages and retention, payback and IRR claims, savings assumptions used by the calculators
-sources: [R8, R3, R6, R2, R4, R5, R1]
+sources: [R8, R3, R6, R2, R4, R5, R1, R9]
 primary_source: R8 (answers research prompt #3; unsourced)
 conflicts: [C10, C17, C19]
 related: [T05, T07, T08]
@@ -96,6 +96,8 @@ Listed company margins: see T05 §2 (Northern Solar 27.4–37.8% GM, FY26 ~34.4%
 | Owner-occupier SMEs: RM950k–1.6M lifetime benefit over 25 yrs, 2x–3x a PPA | R6 |
 | Zero-capex BESS financier return 12%–18% p.a. (~4-year payback) | R8 |
 | Plus Xnergy: RM1.25M/yr savings per 10 MWh | R3, R4 |
+| "100% GITA" + "100% Capital Allowance" at 24% = "Net ~48% CAPEX Subsidy", cutting simple payback "from 5–6 years down to 2.5–3.5 years"; capex purchase with GITA "~2.5 yr payback" (see C02) | R9 |
+| Case studies: 2.1 yrs (overseas CNC), <2.5 yrs (Solarvest), 2.5–3.5 yrs (UniBess), 2.8–3.5 yrs (Livoltek, with GITA), 3.0–4.2 yrs (Avera); three reuse figures from R1, R3, R8 (T08 §9) | R9 |
 Calculator outputs at default inputs, as computed by running each report's code (placeholders shown on the pages are often different):
 | Report | Calculator | Computed at defaults | Placeholder shown |
 |---|---|---|---|
@@ -105,6 +107,7 @@ Calculator outputs at default inputs, as computed by running each report's code 
 | R8 | Project ROI (500 kWp, 200 kWh, 100% GITA + CA) | RM1,520,000 gross, RM516,800 tax shield (34%), RM344,624/yr gross savings, 2.9 yrs | RM1,520,000 gross, RM391,800 tax, RM253,200/yr, 4.4 yrs |
 | R1 | Load-curve simulator (hybrid mode) | True peak-window MD 750 kW (450 kW shaved, RM43,677/month) | Hard-coded 800 kW (400 kW shaved, RM38,824/month) |
 | R7 | Tax engine (Tier 1b, RM2M capex, RM1.5M SI, 24%) | Year-1 CA RM680,000; Year-1 GITA used RM574,000; 5-yr cumulative cash saving RM912,000 (45.6%) | Text claims 48.0% of capex |
+| R9 | Post-solar bill simulator (MV ToU, 1,000 kW stamping plant, LF 0.28, 500 kWp, 250 kW shaved) | Bill RM121,829, MD share 59.8%, BESS savings RM24,265/month (RM291,180/yr); no capex or payback computed | Bill RM163,144, 59.5% (the no-solar, no-BESS baseline) |
 Each source extract's "Calculators" section has the formulas and full outputs.
 
 ## 8. Savings assumptions used inside calculators [C19]
@@ -112,6 +115,8 @@ Each source extract's "Calculators" section has the formulas and full outputs.
 |---|---|---|
 | Solar yield | 1,250 kWh/kWp/yr at RM0.38 blended avoided cost | R8 |
 | Solar yield | ~115 kWh/kWp/month; solar energy capped at 40% of consumption | R3 |
+| Solar yield | ~105 kWh/kWp/month (~1,260 kWh/kWp/yr), split 40% peak / 60% off-peak; solar never reduces MD; no export credit | R9 |
+| BESS savings | kW shaved × RM97.06/month, no battery size or charging cost | R9 |
 | BESS shaving ratio | 1 kW shaved per 2 kWh (2-hour, 0.5C) | R3, R4, R8 |
 | BESS sizing | kW shaved × 3.5 h / (0.85 DoD × 0.90 η × 0.90 SoH); inverter × 1.15 | R2 |
 | Tax benefit | 24% / 34% / 40% / 48% of capex depending on report | C02 |

@@ -9,10 +9,10 @@ related: [T01]
 ---
 
 ## Why the repo can't answer it
-Not stated in any report; needed for exact bill reconstruction in the MD audit tool.
+Needed for exact bill reconstruction in the MD audit tool. Only R9 addresses holidays — off-peak is "22:00–14:00 Mon–Fri, all weekends & public holidays" — and it cites no source. R9 applies KWTBB 1.6% to the demand rate (RM97.06 → RM98.61/kW); R4 applies it to energy + MD + retail. No report gives the power factor surcharge base.
 
 ## What would answer it
 ST / TNB RP4 tariff book; a real MV bill.
 
 ## Interim answer given (unverified)
-Unknown.
+Public holidays: off-peak per R9 only (single source). KWTBB and PF surcharge bases: unknown.

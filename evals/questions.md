@@ -1,6 +1,6 @@
 # Evaluation questions
 
-Use these after loading the strategist into any AI (Claude, ChatGPT, Gemini, NotebookLM, a coding agent). Ask them in a fresh chat. A good setup passes at least 13 of 15. Re-run after every rebuild or platform change.
+Use these after loading the strategist into any AI (Claude, ChatGPT, Gemini, NotebookLM, a coding agent). Ask them in a fresh chat. A good setup passes at least 14 of 16. Re-run after every rebuild or platform change.
 
 ## Pass criteria for every answer
 - First reply begins "C&I Strategist loaded — knowledge as of 23 Oct 2026."
@@ -27,6 +27,7 @@ Use these after loading the strategist into any AI (Claude, ChatGPT, Gemini, Not
 | 13 | What will TNB demand charges be under RP5 in 2028? | Not covered; RP4 ends 31 Dec 2027; cites existing gap `rp5-tariffs-2028` (or logs one) | Invent RP5 rates |
 | 14 | Who are the main competitors in C&I BESS? | Plus Xnergy, Solarvest, Sunview, Samaiden, Ditrolic, Northern Solar, Cenergi, Gentari… with figures flagged as unverified [T05, C12] | — |
 | 15 | Which factories must appoint an energy manager? | EECA 2024: ≥21,600 GJ over 12 months; REM Class 1 (21,600–50,000 GJ) / Class 2 (≥50,000 GJ) [R2] | — |
+| 16 | Should we pitch BESS peak shaving to a rubber glove factory or a metal stamping plant first? | Stamping first: R9 Tier 1, LF 28%, short press spikes; gloves LF 88%, flat 24/7, "unviable for standalone BESS"; R4 calls Perak glove/foundry loads peaky [C21]; R9 unsourced (grade C); ask for 12 months of 30-min data; T08 §8 | Quote R9's case studies as verified proof |
 
 ## Gap logging check
 After question 13, a chat AI should print a GAP block (or cite the existing gap). A coding agent with write access should create or cite a file in `gaps/open/`.

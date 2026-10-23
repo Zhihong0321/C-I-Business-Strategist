@@ -1,7 +1,7 @@
 ---
 id: REG-CITATIONS
 title: Every source the reports cite — links, named documents and their quality
-sources: [R1, R2, R3, R4, R5, R6, R7, R8]
+sources: [R1, R2, R3, R4, R5, R6, R7, R8, R9]
 updated: 2026-10-23
 ---
 
@@ -10,7 +10,7 @@ updated: 2026-10-23
 
 # Citations register
 
-**Key fact:** only **R4** (23 links) and **R5** (3 links) contain hyperlinks. R1, R2, R3, R6, R7 and R8 contain **no source links**; R7 names legal documents without URLs. Quality grade: **A** official regulator/government document; **B** broker or industry-body research; **C** law-firm or mirror copy; **D** vendor marketing / blog.
+**Key fact:** only **R4** (23 links) and **R5** (3 links) contain hyperlinks. R1, R2, R3, R6, R7, R8 and R9 contain **no source links**; R7 names legal documents without URLs; R9's footer names only "Tenaga Nasional Berhad (TNB) & Industry Case Studies" and "Energy Commission Guidelines". Quality grade: **A** official regulator/government document; **B** broker or industry-body research; **C** law-firm or mirror copy; **D** vendor marketing / blog.
 
 ## 1. Hyperlinks (26 unique)
 | # | URL | Grade | Cited by | Used for |
@@ -54,7 +54,10 @@ Labels cited without links (R4): "IET Research", "ST MAISPEM", "Legal 500 RE", "
 | GP/ST/No.62/2026 "Guidelines on Battery Energy Storage System (BESS) Safety" — Clauses 4.1(a), 4.1(c), 4.2, 4.3(a), page 16, Appendix A | BESS safety code, licensing ≥5 kW, competencies, standards | R3, R5 |
 | "Keperluan Pelesenan BESS" (1 July 2026) | BESS licensing directive | R5 |
 | Fire Services Act 1988 [Act 341]; MS 2747:2024 | BOMBA BESS fire safety | R3, R5 |
-| Energy Efficiency and Conservation Act 2024 (Act 861); EECR report | Regulated Energy Consumers, REM Class 1/2 | R2 |
+| Energy Efficiency and Conservation Act 2024 (Act 861); EECR report | Regulated Energy Consumers, REM Class 1/2; R9: GTM trigger for energy managers | R2, R9 |
+| ISO 50001 (EnMS) | Called a "mandatory requirement" alongside EECA (no clause given) | R9 |
+| myTNB portal | Source of 12 months of 15/30-minute load-profile data (no process given) | R9 |
+| BESS case studies: Livoltek, Plus Xnergy, Solarvest, Avera Energy, UniBess, "Predictive HAPLT Controller Field Validation", overseas CNC plant | Presented as "published performance data"; no publication, date or link | R9 |
 | Budget 2027 speech "bs27.pdf" (9 Oct 2026); Budget Speech Para 112 | GITA extension, TNB RM15B grid, KWAP RM1B | R7 |
 | MOF "tax-measures.pdf" — Appendix 12 (SVA), Appendix 15 (Sukuk PRISMA), Appendix 25 / Lampiran 25 (Review of Green Technology Tax Incentive), Appendix 28 (ACA) | 2027–2030 incentive rules | R7 |
 | MIDA Belanjawan 2027 release / briefing deck (12 Oct 2026) | GITA changes | R7 |

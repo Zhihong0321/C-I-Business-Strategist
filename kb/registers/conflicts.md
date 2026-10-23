@@ -1,8 +1,8 @@
 ---
 id: REG-CONFLICTS
 title: Conflict and verification register
-covers: every point where the 8 research reports disagree with each other, or where a figure needs official confirmation
-sources: [R1, R2, R3, R4, R5, R6, R7, R8]
+covers: every point where the 9 research reports disagree with each other, or where a figure needs official confirmation
+sources: [R1, R2, R3, R4, R5, R6, R7, R8, R9]
 updated: 2026-10-23
 ---
 
@@ -11,9 +11,11 @@ updated: 2026-10-23
 
 # Conflict and verification register
 
-How to use: topic files tag disputed facts with `[C##]`. Look the ID up here before relying on the number. "Status" says what would settle it. None of these has been checked against an official source yet; all 8 reports are AI-generated.
+How to use: topic files tag disputed facts with `[C##]`. Look the ID up here before relying on the number. "Status" says what would settle it. None of these has been checked against an official source yet; all 9 reports are AI-generated.
 
-Source IDs: R1 strategy hub · R2 MD mitigation portal · R3 BESS solutions dashboard · R4 market explorer · R5 BESS compliance navigator · R6 financing · R7 green tax portal · R8 market benchmark. See `../00_INDEX.md`.
+Source IDs: R1 strategy hub · R2 MD mitigation portal · R3 BESS solutions dashboard · R4 market explorer · R5 BESS compliance navigator · R6 financing · R7 green tax portal · R8 market benchmark · R9 load profile analyzer. See `../00_INDEX.md`.
+
+Note on independence: three of R9's seven case studies reuse figures from R1, R3 and R8 (see `internal_issues.md`). Where R9 repeats another report's number it is not a second source.
 
 ## Summary table
 
@@ -39,6 +41,8 @@ Source IDs: R1 strategy hub · R2 MD mitigation portal · R3 BESS solutions dash
 | C18 | Zero-capex savings split | Low | Client keeps 15% vs 20–25% vs 15–30% | Different products; not a true conflict |
 | C19 | Solar yield assumption | Low | 1,250 kWh/kWp/yr vs 115 kWh/kWp/month (~1,380/yr) | Use Eternalgy's SAJ fleet data |
 | C20 | Standalone BESS GITA in 2027 (detail of C01) | **Critical** | 100% Tier 1 retained (R2, R3) vs "0% standalone, must integrate" (R7) | Open: same as C01 |
+| C21 | Load shape of 24/7 process plants (gloves, fabs) | Medium | R4: Perak gloves among "peaky motor and furnace loads"; Penang 24-h plants suit SELCO + BESS and MD shaving. R9: gloves "extremely flat" (LF 88%, unviable); fabs flat (UPS + ATAP only) | Open: 30-min interval data from a glove plant and a fab |
+| C22 | MD-shaving BESS sizing heuristic | Medium | Power 10%–20% of MD at 1–2 h (R3) vs top 20%–35% of peak with 1.3–1.5× energy buffer, 1–3 h by sector (R9) vs 3.5 h derated (R2) | Method issue: size from the customer's 30-min data |
 
 ---
 
@@ -53,6 +57,7 @@ Source IDs: R1 strategy hub · R2 MD mitigation portal · R3 BESS solutions dash
 | R6 | 2027–2030: 0% (removed) | not stated separately | 2027–2030: 100% Tier 1 | GITE deadline 31 Dec 2026 |
 | R7 (dedicated tax research, cites MOF Appendix 25) | 0% from 1 Jan 2027 ("Omitted from Tier 2b RE list") | "0% Standalone (Must integrate)" | 100% Tier 1b (2027–2030), 70% SI cap | GITE solar leasing expires 31 Dec 2026; GITA Project Tier 3 (commercial solar) abolished; EE → ACA (Appendix 28) |
 | R8 | — | — | — | "GITA / GTFS Sunset: 31 Dec 2026 — 60–100% Tax Allowance Deadline" |
+| R9 | — | "Tier 1 Green Asset", 100% GITA (no date, no 2027 distinction) | — | Calls it "MIDA Tier 1" GITA; no Budget 2027 or 31 Dec 2026 mention |
 
 Assessment:
 - R7 is the only report built for this question, and the only one citing the Budget 2027 documents (speech 9 Oct 2026, Appendix 25 / Lampiran 25, MIDA release 12 Oct 2026). R6 agrees with R7 on solar and integrated systems.
@@ -73,6 +78,7 @@ Status: **Open.** Settle by reading Budget 2027 Appendix 25 (tax-measures.pdf) a
 | R5 calculator | 24% of BESS capex | GITA 100% × 24% on BESS only |
 | R7 | "200% combined tax deduction… 48.0% of capex at 24%" (text); engine spreads CA (20% IA + 14% AA = 34% in year 1, then 14%/yr) and caps GITA at 70% of (SI − CA), unused GITA carried forward indefinitely | CA first is mandatory (P.U. (A) 243/2024 Para 6(1)) |
 | R8 calculator | 34% of gross (100% GITA + CA), 24% (60% GITA) | Flat percentages |
+| R9 | "Net ~48% CAPEX Subsidy"; payback "5–6 years down to 2.5–3.5 years"; its Solarvest case uses RM920k on RM2.4M (38.3%) | (100% GITA + 100% CA) × 24% |
 
 Assessment: capital allowance is ordinary depreciation that any asset gets over time; GITA is the incentive. Payback headlines should show GITA alone (rate × capex × tax rate), state the 70% statutory-income cap, and show CA separately as timing. The customer must be profitable to use either.
 
@@ -96,12 +102,13 @@ Possible reading: 20/40 sen = earlier framework, 14 sen = after the 18 Sep 2026 
 | R4 | — | "+115% to +201%" |
 | R6 | "RP3 Baseline" 37.00 | "+162% vs RP3" |
 | R8 | Text: from RM30.30; chart: legacy C1/C2 37.00; also an unexplained "RP4 High-Peak Industrial" 98.61 | "+162%" |
+| R9 | "~RM37.00–RM45.10/kW" (E1/E2 ref); chart 41,000 per 1,000 kW; with 1.6% KWTBB ~RM37.59–45.82 | "+115% to +162%" |
 
-Arithmetic: 89.27 / 30.30 = +194.6%; 97.06 / 45.10 = +115.2%; 97.06 / 37.00 = +162.3%. The ranges reflect which legacy tariff is the base. Use the per-tariff legacy rates (R1) when comparing.
+Arithmetic: 89.27 / 30.30 = +194.6%; 97.06 / 45.10 = +115.2%; 97.06 / 37.00 = +162.3%. The ranges reflect which legacy tariff is the base. Use the per-tariff legacy rates (R1) when comparing. R9 gives RM98.61/kW = 97.06 × 1.016 (MV ToU incl. KWTBB), which explains R8's "unexplained" 98.61 bar.
 
 ## C05 — MD share of a C&I bill
 
-R8: capacity + network "now represent 30% to 70% of C&I monthly power bills". R6: MD "accounting for 35% to 45% of an industrial electricity bill". R3's worked factory (500,000 kWh, 900 kW, MV General) gives 80,343 / 229,493 ≈ 35% (derived, not stated by R3). Share falls as load factor rises; measure per customer.
+R8: capacity + network "now represent 30% to 70% of C&I monthly power bills". R6: MD "accounting for 35% to 45% of an industrial electricity bill". R3's worked factory (500,000 kWh, 900 kW, MV General) gives 80,343 / 229,493 ≈ 35% (derived, not stated by R3). R9: 32.5% (rubber gloves, LF 88%) to 59.5% (metal stamping, LF 28%) — outputs of its own simulator at 1,000 kW with no solar, not measured bills; after solar without storage "from ~55% up to ~70%"; MPMA plastics plants "40%+". R9 supports the reading that the share depends on load factor. Share falls as load factor rises; measure per customer.
 
 ## C06 — ST licensing thresholds
 
@@ -158,7 +165,7 @@ R6 Tier 2 warranty: "≥97% system uptime specifically during peak hours (08:00�
 
 ## C14 — Agency for GITA Asset
 
-R1 and R7: MGTC verifies GITA Asset (own consumption); MIDA handles GITA Project and GITE. R4: "MIDA GITA Asset 100% Investment Tax Allowance" and "MIDA's GITA 100% tax allowance". Likely R4 misattribution.
+R1 and R7: MGTC verifies GITA Asset (own consumption); MIDA handles GITA Project and GITE. R4: "MIDA GITA Asset 100% Investment Tax Allowance" and "MIDA's GITA 100% tax allowance". R9: "The MIDA Tier 1 Green Investment Tax Allowance (GITA) Shield", "100% MIDA GITA tax shield". Likely R4 and R9 misattribution.
 
 ## C15 — MV account counts (resolved)
 
@@ -170,16 +177,36 @@ R2: LV ≤1 kV (400 V); MV >1 kV to ≤50 kV; HV >50 kV to ≤230 kV. R4: LV 400
 
 ## C17 — BESS payback claims
 
-Claims: R2 roadmap "2–3 years" with GITA; R3 "3–5 year payback"; R4 MV TAM "3.0–4.5 years (w/ GITA 100%)"; R8 zero-capex financier "~4-year payback", Solarvest "~3-year payback"; Plus Xnergy "RM1.25M/year savings per 10 MWh". Calculator placeholders and their computed outputs disagree (see `internal_issues.md` and each source extract's "Extraction notes"). Payback depends on how many hours a day the load sits above the target MD; see `../topics/T08_bess_technical_sizing.md`.
+Claims: R2 roadmap "2–3 years" with GITA; R3 "3–5 year payback"; R4 MV TAM "3.0–4.5 years (w/ GITA 100%)"; R8 zero-capex financier "~4-year payback", Solarvest "~3-year payback"; Plus Xnergy "RM1.25M/year savings per 10 MWh"; R9 "5–6 years down to 2.5–3.5 years" with a ~48% tax shield, "~2.5 yr payback" with GITA, case studies 2.1–4.2 years (three of them recycle R1, R3 and R8 figures). Calculator placeholders and their computed outputs disagree (see `internal_issues.md` and each source extract's "Extraction notes"). Payback depends on how many hours a day the load sits above the target MD; see `../topics/T08_bess_technical_and_sizing.md` §8.
 
 ## C18 — Zero-capex savings split
 
-R6: IPMVP shared savings 75:25 or 80:20 (ESCO : host), 5–10 years (7 standard). R8: Plus Xnergy client keeps 15% (bills RM82.50/kW vs TNB RM97.06/kW); EV Connection 15%–30% client split. R6 also cites the Plus Xnergy 15% model. Different products, not a true conflict.
+R6: IPMVP shared savings 75:25 or 80:20 (ESCO : host), 5–10 years (7 standard). R8: Plus Xnergy client keeps 15% (bills RM82.50/kW vs TNB RM97.06/kW); EV Connection 15%–30% client split. R6 also cites the Plus Xnergy 15% model; R9 repeats R8's Plus Xnergy example as a "case study" (15-year EaaS). Different products, not a true conflict.
 
 ## C19 — Solar yield assumption
 
-R3: ~115 kWh per kWp per month (≈1,380 kWh/kWp/yr). R8: 1,250 kWh/kWp/yr at RM0.38 avoided cost. Use Eternalgy's SAJ fleet data by state.
+R3: ~115 kWh per kWp per month (≈1,380 kWh/kWp/yr). R8: 1,250 kWh/kWp/yr at RM0.38 avoided cost. R9: ~105 kWh/kWp/month (≈1,260 kWh/kWp/yr). Use Eternalgy's SAJ fleet data by state.
 
 ## C20 — Standalone BESS GITA in 2027 (Critical, part of C01)
 
-R2: "BESS and integrated solar storage maintain Tier 1 status through 2030." R3: standalone BESS "Tier 1: 100% GITA" in both 2024–2026 and 2027–2030. R7 matrix: standalone BESS (own use) 2027–2030 = "0% Standalone (Must integrate)"; R7 chart: standalone BESS 100 → 0. R6: does not separate. If R7 is right, BESS-only MD-shaving retrofits lose GITA from 2027 unless paired with RE.
+R2: "BESS and integrated solar storage maintain Tier 1 status through 2030." R3: standalone BESS "Tier 1: 100% GITA" in both 2024–2026 and 2027–2030. R7 matrix: standalone BESS (own use) 2027–2030 = "0% Standalone (Must integrate)"; R7 chart: standalone BESS 100 → 0. R6: does not separate. R9: BESS "Classified as a Tier 1 Green Asset, qualifying for 100%", with no date and no 2027 distinction (reads as pre-Budget-2027 information). If R7 is right, BESS-only MD-shaving retrofits lose GITA from 2027 unless paired with RE.
+
+## C21 — Load shape of 24/7 process plants (gloves, semiconductor fabs)
+
+| Report | Rubber gloves | Semiconductor / Penang fabs |
+|---|---|---|
+| R4 (state table) | Perak row lists "Cement & limestone, rubber gloves, ceramics, foundry & casting, shipbuilding/marine, automotive" with: Peaky motor and furnace loads; RM89.27/kW MD reduction via BESS "critical for margin preservation" | Penang: "24-hour MNC plants on MV/HV ToU; cleanroom chiller baseloads favour >1 MWac SELCO + BESS and precision MD shaving" |
+| R9 (sector table) | LF 88%, "Extremely flat 24/7 load across all shifts. Stopping a line ruins in-process latex." — "Unviable for Standalone BESS" (score 15) | LF 85%, "<8% diurnal variation. Poor for standalone MD shaving" — "UPS / Solar ATAP Only" (score 25); Penang/Kedah automation vendors in BKIP/Perai are Tier 1 |
+
+Possible reading: R4 describes a state's sector mix (cement and foundries are peaky; gloves may not be), and its Penang point is about the SELCO >1 MWac BESS mandate, not MD fit. R9 is about the load shape of each sector. Neither cites load data. Status: **open** — settle with 30-minute interval data from at least one glove plant and one fab before targeting either. Until then, treat flat 24/7 plants as solar (+ SELCO-mandated BESS) prospects, not MD-shaving BESS prospects.
+
+## C22 — MD-shaving BESS sizing heuristic
+
+| Report | Power | Energy / duration |
+|---|---|---|
+| R3 | 10%–20% of facility MD | 1–2 hours (0.5C–1C) |
+| R9 | "top 20%–35% peak clipping" | "1.3×–1.5× energy buffer for 90% DoD and round-trip efficiency"; 1.0–3.0 h by sector (stamping 1.0–1.5 h; malls and hotels 2.0–3.0 h) |
+| R2 calculator | ΔkW × 1.15 | ΔkW × 3.5 h / (0.85 × 0.90 × 0.90) |
+| R3, R4, R8 calculators; R9 case studies | full kW shaved | ~2 kWh per kW (R9 cases 2.0–3.1 kWh/kW) |
+
+Status: method issue, not a fact to verify. The right size depends on how many hours a day the load sits above the target MD; size from the customer's 12 months of 30-minute data (see `../context/eternalgy_profile_and_analysis.md` §3, analysis).

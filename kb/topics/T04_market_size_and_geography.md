@@ -1,10 +1,10 @@
 ---
 id: T04
 title: Market size, deployment volumes, addressable market (TAM) and geography — Peninsular Malaysia
-covers: macro electricity indicators, C&I accounts and GWh by RP4 category, solar additions by scheme, installed C&I BESS, TAM by voltage tier, state-level MV industrial concentration, order-book flows
-sources: [R4, R8, R3, R2]
-primary_source: R4 (answers research prompt #2; most figures carry a citation link)
-conflicts: [C15]
+covers: macro electricity indicators, C&I accounts and GWh by RP4 category, solar additions by scheme, installed C&I BESS, TAM by voltage tier, state-level MV industrial concentration, industrial parks and factory counts (R9), order-book flows
+sources: [R4, R8, R3, R2, R9]
+primary_source: R4 (answers research prompt #2; most figures carry a citation link); R9 for industrial-park factory counts (unsourced)
+conflicts: [C15, C21]
 related: [T01, T02, T05, T08]
 updated: 2026-10-23
 ---
@@ -18,6 +18,7 @@ updated: 2026-10-23
 - ~**1.648 million C&I accounts**, **110,140 GWh** in 2025 (76.5% of Peninsular sales of 143,973 GWh) [R4].
 - **LV = 98.3% of accounts but ~26% of C&I energy; MV = 1.6% of accounts (~26,500) but ~59% of C&I energy (65,190 GWh)**; HV ≈ 700 accounts [R4].
 - MV is called the "sweet spot": solar TAM **6,500–8,500 MWp**, BESS TAM **3,500–5,500 MWh**, target payback 3.0–4.5 years with GITA [R4].
+- R9 (unsourced): "over 500 industrial parks and 22 Free Industrial Zones"; **Selangor (4,000+ factories) and Johor (2,500+)** hold the densest Tier 1 spiky-load plants (stamping, plastic injection, food); Penang holds flat 24/7 fabs (§6a) [R9].
 - C&I solar additions ~600 MW (2025) → ~710 MW forecast (2026); operational C&I BESS only **~145–180 MWh** (85–110 MWh commissioned by mid-2026) — BESS is early-stage [R4].
 - **Selangor (33–35%) and Johor (21–23%)** hold over half of MV industrial load; then Penang 14–16%, NS + Melaka 8–10%, Perak 7–8%, Kedah 6–7% [R4].
 
@@ -87,10 +88,26 @@ Savings drivers per R4: LV offsets "50.68 sen base + AFA (~54.3 sen)"; MV shaves
 | 5 | Kedah | 6%–7% | Kulim Hi-Tech Park (KHTP 1–4), Sungai Petani (Bakar Arang, Tikam Batu), Gurun | Wafer fabs, solar PV modules, EV batteries, automotive, wood & rubber | Large HV ToU and 33 kV MV ToU plants with RE100 mandates → ground SELCO + BESS and CRESS | MIDA Investment Performance Report 2025 (2026) |
 | 6 | Negeri Sembilan & Melaka | 8%–10% combined | Sendayan TechValley, Techpark @ Enstek, Nilai, Batu Berendam FTZ, Pegoh / Alor Gajah, Tangga Batu | Semiconductors, automotive assembly, F&B halal hubs, textiles, specialty chemicals | Modern single-storey plants with large unshaded roofs, ideal for 1–5 MWp SELCO + BESS | ST MAISPEM & Raygo Solar analysis (2026) |
 
+## 6a. Industrial parks and factory counts (R9, unsourced)
+R9: "Peninsular Malaysia features over 500 industrial parks and 22 Free Industrial Zones (FIZs). Target industries are sharply segregated by state: Selangor (Klang Valley) and Johor (Iskandar) concentrate the densest clusters of Tier 1 spiky-load target plants, whereas Penang concentrates flat 24/7 semiconductor fabs."
+| Region | Cluster / park | Est. factories | Dominant sectors | R9 BESS rating |
+|---|---|---|---|---|
+| Selangor | Shah Alam Industrial Estates (Sec 15, 16, 22, 23, 26, HICOM) | ~1,200–1,500 | Automotive metal stamping, plastic injection, food processing, cold storage | Prime Tier 1 Hub |
+| Selangor | Klang & Port Klang corridor (Meru, Kapar, Bukit Raja, Telok Gong, PKFZ) | ~1,400–1,800 | Plastic moulding, rubber gloves, metal fab, edible oils, port cold storage | High-Volume Mixed |
+| Selangor | Southern corridor (Bangi, Kajang, Balakong, Seri Kembangan, Semenyih) | ~1,100–1,400 | Precision stamping, industrial automation, food, pharma, plastics | Prime Tier 1 SMI Hub |
+| Johor | Tebrau Industrial Estates (I–IV), Mount Austin & Tampoi / Larkin | ~800–1,100 | Plastic injection moulding, metal stamping, wire harness, food processing | Prime Tier 1 Hub |
+| Johor | Pasir Gudang Industrial Estate & Tanjung Langsat (8,000+ acres) | ~500–700 | Oleochemicals, edible oil refining, tinplate, copper extrusion, cold storage | High-Capacity MV/HV |
+| Johor | Senai Industrial Estates (I–IV), i-Park, Kulai & SILC Nusajaya | ~600–850 | EMS/E&E assembly, precision plastics, aerospace, food & cold chain | High-Fit Modern Hub |
+| Penang & Kedah | Bayan Lepas FIZ (Phases 1–4) & Technoplex (1,400 acres) | ~220–300+ | Semiconductor, OSAT (Intel, AMD, Infineon), EMS (Jabil, Plexus), medical | Selective (UPS / Solar) |
+| Penang & Kedah | Batu Kawan (BKIP 1–3), Perai FIZ, Bukit Tengah & Bukit Minyak | ~850–1,000 | Automation (ViTrox, Greatech), sheet metal (UWC), automotive, food | Tier 1 Vendor Ecosystem |
+| Central / southern spine | Nilai & Senawang (N. Sembilan), Ayer Keroh (Melaka), Ipoh (Perak) | ~1,200–1,600 | Halal food hubs, cold storage, rubber gloves, textiles, metal/plastics | High Regional Potential |
+R9 region chart ("Estimated Medium Voltage Factory Density"): Selangor 4,200; Johor 2,600; Penang & Kedah 1,400; Central spine (Melaka / N. Sembilan / Perak) 1,500. The chart and region cards do not match the row sums exactly (Penang & Kedah rows sum to ~1,070–1,300+), Kulim KHTP has no row, and nothing says the counts are MV accounts. R4's ~12,200 MV industrial customers is the only account-based figure.
+R9 vs R4: both rank Selangor then Johor first. R4 says Penang's 24-hour plants favour >1 MWac SELCO + BESS (a scheme mandate); R9 says the fabs are flat (UPS + Solar ATAP) and the BKIP/Perai automation vendors are the peak-shaving targets [C21].
+
 ## 7. Order books and pipelines
 - EPCC order-book flow RM13B–23B from LSS5, LSS6 and CRESS tenders [R8].
 - Listed EPCC unbilled order books: Solarvest RM2,370M (Aug 2026); Sunview ~RM1,169.5M; Pekat RM994M (Jul 2026); Northern Solar RM119.4M LSS5 + C&I; Cheeding RM600M target [R8]. Samaiden RM600M YTD contract wins (Jul 2026) [R8].
 
 ## 8. Gaps
 - No report gives a count of MV accounts by industry, or an independent check of R4's account split.
-- Load-shape suitability by industry is the subject of research prompt #4 (result pending as R9).
+- Load-shape suitability by industry: R9 (unsourced) — see `T08_bess_technical_and_sizing.md` §8. Factory counts per park are R9 estimates without a source; no report gives MV accounts per industry or per park.

@@ -2,7 +2,7 @@
 id: T07
 title: Financing and business models — bank debt, BNM facilities, GTFS 5.0, PPAs (SARE / bilateral / CRESS), zero-capex BESS, guarantees and liquidated damages, customer preferences
 covers: how C&I customers pay for solar and BESS, who funds what, contract structures, BESS performance-risk allocation, preference by company size, decision logic
-sources: [R6, R1, R7, R8, R3]
+sources: [R6, R1, R7, R8, R3, R9]
 primary_source: R6 (answers research prompt #6; no hyperlinks or dates)
 conflicts: [C03, C13, C18]
 related: [T03, T05, T06, T10]
@@ -70,6 +70,8 @@ R6 extraction note: CRESS at ~26 sen + 20/40 sen SAC (46–66 sen) is above the 
 | Bundled hybrid PPA | ERS Energy fixed rate 25%–40% below TNB incl. <20 ms backup | 15–25 yrs | R8 |
 
 Plus Xnergy 15/85 worked example (R8): developer bills RM82.50/kW vs TNB RM97.06/kW; client keeps ~15% (~RM14.56/kW; ~RM21,520/month on 1,478 kW shaved); developer keeps ~85% to cover 2-hour LFP capex (RM2,300–2,900/kW), off-peak charging, 10–15 yr liquid-cooling O&M and mid-life augmentation; financier return 12%–18% p.a. (~4-year payback). R8: "CFOs heavily prefer Zero-Capex, Shared-Savings, and Energy-as-a-Service (EaaS) structures that transfer algorithmic risk to developers."
+
+R9 presents the same Plus Xnergy figures as a case study (1.5 MW / 3.0 MWh, 3,900 → 2,422 kW, gross MD cut RM143,455/month, client nets RM21,520/month, "15-year EaaS agreement", "Immediate (0-Yr Payback)") — a repeat of R8's example, not a second source. R9's "Bifurcated Offer": present a capex purchase with the 100% GITA tax shield ("~2.5 yr payback") alongside zero-capex EaaS leasing [R9].
 
 ## 6. BESS performance risk (R6)
 "BESS peak shaving is binary: because TNB bills Maximum Demand on the single highest 30-minute peak in a month, a single 30-minute battery failure during peak hours (14:00–22:00) destroys 100% of that month's demand charge savings."

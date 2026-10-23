@@ -2,7 +2,7 @@
 id: T09
 title: Regulation, licensing, safety and compliance for C&I solar and behind-the-meter BESS
 covers: agencies and roles, ST licensing thresholds, BESS safety guideline GP/ST/No.62/2026, competent persons, standards, statutory forms, BOMBA fire safety (MS 2747:2024), TNB connection studies and fees, metering fees, insurance, EPCC readiness checklist, EECA 2024 energy-manager rules
-sources: [R5, R1, R3, R2, R4, R6]
+sources: [R5, R1, R3, R2, R4, R6, R9]
 primary_source: R5 (answers research prompt #5; 3 st.gov.my links)
 conflicts: [C06, C07, C08, C11]
 related: [T02, T08]
@@ -129,4 +129,5 @@ Industrial insurers (PAR/IAR) require ST guideline and MS 2747:2024 compliance a
 - 21,600–50,000 GJ/yr (6.0M–13.9M kWh/yr): appoint **Registered Energy Manager (REM) Class 1**; ≥50,000 GJ/yr (>13.9M kWh/yr): **REM Class 2**.
 - Fines up to RM100,000; annual EECR report to ST (R2 roadmap phase 4).
 - EVC's zero-capex BESS sites are curated via 12-month data logging by Registered Energy Managers [R8].
+- R9: EECA "and ISO 50001 mandatory requirements" catalyse BESS sales to technical specifiers ("Registered Electrical Energy Managers - REEM", Certified Energy Managers, facility managers); IEM runs a 5-day Energy Manager Training Course (EMTC) "for REEM certification"; MAREMA and MAESCO group "ST-Certified REEMs & ESCOs" who audit 15-minute load profiles. R9 cites no clause; whether ISO 50001 is mandatory under EECA is not supported by any other report [R9].
 - Analysis note (not from the reports): every Regulated Energy Consumer must already have an REM, which makes them a ready audience for MD audits.

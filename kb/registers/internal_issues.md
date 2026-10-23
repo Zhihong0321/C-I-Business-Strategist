@@ -2,7 +2,7 @@
 id: REG-INTERNAL
 title: Calculator errors and internal inconsistencies inside each report
 covers: placeholder-vs-computed mismatches, hard-coded results, formula problems, self-contradictions — found while extracting each report (full detail in each source extract's "Extraction notes")
-sources: [R1, R2, R3, R4, R5, R6, R7, R8]
+sources: [R1, R2, R3, R4, R5, R6, R7, R8, R9]
 updated: 2026-10-23
 ---
 
@@ -11,7 +11,7 @@ updated: 2026-10-23
 
 # Internal issues register
 
-Rule for any AI reading this KB: **do not quote a report's calculator output or headline payback without checking it here.** Every interactive calculator in the 8 reports shows a static placeholder before its script runs, and most placeholders differ from what the code actually computes.
+Rule for any AI reading this KB: **do not quote a report's calculator output or headline payback without checking it here.** Every interactive calculator in the 9 reports shows a static placeholder before its script runs, and most placeholders differ from what the code actually computes.
 
 ## Calculator results: placeholder vs computed at default inputs
 | Report | Calculator | Placeholder on page | Computed by the code | Main problems |
@@ -32,6 +32,7 @@ Rule for any AI reading this KB: **do not quote a report's calculator output or 
 | R7 | Tax engine | "48.0% of capex" | 5-yr cumulative RM912,000 (45.6%) at defaults | Unabsorbed CA discarded; 70% cap applied after CA (unlabelled); CA caption fixed at 34% |
 | R7 | Cutoff audit checklist | — | — | Doesn't test RPVI conditions before granting GITE; BESS box ignored in pre-2027 branch |
 | R8 | Project ROI & tax shield | RM391,800 tax; RM253,200/yr; 4.4 yrs | RM516,800 (34%); RM344,624/yr; 2.9 yrs | 34% / 24% tax factors hard-coded; gross savings (no charging cost, O&M, degradation); BESS savings at MV General rate |
+| R9 | Post-solar bill simulator | RM163,144; 59.5%; "Pre-Solar Baseline" (= no-solar, no-BESS case) | RM121,829; 59.8%; RM24,265/month (solar + BESS both on by default) | Solar never cuts MD; fixed 40/60 peak/off-peak solar split; no export credit; savings = kW × RM97.06 even when kW shaved > peak (RM145,590/month on a RM200 bill); no battery size, capex or payback; "Shopping Mall" preset does nothing; static banner says 59.5% → 69.4% with solar, code gives 66.4% |
 
 ## Internal contradictions (non-calculator)
 | Report | Issue |
@@ -44,6 +45,15 @@ Rule for any AI reading this KB: **do not quote a report's calculator output or 
 | R6 | Warranty peak window 08:00–22:00 vs 14:00–22:00; GTFS excludes standalone solar yet recommender finances solar via GTFS; CRESS (~26 + 20/40 sen) costs more than the grid rate it quotes, yet promises 10–30% savings; frames RP4 + ATAP as one 1 Jan 2026 shift (RP4 began 1 Jul 2025) |
 | R7 | "Budget 2027 Enacted" vs its own note that gazette orders are still draft; relies on P.U. (A) 243/2024 which covers assets only to 31 Dec 2023; integrated system "current" rate stated three ways (60% split / 60% / 100%); EE-to-ACA shift unreconciled with ACA scope |
 | R8 | "+162%" stated from RM30.30 but matches the RM37.00 bar; unexplained RM98.61 bar; 15 companies' MW sum (≥8,224 MW) exceeds the stated national 5,777 MW; ranking basis not stated; SELCO threshold ">72 kWp" vs "≥1 MWac"; payment stages sum to 80–110%; chart "net" ratios differ (76% / 68% / 66%) with no stated basis |
+| R9 | Sector "Post-RP4 MD Share" values are its own simulator outputs, not data; design comment promises 9 case studies (7 exist), search and modals (absent); tiers don't follow its LF < 0.60 / > 0.75 rule (plastic 0.55 Tier 1, malls 0.52 Tier 2); UniBess "400 kW shaved (Capped at 200 kW target)"; Solarvest ">650 kW" from a 500 kW BESS and RM712k/yr below the RM757k its MD cut alone implies; Solarvest tax benefit 38.3% vs "~48%" in the same section; geography rows don't sum to the region cards or chart; MV General demand described as "inside peak window" |
+
+## Figures recycled between reports
+R9's case studies reuse numbers from earlier reports, so they are not independent confirmation:
+| R9 case | Figures | Same as |
+|---|---|---|
+| Plus Xnergy zero-capex EaaS | 1,478 kW shaved; client nets RM21,520/month at RM82.50/kW vs RM97.06/kW | R8's illustrative "benchmark model" example |
+| UniBess modular peak shaving | 400 kW shaved; RM38,824/month; RM465,888/year | R1's hard-coded simulator result (400 kW × RM97.06) |
+| Avera Energy MV General → ToU | 500,000 kWh/month plant; RM58,945/month; 25.7% bill cut | R3's simulator placeholder (RM229,693 → RM170,748, −25.7%) |
 
 ## Common pattern
-All 8 are AI-generated single-page dashboards (Tailwind + unversioned Chart.js CDN). Design comments often promise features that are static or missing. Treat every number as a lead to verify, prioritising those in `conflicts.md`.
+All 9 are AI-generated single-page dashboards (Tailwind + unversioned Chart.js CDN). Later reports can reuse earlier reports' numbers (see above). Design comments often promise features that are static or missing. Treat every number as a lead to verify, prioritising those in `conflicts.md`.

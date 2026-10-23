@@ -50,7 +50,11 @@ One missed half-hour sets MD for the month, so screening with 30-minute meter da
 - GITE (70% exemption for RPVI leasing) ends 31 Dec 2026 [R7, R6]: host-owned purchases with financing (GSF 2.0, LCTF, HTG) become relatively more attractive than RPVI-funded PPAs.
 - 50–300 kWp rooftops and BESS hardware sold without EMS are named price-war segments [R8]; software (EMS, MD audits) and guarantees are where margins are protected.
 - EECA 2024: sites ≥21,600 GJ/yr must appoint a Registered Energy Manager [R2] — a ready audience for MD audits.
+- R9's load-shape ranking (unsourced) fits the payback rule of thumb in §3: Tier 1 sectors with 1.0–2.5 h durations (metal stamping, office towers, food processing, plastic injection) land at roughly 1.6–4 yr simple payback; flat 24/7 plants (gloves, fabs, textile spinning) land beyond 6 yr and are solar prospects, not MD-shaving BESS prospects [R9, T08 §8; C21].
+- R9's Tier 1 clusters (Shah Alam, Klang–Meru, Bangi–Kajang, Tebrau, Senai) are in Selangor and Johor, where Eternalgy already has projects; FMM, MPMA and MAREMA/MAESCO are the channels R9 names to reach factory owners and energy managers [R9, T10 §8].
+- R9's case studies should not be used as proof in sales material: three repeat figures from R1, R3 and R8, and none has a source (`registers/internal_issues.md`). Eternalgy's own metered results will be more credible.
+- R9's "12 months of 15/30-minute data from myTNB portal" is a lead for the MD audit tool's data step; the process is unverified (gap `tnb-30min-data-access`).
 
 ## 5. Pending inputs
-- R9: research prompt #4 (load profiles by industry) — not yet received.
 - Verification of every [C##] item against official documents.
+- Real 30-minute load data from MV prospects to test R9's sector ranking [C21, C22].

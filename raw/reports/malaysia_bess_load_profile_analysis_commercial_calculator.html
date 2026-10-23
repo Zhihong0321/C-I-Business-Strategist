@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malaysia BESS Load Profile & Tariff Analysis | RP4 Framework</title> <!-- Chosen Palette: Warm Neutral Slate & Emerald Energy --> <!-- Application Structure Plan:
+        The application is structured as an interactive executive decision-support platform designed for energy managers, BESS developers, and corporate CFOs evaluating BESS under TNB's RP4 tariff framework:
+        1. Executive Header & Navigation: Tabbed navigation with smooth section switching.
+        2. RP4 Tariff Architecture & Overview: Summary metrics cards and direct comparison between legacy RP3, RP4 MV General, and RP4 MV ToU structures.
+        3. Sector Load Profile & Suitability Evaluator: Interactive comparison matrix of 11 industries with sector filtering (Tier 1 Targets vs. Flat Loads), radar/bar visualization, and load profile specs.
+        4. Tariff & Post-Solar Load Factor Distortion Simulator: A real-time bill calculator allowing users to simulate their peak demand, load factor, and solar PV capacity to visualize how solar skyrockets the MD share of bills and how BESS mitigates it.
+        5. Empirical Case Studies Explorer: Searchable and filterable gallery of 9 published BESS case studies (Malaysia and global) featuring system specs, kW shaved, savings, tax shields, and payback.
+        6. Geographic Heatmap & Industrial Cluster Directory: Interactive regional mapping of 500+ industrial parks across Selangor, Johor, Penang, and Kedah with factory counts and target density.
+        7. Ecosystem Engagement & GTM Roadmap: Direct mapping of industry associations (FMM, MPMA, MSIA, MAREMA, IEM), regulatory triggers (EECA, ISO 50001, GITA tax shields), and execution roadmaps.
+    --> <!-- Visualization & Content Choices:
+        - Key Indicators: Responsive CSS cards with accent highlights for core rates (RM97.06/kW, 14:00-22:00 window).
+        - Load Factor vs. BESS Suitability Chart: Chart.js Bar + Line combo chart showing Load Factor vs MD Share and Suitability Score (NO SVG).
+        - Dynamic Bill Simulator Chart: Chart.js Doughnut & Stacked Bar chart dynamically updated via JS logic based on user slider inputs.
+        - Geographic Cluster Visualizer: Chart.js Horizontal Bar Chart categorizing industrial park factory densities by region.
+        - Case Studies: Dynamic JS-filtered card list with modal/expand details.
+        - Icons: FontAwesome CSS web font classes (FontAwesome CDN) to prevent raw inline SVGs.
+        - Confirmed: NO SVG markup or Mermaid JS incorporated.
+    --> <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        },
+                        slateDark: '#0f172a',
+                        accentAmber: '#f59e0b',
+                        accentRed: '#ef4444',
+                        accentBlue: '#3b82f6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 380px;
+            }
+        }
+        .tab-btn.active {
+            border-bottom: 3px solid #10b981;
+            color: #047857;
+            font-weight: 700;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Header / Navbar -->
+    <header class="bg-slate-900 text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-brand-500 text-slate-900 p-2 rounded-lg font-bold text-xl flex items-center justify-center w-10 h-10">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-lg tracking-wide text-white block leading-tight">Malaysia BESS RP4 Analyzer</span>
+                        <span class="text-xs text-slate-400 block">Medium Voltage Load Profiles & Commercial Feasibility</span>
+                    </div>
+                </div>
+                <div class="hidden lg:flex items-center space-x-2 text-xs text-slate-300">
+                    <span class="bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
+                        <i class="fa-solid fa-calendar-check text-brand-500 mr-1.5"></i> RP4 Effective: 1 July 2025
+                    </span>
+                    <span class="bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
+                        <i class="fa-solid fa-clock text-accentAmber mr-1.5"></i> Peak Window: 14:00–22:00
+                    </span>
+                </div>
+            </div>
+            <!-- Dynamic Navigation Tabs -->
+            <nav class="flex space-x-2 sm:space-x-6 overflow-x-auto custom-scrollbar border-t border-slate-800 text-sm font-medium">
+                <button onclick="switchTab('overview')" id="tab-overview" class="tab-btn active py-3 px-2 whitespace-nowrap text-slate-300 hover:text-white transition-colors">
+                    <i class="fa-solid fa-chart-line mr-1.5"></i> RP4 Architecture
+                </button>
+                <button onclick="switchTab('loadprofiles')" id="tab-loadprofiles" class="tab-btn py-3 px-2 whitespace-nowrap text-slate-300 hover:text-white transition-colors">
+                    <i class="fa-solid fa-industry mr-1.5"></i> Sector Load Profiles
+                </button>
+                <button onclick="switchTab('simulator')" id="tab-simulator" class="tab-btn py-3 px-2 whitespace-nowrap text-slate-300 hover:text-white transition-colors">
+                    <i class="fa-solid fa-calculator mr-1.5"></i> Post-Solar Bill Simulator
+                </button>
+                <button onclick="switchTab('casestudies')" id="tab-casestudies" class="tab-btn py-3 px-2 whitespace-nowrap text-slate-300 hover:text-white transition-colors">
+                    <i class="fa-solid fa-folder-open mr-1.5"></i> Case Studies & Payback
+                </button>
+                <button onclick="switchTab('geography')" id="tab-geography" class="tab-btn py-3 px-2 whitespace-nowrap text-slate-300 hover:text-white transition-colors">
+                    <i class="fa-solid fa-map-location-dot mr-1.5"></i> Industrial Parks & Hubs
+                </button>
+                <button onclick="switchTab('gtm')" id="tab-gtm" class="tab-btn py-3 px-2 whitespace-nowrap text-slate-300 hover:text-white transition-colors">
+                    <i class="fa-solid fa-bullseye mr-1.5"></i> GTM & Associations
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- SECTION 1: RP4 OVERVIEW & TARIFF ARCHITECTURE -->
+        <section id="sec-overview" class="tab-content space-y-6">
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
+                <h1 class="text-2xl font-bold text-slate-900 mb-2">Regulatory Period 4 (RP4) Tariff Restructuring & Peak Demand Economics</h1>
+                <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                    On 1 July 2025, Tenaga Nasional Berhad (TNB) and Suruhanjaya Tenaga introduced the RP4 tariff framework (2025–2027), replacing legacy commercial/industrial tariffs (C1, C2, E1, E2, E3) with a standardized Medium Voltage (MV) schedule. This reform drastically shifted cost recovery from volumetric energy charges (sen/kWh) to fixed capacity and network demand charges (RM/kW), creating a high-stakes environment for facilities with spiky load profiles.
+                </p>
+
+                <!-- High Impact Metric Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-gradient-to-br from-emerald-50 to-emerald-100/50 rounded-lg p-4 border border-emerald-200">
+                        <div class="text-xs font-semibold text-emerald-800 uppercase tracking-wider mb-1">Peak Demand Rate (MV ToU)</div>
+                        <div class="text-2xl font-extrabold text-emerald-700">RM97.06 <span class="text-xs font-normal text-slate-600">/ kW / mo</span></div>
+                        <div class="text-xs text-emerald-900 mt-1 font-medium">RM98.61/kW incl. 1.6% KWTBB (+115% to +162% vs RP3)</div>
+                    </div>
+                    <div class="bg-gradient-to-br from-amber-50 to-amber-100/50 rounded-lg p-4 border border-amber-200">
+                        <div class="text-xs font-semibold text-amber-800 uppercase tracking-wider mb-1">Weekday Peak Window</div>
+                        <div class="text-2xl font-extrabold text-amber-700">14:00 – 22:00</div>
+                        <div class="text-xs text-amber-900 mt-1 font-medium">Mon–Fri (8 hrs, extended 4 hrs past sunset)</div>
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-lg p-4 border border-blue-200">
+                        <div class="text-xs font-semibold text-blue-800 uppercase tracking-wider mb-1">Energy Arbitrage Spread</div>
+                        <div class="text-2xl font-extrabold text-blue-700">4.09 sen <span class="text-xs font-normal text-slate-600">/ kWh</span></div>
+                        <div class="text-xs text-blue-900 mt-1 font-medium">Peak 31.32 sen vs Off-Peak 27.23 sen (Narrow)</div>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-50 to-purple-100/50 rounded-lg p-4 border border-purple-200">
+                        <div class="text-xs font-semibold text-purple-800 uppercase tracking-wider mb-1">Automatic Fuel Adjustment (AFA)</div>
+                        <div class="text-2xl font-extrabold text-purple-700">+3.61 to +7.59</div>
+                        <div class="text-xs text-purple-900 mt-1 font-medium">sen/kWh monthly monthly variable surcharge</div>
+                    </div>
+                </div>
+
+                <!-- Tariff Structure Detailed Table -->
+                <div class="overflow-x-auto rounded-lg border border-slate-200 mb-6">
+                    <table class="min-w-full divide-y divide-slate-200 text-sm text-left">
+                        <thead class="bg-slate-100 text-slate-700 font-semibold">
+                            <tr>
+                                <th class="py-3 px-4">Tariff Element</th>
+                                <th class="py-3 px-4">Legacy RP3 (E1/E2 Ref)</th>
+                                <th class="py-3 px-4">RP4 MV General</th>
+                                <th class="py-3 px-4">RP4 MV Time-of-Use (MV ToU)</th>
+                                <th class="py-3 px-4">Billing & Operational Impact</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 text-slate-700">
+                            <tr>
+                                <td class="py-3 px-4 font-semibold text-slate-900">Peak Energy Charge</td>
+                                <td class="py-3 px-4">35.50–36.50 sen/kWh</td>
+                                <td class="py-3 px-4">29.83 sen/kWh (Flat)</td>
+                                <td class="py-3 px-4 font-bold text-emerald-700">31.32 sen/kWh</td>
+                                <td class="py-3 px-4 text-xs">Billed per kWh drawn 14:00–22:00 Mon–Fri</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 font-semibold text-slate-900">Off-Peak Energy Charge</td>
+                                <td class="py-3 px-4">21.90–22.40 sen/kWh</td>
+                                <td class="py-3 px-4">29.83 sen/kWh (Flat)</td>
+                                <td class="py-3 px-4 font-bold text-emerald-700">27.23 sen/kWh</td>
+                                <td class="py-3 px-4 text-xs">Billed 22:00–14:00 Mon–Fri, all weekends & public holidays</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 font-semibold text-slate-900">Capacity Charge (Gen)</td>
+                                <td class="py-3 px-4">Bundled in MD</td>
+                                <td class="py-3 px-4">RM29.43/kW</td>
+                                <td class="py-3 px-4 font-bold text-emerald-700">RM30.19/kW</td>
+                                <td class="py-3 px-4 text-xs">Highest 30-min average kW inside peak window</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 font-semibold text-slate-900">Network Charge (Grid)</td>
+                                <td class="py-3 px-4">Bundled in MD</td>
+                                <td class="py-3 px-4">RM59.84/kW</td>
+                                <td class="py-3 px-4 font-bold text-emerald-700">RM66.87/kW</td>
+                                <td class="py-3 px-4 text-xs">Grid substation & cable availability charge</td>
+                            </tr>
+                            <tr class="bg-emerald-50/60 font-semibold">
+                                <td class="py-3 px-4 text-emerald-900">Combined Base MD Charge</td>
+                                <td class="py-3 px-4 text-slate-500">~RM37.00–RM45.10/kW</td>
+                                <td class="py-3 px-4 text-slate-800">RM89.27/kW</td>
+                                <td class="py-3 px-4 text-emerald-800 font-extrabold">RM97.06/kW</td>
+                                <td class="py-3 px-4 text-xs text-emerald-900">Surge of +115% to +162% in demand charges</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 font-semibold text-slate-900">Effective MD (+1.6% KWTBB)</td>
+                                <td class="py-3 px-4">~RM37.59–RM45.82/kW</td>
+                                <td class="py-3 px-4">RM90.70/kW</td>
+                                <td class="py-3 px-4 font-bold text-slate-900">RM98.61/kW</td>
+                                <td class="py-3 px-4 text-xs">Includes Renewable Energy Fund surcharge</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Analytical Comparison Chart -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <h3 class="text-sm font-bold text-slate-800 mb-2 flex items-center">
+                            <i class="fa-solid fa-chart-bar text-brand-600 mr-2"></i> Maximum Demand Charge Surge (RP3 vs. RP4)
+                        </h3>
+                        <p class="text-xs text-slate-500 mb-3">Comparing monthly cost per 1,000 kW Maximum Demand across tariff evolution</p>
+                        <div class="chart-container">
+                            <canvas id="tariffCompareChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <h3 class="text-sm font-bold text-slate-800 mb-2 flex items-center">
+                            <i class="fa-solid fa-arrow-trend-up text-purple-600 mr-2"></i> AFA Surcharge Forecast Trajectory (sen/kWh)
+                        </h3>
+                        <p class="text-xs text-slate-500 mb-3">Monthly Automatic Fuel Adjustment volatility replacing static 6-month ICPT</p>
+                        <div class="chart-container">
+                            <canvas id="afaTrendChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: INDUSTRY LOAD PROFILES & SUITABILITY MATRIX -->
+        <section id="sec-loadprofiles" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900">Industry Load Profile & BESS Feasibility Evaluator</h2>
+                        <p class="text-slate-600 text-sm mt-1">
+                            BESS peak shaving ROI is dictated by load curve geometry. High-power spiky loads with low load factors ($LF < 0.60$) offer maximum BESS returns, whereas flat 24/7 loads ($LF > 0.75$) require excessive storage capacity.
+                        </p>
+                    </div>
+                    <!-- Sector Filter Buttons -->
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="filterSectors('all')" id="btn-sec-all" class="sec-filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-900 text-white">All (11 Sectors)</button>
+                        <button onclick="filterSectors('tier1')" id="btn-sec-tier1" class="sec-filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-200 text-slate-700 hover:bg-emerald-100 hover:text-emerald-800">Tier 1 Target (High)</button>
+                        <button onclick="filterSectors('tier2')" id="btn-sec-tier2" class="sec-filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-200 text-slate-700 hover:bg-amber-100 hover:text-amber-800">Tier 2 (Moderate)</button>
+                        <button onclick="filterSectors('poor')" id="btn-sec-poor" class="sec-filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-200 text-slate-700 hover:bg-rose-100 hover:text-rose-800">Tier 3/4 (Flat / Low Fit)</button>
+                    </div>
+                </div>
+
+                <!-- Sector Comparison Radar / Bar Combo Chart -->
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6">
+                    <h3 class="text-sm font-bold text-slate-800 mb-2">Load Factor ($LF$) vs. BESS Peak Shaving Suitability Score</h3>
+                    <p class="text-xs text-slate-500 mb-3">Notice the clear inverse relationship: lower load factor directly correlates with higher BESS financial fit and higher MD share of electricity bills.</p>
+                    <div class="chart-container">
+                        <canvas id="sectorSuitabilityChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Sector Detail Grid Cards -->
+                <div id="sectorGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Dynamic sector cards injected by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: TARIFF & POST-SOLAR DISTORTION SIMULATOR -->
+        <section id="sec-simulator" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
+                <h2 class="text-2xl font-bold text-slate-900 mb-2">Interactive Tariff & Post-Solar MD Distortion Simulator</h2>
+                <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                    <strong>The Post-Solar Load Factor Distortion Effect:</strong> When a factory installs rooftop solar PV without storage, it reduces volumetric kWh consumption during sunny hours. However, because a single overcast 30-minute transient or late afternoon run (17:00–22:00) sets the full monthly Maximum Demand, <strong>the MD share of the electricity bill surges from ~55% up to ~70%</strong>. Use this tool to simulate your facility's bill and evaluate BESS peak clipping.
+                </p>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Simulator Controls -->
+                    <div class="lg:col-span-5 bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-4">
+                        <h3 class="text-sm font-bold text-slate-800 border-b border-slate-200 pb-2 flex items-center">
+                            <i class="fa-solid fa-sliders text-emerald-600 mr-2"></i> Facility Operational Parameters
+                        </h3>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Preset Sector Profile</label>
+                            <select id="simPreset" onchange="applySimPreset()" class="w-full text-xs p-2 rounded-lg border border-slate-300 bg-white focus:ring-2 focus:ring-emerald-500">
+                                <option value="custom">Custom Configuration</option>
+                                <option value="metal" selected>Metal Stamping (LF: 28%, Peak: 1,000 kW)</option>
+                                <option value="office">Office Tower (LF: 32%, Peak: 1,000 kW)</option>
+                                <option value="food">Food Processing (LF: 42%, Peak: 1,000 kW)</option>
+                                <option value="plastic">Plastic Injection (LF: 55%, Peak: 1,000 kW)</option>
+                                <option value="mall">Shopping Mall (LF: 52%, Peak: 1,000 kW)</option>
+                                <option value="glove">Rubber Gloves (LF: 88%, Peak: 1,000 kW - Flat)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-slate-700">Peak Demand ($P_{\text{max}}$)</span>
+                                <span class="text-emerald-700 font-bold" id="lblPeakDemand">1,000 kW</span>
+                            </div>
+                            <input type="range" id="simPeakDemand" min="200" max="5000" step="100" value="1000" oninput="updateSimulation()" class="w-full accent-emerald-600">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-slate-700">Monthly Load Factor ($LF$)</span>
+                                <span class="text-emerald-700 font-bold" id="lblLoadFactor">28 %</span>
+                            </div>
+                            <input type="range" id="simLoadFactor" min="0.15" max="0.90" step="0.01" value="0.28" oninput="updateSimulation()" class="w-full accent-emerald-600">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-slate-700">Peak Window kWh Ratio ($\alpha$)</span>
+                                <span class="text-emerald-700 font-bold" id="lblPeakRatio">45 %</span>
+                            </div>
+                            <input type="range" id="simPeakRatio" min="0.15" max="0.65" step="0.01" value="0.45" oninput="updateSimulation()" class="w-full accent-emerald-600">
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-200">
+                            <label class="flex items-center space-x-2 text-xs font-bold text-slate-800 cursor-pointer mb-2">
+                                <input type="checkbox" id="simHasSolar" onchange="updateSimulation()" checked class="rounded text-emerald-600 focus:ring-emerald-500 h-4 w-4">
+                                <span>Enable Rooftop Solar PV System</span>
+                            </label>
+                            <div id="solarControls" class="space-y-3">
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold mb-1">
+                                        <span class="text-slate-600">Solar PV Capacity</span>
+                                        <span class="text-amber-600 font-bold" id="lblSolarCapacity">500 kWp</span>
+                                    </div>
+                                    <input type="range" id="simSolarCapacity" min="100" max="3000" step="50" value="500" oninput="updateSimulation()" class="w-full accent-amber-500">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-200">
+                            <label class="flex items-center space-x-2 text-xs font-bold text-slate-800 cursor-pointer mb-2">
+                                <input type="checkbox" id="simHasBess" onchange="updateSimulation()" checked class="rounded text-emerald-600 focus:ring-emerald-500 h-4 w-4">
+                                <span>Deploy BESS Peak Shaving System</span>
+                            </label>
+                            <div id="bessControls" class="space-y-3">
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold mb-1">
+                                        <span class="text-slate-600">Target Demand Cut (kW Shaved)</span>
+                                        <span class="text-emerald-700 font-bold" id="lblBesskW">250 kW (25%)</span>
+                                    </div>
+                                    <input type="range" id="simBesskW" min="50" max="1500" step="25" value="250" oninput="updateSimulation()" class="w-full accent-emerald-600">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Simulator Results & Analysis -->
+                    <div class="lg:col-span-7 flex flex-col justify-between space-y-4">
+                        <!-- Key Output Summary Cards -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div class="bg-slate-100 rounded-lg p-3 border border-slate-200 text-center">
+                                <div class="text-xs text-slate-500 font-semibold uppercase">Total Electricity Bill</div>
+                                <div class="text-lg font-extrabold text-slate-900 mt-1" id="resTotalBill">RM 163,144</div>
+                                <div class="text-xs text-slate-500 mt-0.5" id="resBillSub">Pre-Solar Baseline</div>
+                            </div>
+                            <div class="bg-amber-50 rounded-lg p-3 border border-amber-200 text-center">
+                                <div class="text-xs text-amber-800 font-semibold uppercase">MD Bill Share (%)</div>
+                                <div class="text-lg font-extrabold text-amber-700 mt-1" id="resMdShare">59.5 %</div>
+                                <div class="text-xs text-amber-900 mt-0.5 font-medium" id="resMdDistortion">Low Load Factor Exposure</div>
+                            </div>
+                            <div class="bg-emerald-50 rounded-lg p-3 border border-emerald-200 text-center">
+                                <div class="text-xs text-emerald-800 font-semibold uppercase">Monthly BESS MD Savings</div>
+                                <div class="text-lg font-extrabold text-emerald-700 mt-1" id="resBessSavings">RM 24,265</div>
+                                <div class="text-xs text-emerald-900 mt-0.5 font-medium" id="resAnnualSavings">RM 291,180 / year</div>
+                            </div>
+                        </div>
+
+                        <!-- Live Breakdown Visualizer Chart -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <h4 class="text-xs font-bold text-slate-700 mb-2 uppercase tracking-wider">Monthly Bill Composition Breakdown (RM)</h4>
+                            <div class="chart-container" style="height:260px;">
+                                <canvas id="simBillBreakdownChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Explanatory Insight Banner -->
+                        <div class="bg-emerald-900 text-white rounded-lg p-4 text-xs leading-relaxed flex items-start space-x-3">
+                            <i class="fa-solid fa-lightbulb text-amber-400 text-lg mt-0.5"></i>
+                            <div>
+                                <span class="font-bold text-emerald-300 block text-sm mb-0.5">Key Financial Takeaway:</span>
+                                <span id="simInsightText">
+                                    Installing rooftop solar cuts volumetric energy charges but leaves the RM97.06/kW peak demand charge exposed. Notice how adding solar increases MD share from 59.5% to 69.4% of your total bill, making BESS peak shaving the single highest-return retrofit!
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: CASE STUDIES & PAYBACK DIRECTORY -->
+        <section id="sec-casestudies" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900">Empirical BESS Case Studies & ROI Benchmarks</h2>
+                        <p class="text-slate-600 text-sm mt-1">
+                            Published performance data from C&I deployments across Peninsular Malaysia and benchmark ToU markets following the RP4 tariff restructuring.
+                        </p>
+                    </div>
+                    <!-- Case Study Filters -->
+                    <div class="flex flex-wrap gap-2 text-xs">
+                        <select id="csFilterType" onchange="filterCaseStudies()" class="p-2 rounded-lg border border-slate-300 bg-slate-50 font-semibold text-slate-700">
+                            <option value="all">All Deployment Types</option>
+                            <option value="malaysia">Malaysia RP4 Projects</option>
+                            <option value="eaas">Zero-Capex EaaS / Leases</option>
+                            <option value="overseas">Comparable International ToU</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Case Study Grid Cards -->
+                <div id="caseStudyGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Dynamically populated via JS -->
+                </div>
+
+                <!-- Financial Mechanism & MIDA Tax Shield Explainer -->
+                <div class="bg-slate-900 text-slate-200 rounded-xl p-6 mt-6 border border-slate-800">
+                    <h3 class="text-base font-bold text-white mb-3 flex items-center">
+                        <i class="fa-solid fa-shield-halved text-brand-500 mr-2"></i> The MIDA Tier 1 Green Investment Tax Allowance (GITA) Shield
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs leading-relaxed">
+                        <div class="bg-slate-800/80 p-3.5 rounded-lg border border-slate-700">
+                            <div class="font-bold text-brand-400 mb-1 text-sm">100% GITA Tax Allowance</div>
+                            Classified as a Tier 1 Green Asset, qualifying for 100% Investment Tax Allowance offset against up to 70% of statutory income over 3–5 years.
+                        </div>
+                        <div class="bg-slate-800/80 p-3.5 rounded-lg border border-slate-700">
+                            <div class="font-bold text-brand-400 mb-1 text-sm">100% Capital Allowance</div>
+                            Enables 100% capital depreciation allowance against corporate income tax (24% standard corporate rate).
+                        </div>
+                        <div class="bg-slate-800/80 p-3.5 rounded-lg border border-slate-700">
+                            <div class="font-bold text-amber-400 mb-1 text-sm">Net ~48% CAPEX Subsidy</div>
+                            Combined tax shields effectively subsidize up to 48% of gross project capital expenditure, reducing simple payback from 5–6 years down to <strong>2.5–3.5 years</strong>!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: GEOGRAPHIC INDUSTRIAL PARKS & HUBS -->
+        <section id="sec-geography" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
+                <h2 class="text-2xl font-bold text-slate-900 mb-2">Peninsular Malaysia Geographic Density & Target Industrial Parks</h2>
+                <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                    Peninsular Malaysia features over 500 industrial parks and 22 Free Industrial Zones (FIZs). Target industries are sharply segregated by state: Selangor (Klang Valley) and Johor (Iskandar) concentrate the densest clusters of Tier 1 spiky-load target plants, whereas Penang concentrates flat 24/7 semiconductor fabs.
+                </p>
+
+                <!-- Regional Factory Distribution Visualizer -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
+                    <div class="lg:col-span-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <h3 class="text-sm font-bold text-slate-800 mb-2">Estimated Industrial Factory Density by State/Region</h3>
+                        <p class="text-xs text-slate-500 mb-3">Concentration of Medium Voltage commercial and industrial facilities</p>
+                        <div class="chart-container">
+                            <canvas id="geoDistributionChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-6 flex flex-col justify-between space-y-3">
+                        <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-200">
+                            <div class="font-bold text-emerald-900 text-sm mb-1"><i class="fa-solid fa-map-pin text-emerald-600 mr-2"></i>Selangor / Klang Valley (Prime Target Hub)</div>
+                            <div class="text-xs text-emerald-800 leading-relaxed">
+                                Over 4,000+ factories across Shah Alam, Klang, Meru, Telok Gong, Bangi, and Kajang. Exceptional density of 1–2 shift metal stamping, plastic injection, food manufacturing, and cold chain logistics.
+                            </div>
+                        </div>
+                        <div class="bg-amber-50 rounded-xl p-4 border border-amber-200">
+                            <div class="font-bold text-amber-900 text-sm mb-1"><i class="fa-solid fa-map-pin text-amber-600 mr-2"></i>Johor Southern Corridor (Rapid Growth)</div>
+                            <div class="text-xs text-amber-800 leading-relaxed">
+                                2,500+ factories concentrated in Tebrau I-IV, Pasir Gudang, Senai, SILC, and Mount Austin. Heavy plastic injection, metal fabrication, oleochemicals, and packaging exporters.
+                            </div>
+                        </div>
+                        <div class="bg-blue-50 rounded-xl p-4 border border-blue-200">
+                            <div class="font-bold text-blue-900 text-sm mb-1"><i class="fa-solid fa-map-pin text-blue-600 mr-2"></i>Penang & Kedah Northern Corridor</div>
+                            <div class="text-xs text-blue-800 leading-relaxed">
+                                Bayan Lepas, BKIP, Perai, and Kulim KHTP. Fabs/OSATs operate flat 24/7 loads (target for UPS + Solar ATAP); precision automation vendors in BKIP/Perai are Tier 1 peak shaving targets.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Industrial Park Interactive Directory Table -->
+                <div class="overflow-x-auto rounded-lg border border-slate-200">
+                    <table class="min-w-full divide-y divide-slate-200 text-sm text-left">
+                        <thead class="bg-slate-100 text-slate-700 font-semibold">
+                            <tr>
+                                <th class="py-3 px-4">Region / State</th>
+                                <th class="py-3 px-4">Major Industrial Cluster / Park</th>
+                                <th class="py-3 px-4">Est. Factory Count</th>
+                                <th class="py-3 px-4">Dominant Sector Profiles</th>
+                                <th class="py-3 px-4">BESS Opportunity Rating</th>
+                            </tr>
+                        </thead>
+                        <tbody id="geoTableBody" class="divide-y divide-slate-200 text-slate-700">
+                            <!-- Populated dynamically via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: GTM STRATEGY & ECOSYSTEM ENGAGEMENT -->
+        <section id="sec-gtm" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
+                <h2 class="text-2xl font-bold text-slate-900 mb-2">Go-To-Market Ecosystem & Decision-Maker Engagement</h2>
+                <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                    BESS origination requires engaging two key personas: <strong>Technical Specifiers</strong> (Registered Electrical Energy Managers - REEM, Certified Energy Managers, Facility Managers) and <strong>Financial Approvers</strong> (CFO, Managing Director). Reaching these stakeholders is catalyzed by Malaysia's <strong>Energy Efficiency and Conservation Act (EECA)</strong> and ISO 50001 mandatory requirements.
+                </p>
+
+                <!-- Association & Event Matrix -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                        <div class="flex items-center space-x-3 mb-2">
+                            <div class="bg-emerald-100 text-emerald-800 p-2 rounded-lg font-bold"><i class="fa-solid fa-building"></i></div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-sm">FMM (Federation of Malaysian Mfrs)</h3>
+                                <span class="text-xs text-slate-500">3,500+ Member Factories</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-3">Malaysia's primary industrial body with active state committees in Selangor, Penang, and Johor.</p>
+                        <div class="bg-white p-2.5 rounded border border-slate-200 text-xs">
+                            <span class="font-semibold text-emerald-700 block mb-0.5">Key Touchpoints & Events:</span>
+                            FMM Energy Efficiency & Conservation Conference; FMM ISO 50001 EnMS Workshops; State Branch ESG Seminars.
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                        <div class="flex items-center space-x-3 mb-2">
+                            <div class="bg-blue-100 text-blue-800 p-2 rounded-lg font-bold"><i class="fa-solid fa-bottle-water"></i></div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-sm">MPMA (Plastics Mfrs Assoc)</h3>
+                                <span class="text-xs text-slate-500">800+ Plastics & Injection Plants</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-3">Direct access to factory owners hit with 40%+ MD bill shares from heater bands and chillers.</p>
+                        <div class="bg-white p-2.5 rounded border border-slate-200 text-xs">
+                            <span class="font-semibold text-blue-700 block mb-0.5">Key Touchpoints & Events:</span>
+                            MPMA Technical Seminars on RP4 Tariff Mitigation; Mould & Die Pavilion at MIMF (MITEC KL).
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                        <div class="flex items-center space-x-3 mb-2">
+                            <div class="bg-purple-100 text-purple-800 p-2 rounded-lg font-bold"><i class="fa-solid fa-user-gear"></i></div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-sm">MAREMA & MAESCO</h3>
+                                <span class="text-xs text-slate-500">ST-Certified REEMs & ESCOs</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-3">The professional guild of registered energy managers auditing 15-min load profiles.</p>
+                        <div class="bg-white p-2.5 rounded border border-slate-200 text-xs">
+                            <span class="font-semibold text-purple-700 block mb-0.5">Key Touchpoints & Events:</span>
+                            Energy Transition Conference (ETCON by TNB); MAREMA Technical Dialogues & CPD Hours Workshops.
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                        <div class="flex items-center space-x-3 mb-2">
+                            <div class="bg-amber-100 text-amber-800 p-2 rounded-lg font-bold"><i class="fa-solid fa-graduation-cap"></i></div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-sm">IEM (Institution of Engineers)</h3>
+                                <span class="text-xs text-slate-500">Electrical & Building Engineers</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-3">Official training body for the 5-Day IEM Energy Manager Training Course (EMTC) for REEM certification.</p>
+                        <div class="bg-white p-2.5 rounded border border-slate-200 text-xs">
+                            <span class="font-semibold text-amber-700 block mb-0.5">Key Touchpoints & Events:</span>
+                            CPD-Accredited Technical Talks at Wisma IEM (Petaling Jaya) and Regional Branches (Penang, JB, Ipoh).
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                        <div class="flex items-center space-x-3 mb-2">
+                            <div class="bg-rose-100 text-rose-800 p-2 rounded-lg font-bold"><i class="fa-solid fa-microchip"></i></div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-sm">MSIA (Semiconductor Assoc)</h3>
+                                <span class="text-xs text-slate-500">E&E, Precision & OSAT Vendors</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-3">Reaches VPs of Operations and Facility Directors at MNCs and local precision machining suppliers.</p>
+                        <div class="bg-white p-2.5 rounded border border-slate-200 text-xs">
+                            <span class="font-semibold text-rose-700 block mb-0.5">Key Touchpoints & Events:</span>
+                            SEMICON Southeast Asia; MSIA Northern Corridor C-Suite & Facility Engineering Roundtables.
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                        <div class="flex items-center space-x-3 mb-2">
+                            <div class="bg-indigo-100 text-indigo-800 p-2 rounded-lg font-bold"><i class="fa-solid fa-city"></i></div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-sm">Commercial (PPK / MAH / APHM)</h3>
+                                <span class="text-xs text-slate-500">Malls, Hotels, Private Hospitals</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-3">Reaches Asset Managers, Chief Engineers, and REITs managing large MV C1/C2 commercial properties.</p>
+                        <div class="bg-white p-2.5 rounded border border-slate-200 text-xs">
+                            <span class="font-semibold text-indigo-700 block mb-0.5">Key Touchpoints & Events:</span>
+                            IGEM (International Greentech & Eco Products Expo at KLCC); BMAM / PPK Facility Summits.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Strategic Execution Roadmap Steps -->
+                <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                    <h3 class="text-base font-bold text-slate-900 mb-4">Strategic Commercial Execution Framework</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
+                        <div class="bg-white p-4 rounded-lg border-l-4 border-emerald-500 shadow-sm">
+                            <div class="font-bold text-slate-900 mb-1 text-sm">1. Target Identification</div>
+                            Focus on post-solar 1–2 shift MV factories ($LF = 0.28\text{--}0.55$) in Shah Alam, Klang, Meru, Tebrau, and Senai.
+                        </div>
+                        <div class="bg-white p-4 rounded-lg border-l-4 border-blue-500 shadow-sm">
+                            <div class="font-bold text-slate-900 mb-1 text-sm">2. Interval Data Audit</div>
+                            Request 12 months of 15/30-minute load profile data from myTNB portal to map 14:00–22:00 peak pyramid curves.
+                        </div>
+                        <div class="bg-white p-4 rounded-lg border-l-4 border-amber-500 shadow-sm">
+                            <div class="font-bold text-slate-900 mb-1 text-sm">3. Dynamic Sizing</div>
+                            Size PCS (kW) for top 20%–35% peak clipping with a 1.3$\times$–1.5$\times$ energy buffer for 90% DoD and round-trip efficiency.
+                        </div>
+                        <div class="bg-white p-4 rounded-lg border-l-4 border-purple-500 shadow-sm">
+                            <div class="font-bold text-slate-900 mb-1 text-sm">4. Bifurcated Offer</div>
+                            Present CAPEX purchase with 100% MIDA GITA tax shield (~2.5 yr payback) alongside Zero-Capex EaaS leasing.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 text-xs py-6 mt-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <p class="font-semibold text-slate-300">Malaysia BESS Load Profile & Tariff Feasibility Platform</p>
+                <p class="text-slate-500 mt-0.5">Based on RP4 Medium Voltage Framework (Effective 1 July 2025 – 31 Dec 2027) & Energy Commission Guidelines.</p>
+            </div>
+            <div class="text-slate-500 text-right">
+                <p>Data Source: Tenaga Nasional Berhad (TNB) & Industry Case Studies</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Data Stores & Dynamic Logic -->
+    <script>
+        // Sector Data Model
+        const sectorData = [
+            {
+                id: 'metal',
+                name: 'Metal Stamping',
+                tier: 'tier1',
+                suitability: 'High (Tier 1)',
+                suitabilityScore: 95,
+                loadFactor: 0.28,
+                shiftPattern: '1–2 Shifts (07:00–23:00)',
+                mdShare: 59.5,
+                peakDrivers: 'Mechanical/servo press inrush (30-500 kW), spot welders, compressors.',
+                peakBehavior: 'Jagged spiky curve with sharp 30-60 min spikes at 14:00–17:00 and 19:00–21:00.',
+                optDuration: '1.0 – 1.5 Hours (0.5C – 1C)',
+                icon: 'fa-cubes-stacked',
+                color: 'emerald'
+            },
+            {
+                id: 'office',
+                name: 'Office Towers',
+                tier: 'tier1',
+                suitability: 'High (Tier 1)',
+                suitabilityScore: 92,
+                loadFactor: 0.32,
+                shiftPattern: 'Weekday Day (08:00–18:00)',
+                mdShare: 56.3,
+                peakDrivers: 'Chiller max loading (solar heat gain) + 17:00–18:00 elevator egress surge.',
+                peakBehavior: 'Trapezoidal block that overlaps peak window only from 14:00 to 18:00; drops >75% after 18:00.',
+                optDuration: '2.0 – 2.5 Hours (with PV)',
+                icon: 'fa-building-user',
+                color: 'emerald'
+            },
+            {
+                id: 'food',
+                name: 'Food Processing',
+                tier: 'tier1',
+                suitability: 'High (Tier 1)',
+                suitabilityScore: 90,
+                loadFactor: 0.42,
+                shiftPattern: 'Batch / 2-Shift Operations',
+                mdShare: 49.7,
+                peakDrivers: 'Batch ovens, fryers, retort sterilizers, blast freezers, CIP sanitation.',
+                peakBehavior: 'Stepped batch plateaus; 45–90 min afternoon spikes between 14:00 and 19:00.',
+                optDuration: '1.5 – 2.0 Hours',
+                icon: 'fa-utensils',
+                color: 'emerald'
+            },
+            {
+                id: 'plastic',
+                name: 'Plastic Injection',
+                tier: 'tier1',
+                suitability: 'High (Tier 1)',
+                suitabilityScore: 88,
+                loadFactor: 0.55,
+                shiftPattern: '2–3 Shifts (24/5 or 24/7)',
+                mdShare: 43.1,
+                peakDrivers: 'Barrel heater bands during mould warm-up, hydraulic pumps, chillers.',
+                peakBehavior: 'Elevated baseload with sharp 30-45 min heater spikes; evening solar drop-off spike (18:00-22:00).',
+                optDuration: '1.5 – 2.0 Hours',
+                icon: 'fa-bottle-water',
+                color: 'emerald'
+            },
+            {
+                id: 'mall',
+                name: 'Shopping Malls',
+                tier: 'tier2',
+                suitability: 'Moderate-High (Tier 2)',
+                suitabilityScore: 78,
+                loadFactor: 0.52,
+                shiftPattern: 'Daily (10:00–22:00)',
+                mdShare: 44.1,
+                peakDrivers: 'Central chiller plant, F&B cooking, tenant lighting, cinema audio.',
+                peakBehavior: 'Broad 12-hr plateau; solar clips midday, leaving a steep evening cliff at 17:30–21:30.',
+                optDuration: '2.0 – 3.0 Hours (Evening Tail)',
+                icon: 'fa-store',
+                color: 'amber'
+            },
+            {
+                id: 'hotel',
+                name: 'Hotels & Resorts',
+                tier: 'tier2',
+                suitability: 'Moderate-High (Tier 2)',
+                suitabilityScore: 72,
+                loadFactor: 0.62,
+                shiftPattern: '24/7 Hospitality',
+                mdShare: 40.2,
+                peakDrivers: 'Guestroom A/C check-in surge, heat-pump hot water, laundry, banquet HVAC.',
+                peakBehavior: 'Bimodal profile; pronounced late-afternoon/evening hump from 15:30 to 21:30.',
+                optDuration: '2.0 – 3.0 Hours',
+                icon: 'fa-hotel',
+                color: 'amber'
+            },
+            {
+                id: 'cold',
+                name: 'Cold Storage',
+                tier: 'tier2',
+                suitability: 'Conditional (Tier 2/3)',
+                suitabilityScore: 55,
+                loadFactor: 0.68,
+                shiftPattern: '24/7 Temperature Controlled',
+                mdShare: 38.2,
+                peakDrivers: 'High ambient condensing temp, warm product loading docks, defrost heaters.',
+                peakBehavior: 'High continuous baseload with a 15%–25% afternoon thermal hump at 14:00–18:00.',
+                optDuration: 'Pre-cooling or Solar + BESS',
+                icon: 'fa-snowflake',
+                color: 'amber'
+            },
+            {
+                id: 'hospital',
+                name: 'Hospitals',
+                tier: 'tier2',
+                suitability: 'Moderate (Tier 2)',
+                suitabilityScore: 60,
+                loadFactor: 0.72,
+                shiftPattern: '24/7 Clinical Operations',
+                mdShare: 36.8,
+                peakDrivers: 'Afternoon OT chillers, CSSD steam autoclaves, MRI/CT diagnostic spikes.',
+                peakBehavior: 'High 24/7 baseload (60%) with daytime clinical plateau; value stacked with UPS/backup.',
+                optDuration: '1.5 – 2.0 Hours + Microgrid',
+                icon: 'fa-hospital',
+                color: 'amber'
+            },
+            {
+                id: 'textile',
+                name: 'Textiles & Dyeing',
+                tier: 'poor',
+                suitability: 'Low (Flat) / High (Dyeing)',
+                suitabilityScore: 40,
+                loadFactor: 0.78,
+                shiftPattern: '24/7 Continuous (Spinning/Weaving)',
+                mdShare: 35.1,
+                peakDrivers: 'Air-jet looms, ring frames (or batch jet-dyeing autoclaves in dyeing plants).',
+                peakBehavior: 'Flat 24/7 plateau for spinning; spiky afternoon profile for batch dyeing houses.',
+                optDuration: 'Poor (Weaving) / Tier 1 (Dyeing)',
+                icon: 'fa-shirt',
+                color: 'rose'
+            },
+            {
+                id: 'semicon',
+                name: 'E&E / Semiconductor',
+                tier: 'poor',
+                suitability: 'Poor (Standalone MD)',
+                suitabilityScore: 25,
+                loadFactor: 0.85,
+                shiftPattern: '24/7 Continuous Cleanroom',
+                mdShare: 33.2,
+                peakDrivers: 'Cleanroom MAUs/FFUs, ultra-pure water, chillers, IC test handlers.',
+                peakBehavior: 'Flat, high-utilization 24/7 baseload; <8% diurnal variation. Poor for standalone MD shaving.',
+                optDuration: 'UPS / Solar ATAP Only',
+                icon: 'fa-microchip',
+                color: 'rose'
+            },
+            {
+                id: 'glove',
+                name: 'Rubber Gloves',
+                tier: 'poor',
+                suitability: 'Poor (Flat 24/7)',
+                suitabilityScore: 15,
+                loadFactor: 0.88,
+                shiftPattern: '24/7 Continuous Dipping',
+                mdShare: 32.5,
+                peakDrivers: 'Dipping line conveyors, oven circulation blowers, WWTP aerators.',
+                peakBehavior: 'Extremely flat 24/7 load across all shifts. Stopping a line ruins in-process latex.',
+                optDuration: 'Unviable for Standalone BESS',
+                icon: 'fa-hand-dots',
+                color: 'rose'
+            }
+        ];
+
+        // Case Studies Data
+        const caseStudiesData = [
+            {
+                id: 'livoltek',
+                title: 'Livoltek C&I Evening Peak Suppression',
+                location: 'Malaysia (RP4 MV ToU)',
+                type: 'malaysia',
+                siteType: 'Industrial Factory with Existing Rooftop PV',
+                system: '125 kW / 261 kWh LFP (Liquid-cooled)',
+                shaved: '89.99 kW shaved',
+                savings: 'RM 9,000 / month (>RM 95,000/yr)',
+                payback: '2.8 – 3.5 Years (with MIDA GITA)',
+                details: 'Rooftop solar dropped to 0 at 19:00, but factory ran shift until 22:00 causing severe net-grid spikes. BESS discharged 20:00-22:00 to eliminate evening peak.'
+            },
+            {
+                id: 'plusxnergy',
+                title: 'Plus Xnergy Multi-MW Zero-Capex EaaS',
+                location: 'Malaysia (RP4 MV ToU)',
+                type: 'eaas',
+                siteType: 'Large Industrial Manufacturing Plant',
+                system: '1.5 MW / 3.0 MWh LFP Class',
+                shaved: '1,478 kW shaved (3,900 kW → 2,422 kW)',
+                savings: 'Net client savings: RM 21,520 / month',
+                payback: 'Immediate (0-Yr Payback; EaaS Lease)',
+                details: 'Client pays RM82.50/kW shaved vs TNB RM97.06/kW rate. Gross MD bill cut by RM143,455/mo with zero capital outlay under a 15-year EaaS agreement.'
+            },
+            {
+                id: 'solarvest',
+                title: 'Solarvest Solar ATAP + BESS Reference Site',
+                location: 'Malaysia (RP4 MV ToU)',
+                type: 'malaysia',
+                siteType: 'Medium Voltage C&I Facility',
+                system: '1,000 kWp PV + 500 kW / 1,000 kWh BESS',
+                shaved: '>650 kW shaved (>65% MD Cut)',
+                savings: 'RM 712,000 / year gross savings',
+                payback: '<2.5 Years (Gross RM2.4M less RM920k GITA)',
+                details: 'Combines daytime PV self-consumption with peak shaving. Utilizes AI EPMS control to maintain reserve margin and maximize MIDA GITA tax allowances.'
+            },
+            {
+                id: 'avera',
+                title: 'Avera Energy MV Factory Transition',
+                location: 'Malaysia (MV General → ToU)',
+                type: 'malaysia',
+                siteType: '500,000 kWh/mo Manufacturing Plant',
+                system: 'Rooftop Solar + 165 kW / 330 kWh BESS',
+                shaved: '315 kW Total MD Cut (165 kW BESS)',
+                savings: 'RM 58,945 / month (25.7% total bill cut)',
+                payback: '3.0 – 4.2 Years integrated payback',
+                details: 'Switched from MV General to MV ToU, combining shift optimization (150 kW cut) with targeted 165 kW BESS peak clipping.'
+            },
+            {
+                id: 'unibess',
+                title: 'UniBess C&I Modular Peak Shaving',
+                location: 'Malaysia (RP4 MV ToU)',
+                type: 'malaysia',
+                siteType: 'Medium Voltage Factory (600 kW spikes)',
+                system: '500 kW / 1,044 kWh (4 x 125kW Cabinets)',
+                shaved: '400 kW shaved (Capped at 200 kW target)',
+                savings: 'RM 38,824 / month (RM 465,888 / year)',
+                payback: '2.5 – 3.5 Years simple payback',
+                details: 'Modular LFP liquid-cooled cabinets dynamically capped facility grid import below preset threshold during the 14:00-22:00 peak window.'
+            },
+            {
+                id: 'haplt',
+                title: 'Predictive HAPLT Controller Field Validation',
+                location: 'Malaysia (Industrial Feeder)',
+                type: 'malaysia',
+                siteType: 'Industrial Sub-Load Feeder Trial',
+                system: '50 kW / 155 kWh Li-ion (139.5 kWh usable)',
+                shaved: '89% Average MD Reduction Factor',
+                savings: 'RM 2,445 / month verified in field',
+                payback: 'Academic Field Validation Trial',
+                details: 'CNN/LSTM/XGBoost predictive controller prevented premature SOC depletion during early afternoon humps to preserve battery energy for critical peaks.'
+            },
+            {
+                id: 'cnc',
+                title: 'Precision CNC Machining Plant',
+                location: 'Comparable ToU Market',
+                type: 'overseas',
+                siteType: 'Precision Machining & Compressor Plant',
+                system: '250 kW / 515 kWh LFP BESS',
+                shaved: '230 kW shaved (780 kW → 550 kW)',
+                savings: 'US$ 5,520 / mo (~RM 295,000 / year)',
+                payback: '2.1 Years simple payback',
+                details: 'Automated EMS capped plant load at 550 kW during overlapping 45-90 min CNC cycle runs and compressor startup cycles.'
+            }
+        ];
+
+        // Geographic Industrial Park Data
+        const geoParksData = [
+            { region: 'Selangor (Klang Valley)', park: 'Shah Alam Industrial Estates (Sec 15, 16, 22, 23, 26, HICOM)', count: '~1,200 – 1,500', sectors: 'Automotive metal stamping, plastic injection, food processing, cold storage', rating: 'Prime Tier 1 Hub' },
+            { region: 'Selangor (Klang Valley)', park: 'Klang & Port Klang Corridor (Meru, Kapar, Bukit Raja, Telok Gong, PKFZ)', count: '~1,400 – 1,800', sectors: 'Plastic moulding, rubber gloves, metal fab, edible oils, port cold storage', rating: 'High-Volume Mixed' },
+            { region: 'Selangor (Klang Valley)', park: 'Southern Corridor (Bangi, Kajang, Balakong, Seri Kembangan, Semenyih)', count: '~1,100 – 1,400', sectors: 'Precision stamping, industrial automation, food mfr, pharma, plastics', rating: 'Prime Tier 1 SMI Hub' },
+            { region: 'Johor (Southern)', park: 'Tebrau Industrial Estates (I–IV), Mount Austin & Tampoi / Larkin', count: '~800 – 1,100', sectors: 'Plastic injection moulding, metal stamping, wire harness, food processing', rating: 'Prime Tier 1 Hub' },
+            { region: 'Johor (Southern)', park: 'Pasir Gudang Industrial Estate & Tanjung Langsat (8,000+ acres)', count: '~500 – 700', sectors: 'Oleochemicals, edible oil refining, tinplate, copper extrusion, cold storage', rating: 'High-Capacity MV/HV' },
+            { region: 'Johor (Southern)', park: 'Senai Industrial Estates (I–IV), i-Park, Kulai & SILC Nusajaya', count: '~600 – 850', sectors: 'EMS/E&E assembly, precision plastics, aerospace, food & cold chain', rating: 'High-Fit Modern Hub' },
+            { region: 'Penang & Kedah', park: 'Bayan Lepas FIZ (Phases 1–4) & Technoplex (1,400 acres)', count: '~220 – 300+', sectors: 'Semiconductor, OSAT (Intel, AMD, Infineon), EMS (Jabil, Plexus), medical', rating: 'Selective (UPS / Solar)' },
+            { region: 'Penang & Kedah', park: 'Batu Kawan (BKIP 1–3), Perai FIZ, Bukit Tengah & Bukit Minyak', count: '~850 – 1,000', sectors: 'Automation (ViTrox, Greatech), sheet metal (UWC), automotive, food', rating: 'Tier 1 Vendor Ecosystem' },
+            { region: 'Central / Southern Spine', park: 'Nilai & Senawang (N.Sembilan), Ayer Keroh (Melaka), Ipoh (Perak)', count: '~1,200 – 1,600', sectors: 'Halal food hubs, cold storage, rubber gloves, textiles, metal/plastics', rating: 'High Regional Potential' }
+        ];
+
+        // Page State Logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(`sec-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+            
+            // Trigger Chart resizing when switching tabs
+            window.dispatchEvent(new Event('resize'));
+        }
+
+        // Render Sector Grid Cards
+        function renderSectorGrid(sectors) {
+            const container = document.getElementById('sectorGrid');
+            container.innerHTML = '';
+            
+            sectors.forEach(s => {
+                let badgeBg = s.tier === 'tier1' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' :
+                              (s.tier === 'tier2' ? 'bg-amber-100 text-amber-800 border-amber-300' : 'bg-rose-100 text-rose-800 border-rose-300');
+                
+                const card = `
+                    <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between space-y-3">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center space-x-2">
+                                    <div class="bg-slate-100 p-2 rounded-lg text-slate-700 font-bold">
+                                        <i class="fa-solid ${s.icon}"></i>
+                                    </div>
+                                    <h3 class="font-bold text-slate-900 text-base">${s.name}</h3>
+                                </div>
+                                <span class="text-xs px-2.5 py-1 rounded-full font-bold border ${badgeBg}">${s.suitability}</span>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-2 text-xs mb-3 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+                                <div>
+                                    <span class="text-slate-500 block">Load Factor ($LF$)</span>
+                                    <span class="font-extrabold text-slate-800 text-sm">${(s.loadFactor * 100).toFixed(0)}%</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-500 block">Post-RP4 MD Share</span>
+                                    <span class="font-extrabold text-slate-800 text-sm">${s.mdShare}%</span>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-2 text-xs">
+                                <div>
+                                    <span class="font-semibold text-slate-700 block">Shift Pattern:</span>
+                                    <span class="text-slate-600">${s.shiftPattern}</span>
+                                </div>
+                                <div>
+                                    <span class="font-semibold text-slate-700 block">Peak Window Behavior (14:00–22:00):</span>
+                                    <span class="text-slate-600 leading-relaxed">${s.peakBehavior}</span>
+                                </div>
+                                <div>
+                                    <span class="font-semibold text-slate-700 block">Primary Spike Drivers:</span>
+                                    <span class="text-slate-600">${s.peakDrivers}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                            <span class="font-semibold text-slate-500">Opt. BESS Duration:</span>
+                            <span class="font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">${s.optDuration}</span>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+        }
+
+        function filterSectors(tier) {
+            document.querySelectorAll('.sec-filter-btn').forEach(btn => {
+                btn.classList.remove('bg-slate-900', 'text-white');
+                btn.classList.add('bg-slate-200', 'text-slate-700');
+            });
+            const activeBtn = document.getElementById(`btn-sec-${tier}`);
+            if(activeBtn) {
+                activeBtn.classList.remove('bg-slate-200', 'text-slate-700');
+                activeBtn.classList.add('bg-slate-900', 'text-white');
+            }
+
+            if(tier === 'all') renderSectorGrid(sectorData);
+            else renderSectorGrid(sectorData.filter(s => s.tier === tier));
+        }
+
+        // Render Case Studies
+        function renderCaseStudies(items) {
+            const container = document.getElementById('caseStudyGrid');
+            container.innerHTML = '';
+            
+            items.forEach(cs => {
+                const card = `
+                    <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2 py-1 rounded border border-emerald-200">${cs.location}</span>
+                                <span class="text-xs font-semibold text-slate-500">${cs.siteType}</span>
+                            </div>
+                            <h3 class="font-bold text-slate-900 text-base mb-1">${cs.title}</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed mb-3">${cs.details}</p>
+                            
+                            <div class="space-y-2 text-xs bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">System Hardware:</span>
+                                    <span class="font-bold text-slate-800">${cs.system}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">Demand Cut:</span>
+                                    <span class="font-bold text-emerald-700">${cs.shaved}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">Verified Savings:</span>
+                                    <span class="font-bold text-slate-900">${cs.savings}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                            <span class="font-semibold text-slate-500">Payback / Financials:</span>
+                            <span class="font-extrabold text-amber-700 bg-amber-50 px-2 py-1 rounded border border-amber-200">${cs.payback}</span>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+        }
+
+        function filterCaseStudies() {
+            const val = document.getElementById('csFilterType').value;
+            if(val === 'all') renderCaseStudies(caseStudiesData);
+            else renderCaseStudies(caseStudiesData.filter(cs => cs.type === val));
+        }
+
+        // Render Geo Directory Table
+        function renderGeoTable() {
+            const tbody = document.getElementById('geoTableBody');
+            tbody.innerHTML = '';
+            geoParksData.forEach(g => {
+                let ratingClass = g.rating.includes('Prime') ? 'font-bold text-emerald-700 bg-emerald-50' : 'text-slate-700 bg-slate-100';
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="py-3 px-4 font-semibold text-slate-900">${g.region}</td>
+                        <td class="py-3 px-4 text-xs font-medium text-slate-800">${g.park}</td>
+                        <td class="py-3 px-4 text-xs font-bold text-slate-900">${g.count}</td>
+                        <td class="py-3 px-4 text-xs text-slate-600">${g.sectors}</td>
+                        <td class="py-3 px-4 text-xs"><span class="px-2 py-1 rounded ${ratingClass}">${g.rating}</span></td>
+                    </tr>
+                `;
+            });
+        }
+
+        // SIMULATOR LOGIC & CALCULATION
+        function applySimPreset() {
+            const preset = document.getElementById('simPreset').value;
+            if(preset === 'metal') {
+                document.getElementById('simPeakDemand').value = 1000;
+                document.getElementById('simLoadFactor').value = 0.28;
+                document.getElementById('simPeakRatio').value = 0.45;
+            } else if(preset === 'office') {
+                document.getElementById('simPeakDemand').value = 1000;
+                document.getElementById('simLoadFactor').value = 0.32;
+                document.getElementById('simPeakRatio').value = 0.42;
+            } else if(preset === 'food') {
+                document.getElementById('simPeakDemand').value = 1000;
+                document.getElementById('simLoadFactor').value = 0.42;
+                document.getElementById('simPeakRatio').value = 0.40;
+            } else if(preset === 'plastic') {
+                document.getElementById('simPeakDemand').value = 1000;
+                document.getElementById('simLoadFactor').value = 0.55;
+                document.getElementById('simPeakRatio').value = 0.35;
+            } else if(preset === 'glove') {
+                document.getElementById('simPeakDemand').value = 1000;
+                document.getElementById('simLoadFactor').value = 0.88;
+                document.getElementById('simPeakRatio').value = 0.24;
+            }
+            updateSimulation();
+        }
+
+        let simChartInstance = null;
+
+        function updateSimulation() {
+            const peakDemand = parseFloat(document.getElementById('simPeakDemand').value);
+            const loadFactor = parseFloat(document.getElementById('simLoadFactor').value);
+            const peakRatio = parseFloat(document.getElementById('simPeakRatio').value);
+            const hasSolar = document.getElementById('simHasSolar').checked;
+            const solarCapacity = hasSolar ? parseFloat(document.getElementById('simSolarCapacity').value) : 0;
+            const hasBess = document.getElementById('simHasBess').checked;
+            const bessCut = hasBess ? parseFloat(document.getElementById('simBesskW').value) : 0;
+
+            // Display UI updates
+            document.getElementById('lblPeakDemand').innerText = `${peakDemand.toLocaleString()} kW`;
+            document.getElementById('lblLoadFactor').innerText = `${(loadFactor * 100).toFixed(0)} %`;
+            document.getElementById('lblPeakRatio').innerText = `${(peakRatio * 100).toFixed(0)} %`;
+            document.getElementById('lblSolarCapacity').innerText = `${solarCapacity.toLocaleString()} kWp`;
+            document.getElementById('lblBesskW').innerText = `${bessCut.toLocaleString()} kW (${((bessCut/peakDemand)*100).toFixed(0)}%)`;
+
+            document.getElementById('solarControls').style.display = hasSolar ? 'block' : 'none';
+            document.getElementById('bessControls').style.display = hasBess ? 'block' : 'none';
+
+            // Billing Parameters (RP4 MV ToU)
+            const mdRate = 97.06; // RM/kW
+            const peakEnergyRate = 0.3132; // RM/kWh
+            const offPeakEnergyRate = 0.2723; // RM/kWh
+            const afaRate = 0.0361; // RM/kWh (Oct 2026 rate)
+            const retailFee = 200; // RM/mo
+
+            // Base Calculations
+            const totalMonthlykWh = peakDemand * 720 * loadFactor;
+            const peakkWh = totalMonthlykWh * peakRatio;
+            const offPeakkWh = totalMonthlykWh * (1 - peakRatio);
+
+            // Solar Impact (replaces volumetric off-peak & partial peak kWh, but leaves peak kW set)
+            const solarMonthlykWh = solarCapacity * 105; // ~105 kWh/kWp/month yield
+            const netkWh = Math.max(0, totalMonthlykWh - solarMonthlykWh);
+            const netPeakkWh = Math.max(0, peakkWh - (solarMonthlykWh * 0.4));
+            const netOffPeakkWh = Math.max(0, offPeakkWh - (solarMonthlykWh * 0.6));
+
+            // BESS Peak Shaving Impact
+            const billedMD = Math.max(0, peakDemand - bessCut);
+
+            // Financial Breakdown
+            const mdCharge = billedMD * mdRate;
+            const peakEnergyCharge = netPeakkWh * peakEnergyRate;
+            const offPeakEnergyCharge = netOffPeakkWh * offPeakEnergyRate;
+            const afaCharge = netkWh * afaRate;
+            const totalBill = mdCharge + peakEnergyCharge + offPeakEnergyCharge + afaCharge + retailFee;
+
+            const mdSharePct = (mdCharge / totalBill) * 100;
+            const monthlyBessSavings = bessCut * mdRate;
+
+            // Render Output Text
+            document.getElementById('resTotalBill').innerText = `RM ${Math.round(totalBill).toLocaleString()}`;
+            document.getElementById('resMdShare').innerText = `${mdSharePct.toFixed(1)} %`;
+            document.getElementById('resBessSavings').innerText = `RM ${Math.round(monthlyBessSavings).toLocaleString()}`;
+            document.getElementById('resAnnualSavings').innerText = `RM ${Math.round(monthlyBessSavings * 12).toLocaleString()} / year`;
+
+            if(hasSolar && !hasBess) {
+                document.getElementById('resBillSub').innerText = 'With Rooftop Solar PV';
+                document.getElementById('resMdDistortion').innerText = 'Distortion Active (High MD Share)';
+            } else if(hasBess) {
+                document.getElementById('resBillSub').innerText = 'With Solar + BESS Peak Shaving';
+                document.getElementById('resMdDistortion').innerText = 'MD Clipped via BESS';
+            } else {
+                document.getElementById('resBillSub').innerText = 'Pre-Solar Baseline';
+                document.getElementById('resMdDistortion').innerText = 'Unmitigated Grid Baseline';
+            }
+
+            // Render/Update Chart
+            const ctx = document.getElementById('simBillBreakdownChart').getContext('2d');
+            if(simChartInstance) simChartInstance.destroy();
+
+            simChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Bill Component Breakdown'],
+                    datasets: [
+                        { label: 'Maximum Demand Charge (RM)', data: [mdCharge], backgroundColor: '#10b981' },
+                        { label: 'Peak Energy Charge (RM)', data: [peakEnergyCharge], backgroundColor: '#f59e0b' },
+                        { label: 'Off-Peak Energy Charge (RM)', data: [offPeakEnergyCharge], backgroundColor: '#3b82f6' },
+                        { label: 'AFA Fuel Surcharge (RM)', data: [afaCharge], backgroundColor: '#8b5cf6' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: { stacked: true, grid: { color: '#e2e8f0' } },
+                        y: { stacked: true, display: false }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } }
+                    }
+                }
+            });
+        }
+
+        // Initialize Static Overview Charts
+        function initOverviewCharts() {
+            // Tariff Comparison Chart
+            const ctx1 = document.getElementById('tariffCompareChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['Legacy RP3 (E1/E2)', 'RP4 MV General', 'RP4 MV ToU (Base)', 'RP4 MV ToU (+1.6% KWTBB)'],
+                    datasets: [{
+                        label: 'MD Charge per 1,000 kW Peak (RM/month)',
+                        data: [41000, 89270, 97060, 98610],
+                        backgroundColor: ['#cbd5e1', '#64748b', '#059669', '#047857']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } } }
+                }
+            });
+
+            // AFA Trend Chart
+            const ctx2 = document.getElementById('afaTrendChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: ['Oct 2026', 'Nov 2026 (Fcst)', 'Dec 2026 (Fcst)', 'Jan 2027 (Fcst)'],
+                    datasets: [{
+                        label: 'AFA Monthly Surcharge (sen/kWh)',
+                        data: [3.61, 4.27, 4.46, 7.59],
+                        borderColor: '#8b5cf6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+
+            // Sector Suitability Radar / Bar Chart
+            const ctx3 = document.getElementById('sectorSuitabilityChart').getContext('2d');
+            new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: sectorData.map(s => s.name),
+                    datasets: [
+                        {
+                            label: 'Load Factor (%)',
+                            data: sectorData.map(s => s.loadFactor * 100),
+                            backgroundColor: '#94a3b8',
+                            order: 2
+                        },
+                        {
+                            label: 'BESS Suitability Score (1-100)',
+                            data: sectorData.map(s => s.suitabilityScore),
+                            borderColor: '#10b981',
+                            backgroundColor: '#10b981',
+                            type: 'line',
+                            tension: 0.2,
+                            order: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } },
+                    scales: { y: { beginAtZero: true, max: 100 } }
+                }
+            });
+
+            // Geo Distribution Chart
+            const ctx4 = document.getElementById('geoDistributionChart').getContext('2d');
+            new Chart(ctx4, {
+                type: 'bar',
+                data: {
+                    labels: ['Selangor (Klang Valley)', 'Johor (Southern)', 'Penang & Kedah', 'Central Spine (Melaka/NS/Perak)'],
+                    datasets: [{
+                        label: 'Estimated Medium Voltage Factory Density',
+                        data: [4200, 2600, 1400, 1500],
+                        backgroundColor: ['#10b981', '#f59e0b', '#3b82f6', '#8b5cf6']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: { legend: { display: false } },
+                    scales: { x: { beginAtZero: true } }
+                }
+            });
+        }
+
+        // DOM Load Event Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSectorGrid(sectorData);
+            renderCaseStudies(caseStudiesData);
+            renderGeoTable();
+            initOverviewCharts();
+            updateSimulation();
+        });
+    </script>
+</body>
+</html>

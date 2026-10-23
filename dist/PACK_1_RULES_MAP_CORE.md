@@ -144,6 +144,8 @@ mindmap
       Sizing rules
       EMS
       Site suitability
+      Load profiles by industry R9
+      Case studies
     Compliance T09
       ST licence from 5 kW
       GP ST No.62 2026
@@ -151,11 +153,11 @@ mindmap
       TNB CAS fees
     Playbooks T10
     Registers
-      Conflicts C01 to C20
+      Conflicts C01 to C22
       Calculator issues
       Citations
       Glossary
-    Sources R1 to R8
+    Sources R1 to R9
     Gaps
       Open questions
       Log a new gap
@@ -166,22 +168,22 @@ mindmap
 RULES.md ............................. read first: role, retrieval loop, truth rules, answer format, gap logging
 MIND_MAP.md .......................... this file
 kb/
-├── 00_INDEX.md ...................... file map + source registry (R1–R8, R9 pending)
+├── 00_INDEX.md ...................... file map + source registry (R1–R9)
 ├── 01_BIG_PICTURE.md ................ market on one page; key numbers with grades A–D; open questions
 ├── topics/
 │   ├── T01 tariff_rp4_and_maximum_demand ...... RP4 rates, MD = 2 × max 30-min kWh, ToU window, PF surcharge, tariff-switch maths, typical bills
 │   ├── T02 solar_schemes_atap_selco_cress ..... NEM closure, ATAP (≤1 MWac, SMP export), SELCO (BESS + RM12/kWp >1 MWac), CRESS, tenders
 │   ├── T03 tax_incentives_gita_gite ........... GITA / GITE, Budget 2027 changes (disputed), 31 Dec 2026 cutoff, CA rules, ACA, GSF 2.0
-│   ├── T04 market_size_and_geography .......... accounts & GWh by tariff, solar additions, installed BESS, TAM, states & estates
+│   ├── T04 market_size_and_geography .......... accounts & GWh by tariff, solar additions, installed BESS, TAM, states & estates, industrial parks & factory counts
 │   ├── T05 competitors_and_providers .......... ~30 companies, listed financials, zero-capex terms, price-war zones, EMS moats
 │   ├── T06 pricing_margins_payment_terms ...... RM/Wp, RM/kWh, O&M, warranty adders, margins, payment stages, payback claims
 │   ├── T07 financing_and_business_models ...... BNM LCTF/HTG, GTFS 5.0, banks, SARE / bilateral / CRESS PPAs, zero-capex BESS, LDs, preferences
-│   ├── T08 bess_technical_and_sizing .......... why BESS, load curves, topologies, sizing rules, EMS, DSM, TES, site suitability
+│   ├── T08 bess_technical_and_sizing .......... why BESS, load curves, topologies, sizing rules, EMS, DSM, TES, site suitability, load profiles by industry, case studies
 │   ├── T09 regulation_safety_compliance ....... agencies, ST licensing, GP/ST/No.62/2026, standards, forms, BOMBA, CAS fees, insurance, EECA
-│   └── T10 strategy_playbooks_from_reports .... archetypes, roadmaps, segment strategies proposed by the reports
+│   └── T10 strategy_playbooks_from_reports .... archetypes, roadmaps, segment strategies, target sectors and associations proposed by the reports
 ├── registers/
-│   ├── conflicts.md ................. C01–C20 disputes between reports (check before quoting numbers)
-│   ├── internal_issues.md ........... calculator errors, placeholder vs computed, self-contradictions
+│   ├── conflicts.md ................. C01–C22 disputes between reports (check before quoting numbers)
+│   ├── internal_issues.md ........... calculator errors, placeholder vs computed, self-contradictions, figures recycled between reports
 │   ├── citations.md ................. all 26 links graded A–D + named laws, guidelines, standards
 │   └── glossary.md .................. acronyms
 ├── context/
@@ -194,13 +196,14 @@ kb/
     ├── R5 bess_compliance_navigator (#5) ..... GP/ST/No.62/2026, standards, forms, SELCO sizing, BOMBA, CAS, insurance — 3 links
     ├── R6 financing_2026 (#6) ................ banks, GTFS 5.0, PPAs, zero-capex, guarantees, recommender
     ├── R7 green_tax_portal (#1) .............. Budget 2027 GITA/GITE matrix, cutoff mechanics, tax engine, unconfirmed items
-    └── R8 market_benchmark_2026 (#3) ......... prices, top 15 competitors, zero-capex providers, margins, payments
+    ├── R8 market_benchmark_2026 (#3) ......... prices, top 15 competitors, zero-capex providers, margins, payments
+    └── R9 load_profile_analyzer (#4) ......... 11-sector load factors & BESS fit, post-solar bill simulator, 7 case studies, industrial parks, associations
 gaps/
 ├── INDEX.md ......................... open questions the repo cannot answer yet (check before logging)
 ├── TEMPLATE.md ...................... gap file + GAP block format
 └── open/ ............................ one file per gap
-research/round2_research_prompts.md .. the prompts that produced R4–R8 (R9 pending)
-raw/reports/ ......................... original HTML reports (R1–R8)
+research/round2_research_prompts.md .. the prompts that produced R4–R9
+raw/reports/ ......................... original HTML reports (R1–R9)
 dist/ ................................ generated upload packs for chat apps + Claude skill
 evals/questions.md ................... test questions to check an AI after setup
 tools/ ............................... build.py (packs, index, skill), check_coverage.py
@@ -216,7 +219,9 @@ tools/ ............................... build.py (packs, index, skill), check_cov
 | Competitors, zero-capex providers, OEMs, who does what | `kb/topics/T05_competitors_and_providers.md` | `kb/sources/R8_market_benchmark_2026.md`, `kb/sources/R3_bess_solutions_dashboard.md` | C12 |
 | Prices (RM/Wp, RM/kWh), O&M, margins, payment terms, payback | `kb/topics/T06_pricing_margins_payment_terms.md` | `kb/sources/R8_market_benchmark_2026.md` | C10, C17, `internal_issues.md` |
 | Financing, banks, PPA, SARE, lease, shared savings, guarantees, LDs | `kb/topics/T07_financing_and_business_models.md` | `kb/sources/R6_financing_2026.md` | C13, C18 |
-| BESS sizing, dispatch, EMS, which sites suit BESS, DSM, thermal storage | `kb/topics/T08_bess_technical_and_sizing.md` | `kb/sources/R2…`, `R3…`, `R1…` | C08, C17 |
+| BESS sizing, dispatch, EMS, which sites suit BESS, DSM, thermal storage | `kb/topics/T08_bess_technical_and_sizing.md` | `kb/sources/R2…`, `R3…`, `R1…`, `R9…` | C08, C17, C22 |
+| Load profiles by industry, which sectors to target, load factor, BESS case studies | `kb/topics/T08_bess_technical_and_sizing.md` §8–9 | `kb/sources/R9_load_profile_analyzer.md` | C05, C21, C22, `internal_issues.md` |
+| Industrial parks, factory counts, associations and events to reach energy managers | `kb/topics/T04_market_size_and_geography.md` §6a, `kb/topics/T10_strategy_playbooks_from_reports.md` §8 | `kb/sources/R9_load_profile_analyzer.md` | C21 |
 | Licensing, ST, BOMBA, CAS, standards, forms, insurance, EECA | `kb/topics/T09_regulation_safety_compliance.md` | `kb/sources/R5_bess_compliance_navigator.md` | C06, C07 |
 | "What should we do?" strategy, segments, go-to-market | `kb/topics/T10_strategy_playbooks_from_reports.md` + `kb/context/eternalgy_profile_and_analysis.md` | `private/` if present | — |
 | Is this number reliable? | `kb/registers/conflicts.md` | `kb/registers/internal_issues.md`, `kb/registers/citations.md` | grades in `kb/01_BIG_PICTURE.md` |
@@ -227,7 +232,7 @@ tools/ ............................... build.py (packs, index, skill), check_cov
 | Item | Status |
 |---|---|
 | Knowledge date | 23 Oct 2026 |
-| Reports | R1–R8 extracted losslessly; R9 (load profiles by industry) pending |
+| Reports | R1–R9 extracted losslessly (R9, load profiles by industry, added 23 Oct 2026) |
 | Verification | None of the reports has been checked against official sources yet |
 | Biggest open issue | Budget 2027 GITA rules [C01, C20] |
 
@@ -241,7 +246,7 @@ id: INDEX
 title: Malaysia C&I Solar + BESS knowledge base — start here
 owner: Eternalgy Sdn Bhd (solar EPCC + BESS, West Malaysia)
 built: 2026-10-23
-built_from: 8 AI-generated HTML research reports in raw/reports/ (R1–R8); R9 pending
+built_from: 9 AI-generated HTML research reports in raw/reports/ (R1–R9; R9 added 23 Oct 2026)
 purpose: AI-readable, lossless distillation of the research, plus cross-report synthesis, for planning Eternalgy's C&I market entry
 ---
 
@@ -254,7 +259,7 @@ purpose: AI-readable, lossless distillation of the research, plus cross-report s
 **AI readers: read `../RULES.md` and `../MIND_MAP.md` before this file.**
 
 A markdown knowledge base built from the research reports in `../raw/reports/`. It has three layers:
-1. **`sources/`** — one complete extract per report (R1–R8). Lossless: every number, table row, chart value, calculator formula and link from the HTML is here. Each was checked with a script that compares every number and link in the HTML with the markdown (0 missing; leftovers were Tailwind class names only).
+1. **`sources/`** — one complete extract per report (R1–R9). Lossless: every number, table row, chart value, calculator formula and link from the HTML is here. Each was checked with a script that compares every number and link in the HTML with the markdown (0 missing; leftovers were Tailwind class names only).
 2. **`topics/`** — cross-report synthesis by subject (T01–T10). Every fact carries its source tag, e.g. `[R4]`; disputed facts carry a conflict tag, e.g. `[C01]`.
 3. **`registers/`** — conflicts between reports, calculator errors and internal inconsistencies, every citation with a quality grade, and a glossary.
 Plus `01_BIG_PICTURE.md` (the whole market on one page) and `context/` (Eternalgy's profile and the planning session's conclusions — analysis, not report content).
@@ -276,15 +281,15 @@ Plus `01_BIG_PICTURE.md` (the whole market on one page) and `context/` (Eternalg
 | `topics/T05_competitors_and_providers.md` | Master table of ~30 companies (EPCCs, zero-capex providers, integrators, OEMs), listed financials, competition heatmap, EMS moats |
 | `topics/T06_pricing_margins_payment_terms.md` | Solar RM/Wp, BESS RM/kWh, O&M, warranty adders, margins by segment, payment milestones, payback/IRR claims, calculator outputs |
 | `topics/T07_financing_and_business_models.md` | BNM facilities, GTFS 5.0, bank products, SARE / bilateral / CRESS PPAs, zero-capex BESS models, guarantees and LDs, preferences by size, decision logic |
-| `topics/T08_bess_technical_and_sizing.md` | Why BESS, load-curve examples, topologies and models, sizing rules, EMS, MD mitigation ladder, site suitability |
+| `topics/T08_bess_technical_and_sizing.md` | Why BESS, load-curve examples, topologies and models, sizing rules, EMS, MD mitigation ladder, site suitability, load profiles by industry (R9), BESS case studies (R9) |
 | `topics/T09_regulation_safety_compliance.md` | Agencies, licensing thresholds, GP/ST/No.62/2026, competencies, standards, forms, BOMBA, TNB CAS and fees, insurance, readiness checklist, EECA 2024 |
 | `topics/T10_strategy_playbooks_from_reports.md` | Each report's recommended strategies, archetypes and roadmaps |
-| `registers/conflicts.md` | C01–C20: where reports disagree, severity, what would settle it |
+| `registers/conflicts.md` | C01–C22: where reports disagree, severity, what would settle it |
 | `registers/internal_issues.md` | Placeholder vs computed calculator results and self-contradictions in each report |
 | `registers/citations.md` | All 26 hyperlinks (graded A–D) and all named laws, guidelines and standards |
 | `registers/glossary.md` | Acronyms and terms |
 | `context/eternalgy_profile_and_analysis.md` | Company profile; working conclusions; what the new research changes for Eternalgy (analysis) |
-| `sources/R1…R8_*.md` | Lossless per-report extracts (front matter, key-claims index, full body, charts, calculators with computed outputs, data tables, links, extraction notes) |
+| `sources/R1…R9_*.md` | Lossless per-report extracts (front matter, key-claims index, full body, charts, calculators with computed outputs, data tables, links, extraction notes) |
 
 ## Source registry
 | ID | Extract | Original HTML (`raw/reports/`) | Modified | Answers | Links | Notes |
@@ -297,7 +302,7 @@ Plus `01_BIG_PICTURE.md` (the whole market on one page) and `context/` (Eternalg
 | R6 | `sources/R6_financing_2026.md` | malaysia_c_i_solar_bess_financing_2026.html | 14:53 | Research prompt #6 — financing and business models | 0 | Recommender with 36 branches |
 | R7 | `sources/R7_green_tax_portal.md` | malaysia_green_tax_incentives_portal.html | 15:02 | Research prompt #1 — green tax incentives after Budget 2027 | 0 (names legal docs) | Primary source for Budget 2027; lists 5 unconfirmed items |
 | R8 | `sources/R8_market_benchmark_2026.md` | malaysia_c_i_solar_bess_market_2026.html | 15:07 | Research prompt #3 — competitors and pricing | 0 | Top 15 competitors, prices, margins |
-| R9 | — | (pending) | — | Research prompt #4 — load profiles and target industries | — | Still running at build time; add as `sources/R9_*.md` and update T08 |
+| R9 | `sources/R9_load_profile_analyzer.md` | malaysia_bess_load_profile_analysis_commercial_calculator.html | 16:07 | Research prompt #4 — load profiles and target industries | 0 | 11-sector load-factor table, post-solar bill simulator, 7 case studies (3 recycle R1/R3/R8 figures), 9 industrial clusters, associations; unsourced |
 Research prompts: `../research/round2_research_prompts.md`. Internal material (MD audit tool spec, strategy notes) is in `../private/`, which is not published.
 
 ## Conventions
@@ -305,7 +310,7 @@ Research prompts: `../research/round2_research_prompts.md`. Internal material (M
 - Text quoted in "double quotes" is the report's wording.
 - "Analysis note" or anything under `context/` = Claude's analysis, not report content.
 - Dates are absolute; "today" at build time = 23 Oct 2026.
-- Nothing here has been checked against official sources yet. All 8 reports are AI-generated; treat figures as leads, especially those graded C or D in `01_BIG_PICTURE.md`.
+- Nothing here has been checked against official sources yet. All 9 reports are AI-generated; treat figures as leads, especially those graded C or D in `01_BIG_PICTURE.md`.
 
 ## Maintenance
 - New report: extract it to `sources/R#_*.md` with the same template; run the coverage checker; then update the topic files it touches, `registers/conflicts.md`, `registers/citations.md`, the cheat sheet and this registry.
@@ -319,7 +324,7 @@ Research prompts: `../research/round2_research_prompts.md`. Internal material (M
 ---
 id: BIG-PICTURE
 title: Malaysia C&I solar + BESS market — big-picture synthesis across all research reports
-sources: [R1, R2, R3, R4, R5, R6, R7, R8]
+sources: [R1, R2, R3, R4, R5, R6, R7, R8, R9]
 updated: 2026-10-23
 read_next: [topics/T01 … T10, registers/conflicts.md, context/eternalgy_profile_and_analysis.md]
 ---
@@ -333,8 +338,8 @@ read_next: [topics/T01 … T10, registers/conflicts.md, context/eternalgy_profil
 1. **RP4 made Maximum Demand the main pain for MV customers.** From 1 Jul 2025, demand is billed as capacity + network: MV General RM89.27/kW (any time), MV ToU RM97.06/kW (14:00–22:00 weekdays), roughly +115% to +200% on legacy rates. A single 30-minute block sets the whole month's charge. MD is now ~30–45%+ of an MV industrial bill. [T01; C04, C05]
 2. **LV customers have no kW demand charge.** LV capacity and network are per kWh (23.65 sen); all-in ~50.68 sen/kWh before AFA. Solar saves the full rate there; BESS has no MD to shave. [T01]
 3. **Net metering ended; self-consumption rules took over.** NEM 3.0 closed 30 Jun 2025. From 1 Jan 2026: **Solar ATAP** (≤1 MWac, export credited only at SMP ~18–20 sen, no rollover) or **Enhanced SELCO** (zero export; above 1 MWac a **BESS is mandatory** plus **RM12/kWp/month standby**). [T02]
-4. **Solar alone rarely cuts MD.** Solar peaks in the off-peak window and drops out with clouds and in the evening, so the month's peak survives. BESS that charges at midday and discharges 14:00–22:00 is the lever on MV. [T08]
-5. **MV is the sweet spot.** ~26,500 MV accounts (1.6% of C&I accounts) use ~65,190 GWh (~59% of C&I energy). R4 puts MV TAM at 6,500–8,500 MWp solar and 3,500–5,500 MWh BESS. Selangor (33–35%) and Johor (21–23%) hold over half of MV industrial load. [T04]
+4. **Solar alone rarely cuts MD, and load shape decides whether BESS pays.** Solar peaks in the off-peak window and drops out with clouds and in the evening, so the month's peak survives (R9: the MD share of the bill rises after solar). BESS that charges at midday and discharges 14:00–22:00 is the lever on MV. R9 ranks spiky, 1–2 shift loads first — metal stamping, office towers, food processing, plastic injection (load factor 28%–55%) — and calls flat 24/7 loads (gloves, semiconductor fabs, textile spinning; LF 78%–88%) poor fits; unsourced. [T08 §8; C21]
+5. **MV is the sweet spot.** ~26,500 MV accounts (1.6% of C&I accounts) use ~65,190 GWh (~59% of C&I energy). R4 puts MV TAM at 6,500–8,500 MWp solar and 3,500–5,500 MWh BESS. Selangor (33–35%) and Johor (21–23%) hold over half of MV industrial load; R9 puts the densest spiky-load clusters in Shah Alam, Klang, Bangi–Kajang, Tebrau and Senai. [T04]
 6. **BESS is early.** Only ~145–180 MWh of C&I BESS exists (85–110 MWh commissioned by mid-2026), led by Plus Xnergy (100 MWh incl. a 20 MWh single site). C&I solar additions are ~600 MW (2025) → ~710 MW (2026F). [T04, T05]
 7. **Tax incentives are pivoting — and the details are disputed.** The most-supported reading (R7, R6): Budget 2027 (9 Oct 2026) extends GITA to 2030 only for **integrated solar + BESS (100%)**; **standalone solar drops to 0%** and **GITE solar leasing ends** after 31 Dec 2026. Standalone BESS is contested. Pre-2027 rules need invoice + commissioning + MGTC receipt by 31 Dec 2026. [T03; C01, C20]
 8. **Competition is consolidating around BESS + software.** Large listed EPCCs and funded zero-capex players (Solarvest, Plus Xnergy, Sunview, Samaiden, Ditrolic, Gentari, Cenergi, Northern Solar…) sell solar + BESS with proprietary EMS. Price wars: 50–300 kWp rooftops (~RM2.40/Wp quotes) and plain BESS hardware distribution. Protected: zero-capex MD shaving, data-centre electrical, HV grid. [T05]
@@ -352,7 +357,13 @@ Grade: **A** consistent across reports and linked to an official document (not y
 | LV capacity + network | 8.83 + 14.82 = 23.65 sen/kWh (no kW charge) | B | T01 |
 | MD definition | 2 × max 30-min kWh in the billing month (assessed window) | B | T01 |
 | Legacy → RP4 MD increase | +115% to +202% (base-dependent) | D | C04 |
-| MD share of bill | 30%–70% (R8) / 35%–45% (R6) | D | C05 |
+| MD share of bill | 30%–70% (R8) / 35%–45% (R6) / 32.5%–59.5% by sector, modelled (R9) | D | C05 |
+| BESS fit by load factor | LF < 0.60 good; LF > 0.75 "excessive storage" | C (R9) | T08 §8 |
+| Tier 1 BESS sectors | Metal stamping, office towers, food processing, plastic injection | C (R9) | T08 §8 |
+| Flat-load sectors (poor MD fit) | Rubber gloves (LF 88%), semiconductor (85%), textile spinning (78%) | D (R9 vs R4) | C21 |
+| MD-shaving BESS size | 10%–20% of MD, 1–2 h (R3) vs top 20%–35% of peak, 1–3 h (R9) | D | C22 |
+| MV ToU MD incl. 1.6% KWTBB | RM98.61/kW (MV General RM90.70) | C (R9) | T01 |
+| Off-peak includes public holidays | Yes (R9 only) | C | T01 §3 |
 | ATAP | ≤1 MWac; export at SMP (~18–20 sen); no rollover | B | T02 |
 | SELCO >1 MWac | Mandatory BESS + RM12/kWp/month standby | B | T02 |
 | SELCO BESS size | ≥1 h × PV kWp | C (R5) | C08 |
@@ -379,12 +390,12 @@ Grade: **A** consistent across reports and linked to an official document (not y
 
 ## 3. Solid vs shaky
 - **Solid enough to plan on:** RP4 rate structure and MD mechanics; LV vs MV distinction; ATAP/SELCO basics; MV as the BESS market; BESS compliance stack; MD-miss risk shaping contracts.
-- **Must verify before acting:** all Budget 2027 GITA rules [C01, C20]; CRESS SAC [C03]; SELCO BESS sizing rule [C08]; market sizes from R4 (modelled, several weak/stale sources); every competitor figure (no links); every calculator payback (see `registers/internal_issues.md`).
-- **Evidence quality:** all 8 reports are AI-generated dashboards; only R4 (23 links) and R5 (3 links) cite anything. See `registers/citations.md`.
+- **Must verify before acting:** all Budget 2027 GITA rules [C01, C20]; CRESS SAC [C03]; SELCO BESS sizing rule [C08]; market sizes from R4 (modelled, several weak/stale sources); every competitor figure (no links); every calculator payback (see `registers/internal_issues.md`); R9's sector load factors and case studies (no sources; three cases recycle R1, R3 and R8 figures).
+- **Evidence quality:** all 9 reports are AI-generated dashboards; only R4 (23 links) and R5 (3 links) cite anything. See `registers/citations.md`.
 
 ## 4. Top open questions
 1. Exact Budget 2027 Appendix 25 wording: standalone solar, standalone BESS, integrated system, minimum BESS ratio for Tier 1b, transition for late-2026 invoices. (Drives Q4 2026 sales and 2027 product design.)
-2. Which industries have short peaks inside 14:00–22:00 (BESS fit) vs flat loads — research prompt #4, pending as R9.
+2. Real load shapes by industry: R9 gives a ranking (T08 §8) but no measured data or sources, and disagrees with R4 on gloves [C21]. 30-minute data from real MV customers is needed, and how to get it from TNB is still open (gap `tnb-30min-data-access`).
 3. CRESS SAC after the 18 Sep 2026 package.
 4. SELCO >1 MWac BESS sizing rule and "no cap" vs "100% MD".
 5. RP5 tariffs from 1 Jan 2028 (RP4 ends 31 Dec 2027) — not covered by any report.
@@ -401,11 +412,11 @@ Company profile, the segment-fit table, the BESS payback rule of thumb and what 
 id: T01
 title: TNB RP4 tariff structure and Maximum Demand (MD) mechanics
 covers: RP4 rates by category, legacy mapping, ToU windows, how MD is measured and billed, MD increase vs legacy, power factor surcharge, General vs ToU switch maths, typical bills
-sources: [R1, R2, R3, R4, R5, R6, R8]
+sources: [R1, R2, R3, R4, R5, R6, R8, R9]
 conflicts: [C04, C05, C09, C13, C16]
 related: [T02, T08, T10]
 updated: 2026-10-23
-confidence_note: All rate figures below agree across R2, R3 and R4 (and R1/R5/R6/R8 where quoted). None of the reports links the official ST/TNB tariff book. Treat as consistent but unverified.
+confidence_note: All rate figures below agree across R2, R3 and R4 (and R1/R5/R6/R8/R9 where quoted). None of the reports links the official ST/TNB tariff book. Treat as consistent but unverified.
 ---
 
 <!-- ai-banner -->
@@ -420,6 +431,7 @@ confidence_note: All rate figures below agree across R2, R3 and R4 (and R1/R5/R6
 - **MV and HV pay capacity + network per kW of Maximum Demand**: MV General **RM89.27/kW** (any time), MV ToU **RM97.06/kW** (14:00–22:00 weekdays only), HV General RM31.21/kW, HV ToU RM44.82/kW [R2, R3, R4].
 - **MD = 2 × the largest kWh in any 30-minute block** of the billing month (within the assessed window). One block sets the charge for the whole month [R2, R3, R6, R8].
 - MV demand charges rose roughly **+115% to +202%** vs legacy, depending on which legacy tariff is the base [C04].
+- Solar without storage cuts kWh but not MD, so the MD share of the bill rises: "from ~55% up to ~70%" (R9 claim; its own model gives 59.5% → 66.4% for a stamping plant) [R9; C05].
 
 ## 1. Regime basics
 | Item | Detail | Source |
@@ -431,7 +443,9 @@ confidence_note: All rate figures below agree across R2, R3 and R4 (and R1/R5/R6
 | Consolidation | "TNB consolidated 11 legacy non-domestic tariffs into six core RP4 categories" | R4 |
 | AFA | Monthly fuel pass-through replaced the legacy 6-month ICPT cycle | R2 |
 | AFA example | +3.61 sen/kWh (Oct 2026) — calculator default, range −5.0 to +8.0 sen | R4 |
-| KWTBB levy | 1.6%; R2's chart "Excludes 1.6% KWTBB Levy"; R4's calculator applies 1.6% to (energy + MD + retail), not to AFA | R2, R4 |
+| AFA trajectory | 3.61 sen/kWh Oct 2026; forecasts 4.27 (Nov 2026), 4.46 (Dec 2026), 7.59 (Jan 2027) — no source or method | R9 |
+| KWTBB levy | 1.6%; R2's chart "Excludes 1.6% KWTBB Levy"; R4's calculator applies 1.6% to (energy + MD + retail), not to AFA; R9 applies it to the demand rate: "Effective MD" MV General RM90.70/kW, MV ToU RM98.61/kW | R2, R4, R9 |
+| Legacy (RP3) energy rates, "E1/E2 Ref" | Peak 35.50–36.50 sen/kWh; off-peak 21.90–22.40 sen/kWh (single source, unsourced) | R9 |
 | Off-peak share | Off-peak = 128 hours/week (76.2% of all hours), "expanded by 80%" | R1, R2 |
 | Legacy peak window | 14-hour block 08:00–22:00 (pre-RP4) | R2 |
 
@@ -455,7 +469,7 @@ Blended energy rates used inside calculators (assumptions, not tariff): R3 MV To
 - **Peak: 14:00–22:00, Monday–Friday** (8 hours/day) [R1, R2, R3, R4, R5, R6, R8].
 - Off-peak: 22:00–14:00 on weekdays plus all weekend hours [R2, R3].
 - On MV/HV ToU, demand recorded outside the window carries **RM0/kW** ("Immediate savings on all morning & weekend demand spikes (billed at RM0/kW)") [R2].
-- Public holidays: **not addressed by any report** (open question).
+- Public holidays: only R9 addresses them — off-peak is "22:00–14:00 Mon–Fri, all weekends & public holidays" (single source, no citation; open gap `tou-holidays-levy-pf-base`).
 - Solar mismatch: peak solar 10:00–15:00 falls mostly in off-peak; BESS bridges to the 14:00–22:00 window [R3, R1].
 
 ## 4. How Maximum Demand is measured and billed
@@ -478,12 +492,15 @@ Real-time projection used by EMS (R2): **D_projected (kW) = 2 × [E(t_e) + P_ins
 | HV Gen (C3) | 29.20 | 31.21 |
 | HV TOU (C4/E3) | 43.60 | 44.82 |
 
-Claims: "+115% to +201%" (R1, R4); "+100% to +202%", "up to 202%" (R2); "+162%" from RP3 baseline RM37.00 (R6) / from RM30.30 (R8 text; R8 chart uses 37.00 and an unexplained "RP4 High-Peak Industrial" 98.61). HV demand charges barely moved; the shock is on **MV**.
+Claims: "+115% to +201%" (R1, R4); "+100% to +202%", "up to 202%" (R2); "+162%" from RP3 baseline RM37.00 (R6) / from RM30.30 (R8 text; R8 chart uses 37.00 and an unexplained "RP4 High-Peak Industrial" 98.61); "+115% to +162%" from "~RM37.00–RM45.10/kW" (R9). R9 shows RM98.61/kW as MV ToU RM97.06 plus the 1.6% KWTBB levy (97.06 × 1.016), which is probably what R8's 98.61 bar is. HV demand charges barely moved; the shock is on **MV**.
 
 ## 6. MD share of the bill [C05]
 - "Unbundled RP4 capacity & network charges now represent 30% to 70% of C&I monthly power bills" [R8].
 - MD "accounting for 35% to 45% of an industrial electricity bill" [R6].
 - R3 worked factory (500,000 kWh/month, 900 kW MD, MV General): MD RM80,343 vs energy RM149,150 → ~35% (derived).
+- R9 by sector (MV ToU, 1,000 kW, no solar — outputs of R9's own simulator, not measured bills): metal stamping 59.5%, office towers 56.3%, food 49.7%, malls 44.1%, plastic injection 43.1%, hotels 40.2%, cold storage 38.2%, hospitals 36.8%, textiles 35.1%, semiconductor 33.2%, rubber gloves 32.5%. The lower the load factor, the higher the MD share (T08 §8).
+- R9 "Post-Solar Load Factor Distortion Effect": after rooftop solar without storage, "the MD share of the electricity bill surges from ~55% up to ~70%", because one overcast 30-minute block or a 17:00–22:00 run still sets the month's MD. R9's simulator at its defaults (1,000 kW stamping plant, 500 kWp) gives 59.5% → 66.4%; its banner says 69.4%, which the code does not reproduce.
+- R9: MPMA plastics members are "hit with 40%+ MD bill shares from heater bands and chillers".
 
 ## 7. Power factor surcharge (R2)
 - PF = kWh / √(kWh² + kVArh²) for the month.
@@ -529,7 +546,7 @@ R5: storing surplus solar instead of exporting at SMP yields "a net spread savin
 
 ## 12. Open questions
 - Official tariff book link; HV energy rates (43.03 / 44.52 / 40.43 sen) look high relative to MV but all three reports agree.
-- Public holidays in the ToU window.
+- Public holidays in the ToU window (R9 alone says off-peak; unsourced).
 - Base of the power factor surcharge and of KWTBB.
 - RP5 tariffs from 1 January 2028 (RP4 ends 31 Dec 2027) — no report covers this.
 
@@ -638,7 +655,7 @@ updated: 2026-10-23
 id: T03
 title: Green tax incentives — GITA Asset, GITA Project, GITE, Budget 2027 changes, alternatives
 covers: incentive rates by asset type before/after 2027, 31 Dec 2026 cutoff mechanics, how GITA is used against income, RPVI/GITE rules, compliance traps, other Budget 2027 instruments
-sources: [R1, R2, R3, R4, R5, R6, R7, R8]
+sources: [R1, R2, R3, R4, R5, R6, R7, R8, R9]
 primary_source: R7 (dedicated research; cites Budget 2027 documents)
 conflicts: [C01, C02, C14, C20]
 related: [T07, T10]
@@ -699,6 +716,7 @@ R7 tier definitions (2027–2030, GITA Assets, 70% SI set-off):
 | R4 | "31 December 2026 sunset of MIDA's GITA 100% tax allowance"; MV payback "3.0–4.5 years (w/ GITA 100%)" |
 | R6 | 2026: 60% standalone solar, 100% BESS; 2027–2030: standalone solar 0%, integrated solar + BESS 100% Tier 1; GITE deadline 31 Dec 2026 |
 | R8 | "GITA / GTFS Sunset 31 Dec 2026 — 60–100% Tax Allowance Deadline" |
+| R9 | "MIDA Tier 1 Green Investment Tax Allowance (GITA) Shield": BESS "Classified as a Tier 1 Green Asset, qualifying for 100% Investment Tax Allowance offset against up to 70% of statutory income over 3–5 years"; plus "100% Capital Allowance" at 24% → "Net ~48% CAPEX Subsidy". No dates, no Budget 2027, no standalone vs integrated split (C02, C14, C20) |
 
 ## 3. The 31 December 2026 cutoff (R7)
 Three overlapping requirements to claim pre-2027 rules (60% standalone solar GITA, 70% GITE, standalone EE GITA):
@@ -766,10 +784,10 @@ GTFS 5.0 (financing guarantee, not a tax incentive) is covered in T07.
 ---
 id: T04
 title: Market size, deployment volumes, addressable market (TAM) and geography — Peninsular Malaysia
-covers: macro electricity indicators, C&I accounts and GWh by RP4 category, solar additions by scheme, installed C&I BESS, TAM by voltage tier, state-level MV industrial concentration, order-book flows
-sources: [R4, R8, R3, R2]
-primary_source: R4 (answers research prompt #2; most figures carry a citation link)
-conflicts: [C15]
+covers: macro electricity indicators, C&I accounts and GWh by RP4 category, solar additions by scheme, installed C&I BESS, TAM by voltage tier, state-level MV industrial concentration, industrial parks and factory counts (R9), order-book flows
+sources: [R4, R8, R3, R2, R9]
+primary_source: R4 (answers research prompt #2; most figures carry a citation link); R9 for industrial-park factory counts (unsourced)
+conflicts: [C15, C21]
 related: [T01, T02, T05, T08]
 updated: 2026-10-23
 ---
@@ -783,6 +801,7 @@ updated: 2026-10-23
 - ~**1.648 million C&I accounts**, **110,140 GWh** in 2025 (76.5% of Peninsular sales of 143,973 GWh) [R4].
 - **LV = 98.3% of accounts but ~26% of C&I energy; MV = 1.6% of accounts (~26,500) but ~59% of C&I energy (65,190 GWh)**; HV ≈ 700 accounts [R4].
 - MV is called the "sweet spot": solar TAM **6,500–8,500 MWp**, BESS TAM **3,500–5,500 MWh**, target payback 3.0–4.5 years with GITA [R4].
+- R9 (unsourced): "over 500 industrial parks and 22 Free Industrial Zones"; **Selangor (4,000+ factories) and Johor (2,500+)** hold the densest Tier 1 spiky-load plants (stamping, plastic injection, food); Penang holds flat 24/7 fabs (§6a) [R9].
 - C&I solar additions ~600 MW (2025) → ~710 MW forecast (2026); operational C&I BESS only **~145–180 MWh** (85–110 MWh commissioned by mid-2026) — BESS is early-stage [R4].
 - **Selangor (33–35%) and Johor (21–23%)** hold over half of MV industrial load; then Penang 14–16%, NS + Melaka 8–10%, Perak 7–8%, Kedah 6–7% [R4].
 
@@ -852,13 +871,29 @@ Savings drivers per R4: LV offsets "50.68 sen base + AFA (~54.3 sen)"; MV shaves
 | 5 | Kedah | 6%–7% | Kulim Hi-Tech Park (KHTP 1–4), Sungai Petani (Bakar Arang, Tikam Batu), Gurun | Wafer fabs, solar PV modules, EV batteries, automotive, wood & rubber | Large HV ToU and 33 kV MV ToU plants with RE100 mandates → ground SELCO + BESS and CRESS | MIDA Investment Performance Report 2025 (2026) |
 | 6 | Negeri Sembilan & Melaka | 8%–10% combined | Sendayan TechValley, Techpark @ Enstek, Nilai, Batu Berendam FTZ, Pegoh / Alor Gajah, Tangga Batu | Semiconductors, automotive assembly, F&B halal hubs, textiles, specialty chemicals | Modern single-storey plants with large unshaded roofs, ideal for 1–5 MWp SELCO + BESS | ST MAISPEM & Raygo Solar analysis (2026) |
 
+## 6a. Industrial parks and factory counts (R9, unsourced)
+R9: "Peninsular Malaysia features over 500 industrial parks and 22 Free Industrial Zones (FIZs). Target industries are sharply segregated by state: Selangor (Klang Valley) and Johor (Iskandar) concentrate the densest clusters of Tier 1 spiky-load target plants, whereas Penang concentrates flat 24/7 semiconductor fabs."
+| Region | Cluster / park | Est. factories | Dominant sectors | R9 BESS rating |
+|---|---|---|---|---|
+| Selangor | Shah Alam Industrial Estates (Sec 15, 16, 22, 23, 26, HICOM) | ~1,200–1,500 | Automotive metal stamping, plastic injection, food processing, cold storage | Prime Tier 1 Hub |
+| Selangor | Klang & Port Klang corridor (Meru, Kapar, Bukit Raja, Telok Gong, PKFZ) | ~1,400–1,800 | Plastic moulding, rubber gloves, metal fab, edible oils, port cold storage | High-Volume Mixed |
+| Selangor | Southern corridor (Bangi, Kajang, Balakong, Seri Kembangan, Semenyih) | ~1,100–1,400 | Precision stamping, industrial automation, food, pharma, plastics | Prime Tier 1 SMI Hub |
+| Johor | Tebrau Industrial Estates (I–IV), Mount Austin & Tampoi / Larkin | ~800–1,100 | Plastic injection moulding, metal stamping, wire harness, food processing | Prime Tier 1 Hub |
+| Johor | Pasir Gudang Industrial Estate & Tanjung Langsat (8,000+ acres) | ~500–700 | Oleochemicals, edible oil refining, tinplate, copper extrusion, cold storage | High-Capacity MV/HV |
+| Johor | Senai Industrial Estates (I–IV), i-Park, Kulai & SILC Nusajaya | ~600–850 | EMS/E&E assembly, precision plastics, aerospace, food & cold chain | High-Fit Modern Hub |
+| Penang & Kedah | Bayan Lepas FIZ (Phases 1–4) & Technoplex (1,400 acres) | ~220–300+ | Semiconductor, OSAT (Intel, AMD, Infineon), EMS (Jabil, Plexus), medical | Selective (UPS / Solar) |
+| Penang & Kedah | Batu Kawan (BKIP 1–3), Perai FIZ, Bukit Tengah & Bukit Minyak | ~850–1,000 | Automation (ViTrox, Greatech), sheet metal (UWC), automotive, food | Tier 1 Vendor Ecosystem |
+| Central / southern spine | Nilai & Senawang (N. Sembilan), Ayer Keroh (Melaka), Ipoh (Perak) | ~1,200–1,600 | Halal food hubs, cold storage, rubber gloves, textiles, metal/plastics | High Regional Potential |
+R9 region chart ("Estimated Medium Voltage Factory Density"): Selangor 4,200; Johor 2,600; Penang & Kedah 1,400; Central spine (Melaka / N. Sembilan / Perak) 1,500. The chart and region cards do not match the row sums exactly (Penang & Kedah rows sum to ~1,070–1,300+), Kulim KHTP has no row, and nothing says the counts are MV accounts. R4's ~12,200 MV industrial customers is the only account-based figure.
+R9 vs R4: both rank Selangor then Johor first. R4 says Penang's 24-hour plants favour >1 MWac SELCO + BESS (a scheme mandate); R9 says the fabs are flat (UPS + Solar ATAP) and the BKIP/Perai automation vendors are the peak-shaving targets [C21].
+
 ## 7. Order books and pipelines
 - EPCC order-book flow RM13B–23B from LSS5, LSS6 and CRESS tenders [R8].
 - Listed EPCC unbilled order books: Solarvest RM2,370M (Aug 2026); Sunview ~RM1,169.5M; Pekat RM994M (Jul 2026); Northern Solar RM119.4M LSS5 + C&I; Cheeding RM600M target [R8]. Samaiden RM600M YTD contract wins (Jul 2026) [R8].
 
 ## 8. Gaps
 - No report gives a count of MV accounts by industry, or an independent check of R4's account split.
-- Load-shape suitability by industry is the subject of research prompt #4 (result pending as R9).
+- Load-shape suitability by industry: R9 (unsourced) — see `T08_bess_technical_and_sizing.md` §8. Factory counts per park are R9 estimates without a source; no report gives MV accounts per industry or per park.
 
 
 
@@ -869,9 +904,9 @@ Savings drivers per R4: LV offsets "50.68 sen base + AFA (~54.3 sen)"; MV shaves
 id: T05
 title: Competitors, zero-capex BESS providers, integrators and hardware OEMs
 covers: master list of every company named across the reports, with scale, BESS track record, business models, EMS products, financials, competitive moats and price-competition segments
-sources: [R3, R8, R6, R4, R1]
+sources: [R3, R8, R6, R4, R1, R9]
 primary_source: R8 (answers research prompt #3; no hyperlinks), R3 provider directory (no sources)
-conflicts: [C12, C18]
+conflicts: [C12, C18, C17]
 related: [T06, T07, T08]
 updated: 2026-10-23
 confidence_note: No company figure in R3 or R8 carries a link. Treat portfolio sizes, order books and project claims as leads to verify against Bursa filings and company releases.
@@ -959,7 +994,17 @@ High-moat, margin-protected:
 - HV grid interconnection — Cheeding (500 kV TNB transmission licences, ~50% GP, 28% net).
 
 ## 5. EMS as the moat (R8, R6)
-"Top contractors rely on software moats to prevent 30-minute peak-shaving failures": Solarvest AI machine-learning EPMS; Ditrolic Net-Zero Energy OS with 15-minute interval dispatch; Plus Xnergy SOURCE weekday peak shaving [R8]. Tanand EasiEMS early alerts [R6]. EVOLTS and XPERTS.NRG / EVC require 30-day to 12-month interval-meter studies before sizing [R3, R8].
+"Top contractors rely on software moats to prevent 30-minute peak-shaving failures": Solarvest AI machine-learning EPMS; Ditrolic Net-Zero Energy OS with 15-minute interval dispatch; Plus Xnergy SOURCE weekday peak shaving [R8]. Tanand EasiEMS early alerts [R6]. EVOLTS and XPERTS.NRG / EVC require 30-day to 12-month interval-meter studies before sizing [R3, R8]. R9 adds a "Predictive HAPLT Controller" field trial (CNN/LSTM/XGBoost forecasting) that kept battery charge for the critical peaks [R9].
+
+## 6. Companies named in R9's case studies (detail in T08 §9)
+| Company | R9 case | Note |
+|---|---|---|
+| Livoltek | 125 kW / 261 kWh LFP at a Malaysian factory with rooftop PV; 89.99 kW evening peak shaved; RM9,000/month | Not named in any other report |
+| Plus Xnergy | 1.5 MW / 3.0 MWh zero-capex EaaS, 15 years, RM82.50/kW | Figures repeat R8's illustrative example |
+| Solarvest | Solar ATAP + BESS reference site, 1,000 kWp + 500 kW / 1,000 kWh, RM712,000/yr | AI EPMS control |
+| Avera Energy | MV General → ToU switch + 165 kW / 330 kWh BESS, 315 kW MD cut | Not named elsewhere; RM figures repeat R3's simulator placeholder |
+| UniBess | 500 kW / 1,044 kWh (4 × 125 kW cabinets), 400 kW shaved | Elsewhere a 7–10 yr lease provider (R6, R8); RM figures repeat R1's hard-coded result |
+None of the cases has a link or date [R9; C17].
 
 
 
@@ -970,7 +1015,7 @@ High-moat, margin-protected:
 id: T06
 title: Pricing benchmarks, O&M rates, EPCC margins, payment milestones, paybacks
 covers: solar EPCC RM/Wp by size, BESS RM/kWh by size, cost drivers, O&M %, warranty cost adders, gross/net margins by segment, payment stages and retention, payback and IRR claims, savings assumptions used by the calculators
-sources: [R8, R3, R6, R2, R4, R5, R1]
+sources: [R8, R3, R6, R2, R4, R5, R1, R9]
 primary_source: R8 (answers research prompt #3; unsourced)
 conflicts: [C10, C17, C19]
 related: [T05, T07, T08]
@@ -1064,6 +1109,8 @@ Listed company margins: see T05 §2 (Northern Solar 27.4–37.8% GM, FY26 ~34.4%
 | Owner-occupier SMEs: RM950k–1.6M lifetime benefit over 25 yrs, 2x–3x a PPA | R6 |
 | Zero-capex BESS financier return 12%–18% p.a. (~4-year payback) | R8 |
 | Plus Xnergy: RM1.25M/yr savings per 10 MWh | R3, R4 |
+| "100% GITA" + "100% Capital Allowance" at 24% = "Net ~48% CAPEX Subsidy", cutting simple payback "from 5–6 years down to 2.5–3.5 years"; capex purchase with GITA "~2.5 yr payback" (see C02) | R9 |
+| Case studies: 2.1 yrs (overseas CNC), <2.5 yrs (Solarvest), 2.5–3.5 yrs (UniBess), 2.8–3.5 yrs (Livoltek, with GITA), 3.0–4.2 yrs (Avera); three reuse figures from R1, R3, R8 (T08 §9) | R9 |
 Calculator outputs at default inputs, as computed by running each report's code (placeholders shown on the pages are often different):
 | Report | Calculator | Computed at defaults | Placeholder shown |
 |---|---|---|---|
@@ -1073,6 +1120,7 @@ Calculator outputs at default inputs, as computed by running each report's code 
 | R8 | Project ROI (500 kWp, 200 kWh, 100% GITA + CA) | RM1,520,000 gross, RM516,800 tax shield (34%), RM344,624/yr gross savings, 2.9 yrs | RM1,520,000 gross, RM391,800 tax, RM253,200/yr, 4.4 yrs |
 | R1 | Load-curve simulator (hybrid mode) | True peak-window MD 750 kW (450 kW shaved, RM43,677/month) | Hard-coded 800 kW (400 kW shaved, RM38,824/month) |
 | R7 | Tax engine (Tier 1b, RM2M capex, RM1.5M SI, 24%) | Year-1 CA RM680,000; Year-1 GITA used RM574,000; 5-yr cumulative cash saving RM912,000 (45.6%) | Text claims 48.0% of capex |
+| R9 | Post-solar bill simulator (MV ToU, 1,000 kW stamping plant, LF 0.28, 500 kWp, 250 kW shaved) | Bill RM121,829, MD share 59.8%, BESS savings RM24,265/month (RM291,180/yr); no capex or payback computed | Bill RM163,144, 59.5% (the no-solar, no-BESS baseline) |
 Each source extract's "Calculators" section has the formulas and full outputs.
 
 ## 8. Savings assumptions used inside calculators [C19]
@@ -1080,6 +1128,8 @@ Each source extract's "Calculators" section has the formulas and full outputs.
 |---|---|---|
 | Solar yield | 1,250 kWh/kWp/yr at RM0.38 blended avoided cost | R8 |
 | Solar yield | ~115 kWh/kWp/month; solar energy capped at 40% of consumption | R3 |
+| Solar yield | ~105 kWh/kWp/month (~1,260 kWh/kWp/yr), split 40% peak / 60% off-peak; solar never reduces MD; no export credit | R9 |
+| BESS savings | kW shaved × RM97.06/month, no battery size or charging cost | R9 |
 | BESS shaving ratio | 1 kW shaved per 2 kWh (2-hour, 0.5C) | R3, R4, R8 |
 | BESS sizing | kW shaved × 3.5 h / (0.85 DoD × 0.90 η × 0.90 SoH); inverter × 1.15 | R2 |
 | Tax benefit | 24% / 34% / 40% / 48% of capex depending on report | C02 |
@@ -1093,7 +1143,7 @@ Each source extract's "Calculators" section has the formulas and full outputs.
 id: T07
 title: Financing and business models — bank debt, BNM facilities, GTFS 5.0, PPAs (SARE / bilateral / CRESS), zero-capex BESS, guarantees and liquidated damages, customer preferences
 covers: how C&I customers pay for solar and BESS, who funds what, contract structures, BESS performance-risk allocation, preference by company size, decision logic
-sources: [R6, R1, R7, R8, R3]
+sources: [R6, R1, R7, R8, R3, R9]
 primary_source: R6 (answers research prompt #6; no hyperlinks or dates)
 conflicts: [C03, C13, C18]
 related: [T03, T05, T06, T10]
@@ -1162,6 +1212,8 @@ R6 extraction note: CRESS at ~26 sen + 20/40 sen SAC (46–66 sen) is above the 
 
 Plus Xnergy 15/85 worked example (R8): developer bills RM82.50/kW vs TNB RM97.06/kW; client keeps ~15% (~RM14.56/kW; ~RM21,520/month on 1,478 kW shaved); developer keeps ~85% to cover 2-hour LFP capex (RM2,300–2,900/kW), off-peak charging, 10–15 yr liquid-cooling O&M and mid-life augmentation; financier return 12%–18% p.a. (~4-year payback). R8: "CFOs heavily prefer Zero-Capex, Shared-Savings, and Energy-as-a-Service (EaaS) structures that transfer algorithmic risk to developers."
 
+R9 presents the same Plus Xnergy figures as a case study (1.5 MW / 3.0 MWh, 3,900 → 2,422 kW, gross MD cut RM143,455/month, client nets RM21,520/month, "15-year EaaS agreement", "Immediate (0-Yr Payback)") — a repeat of R8's example, not a second source. R9's "Bifurcated Offer": present a capex purchase with the 100% GITA tax shield ("~2.5 yr payback") alongside zero-capex EaaS leasing [R9].
+
 ## 6. BESS performance risk (R6)
 "BESS peak shaving is binary: because TNB bills Maximum Demand on the single highest 30-minute peak in a month, a single 30-minute battery failure during peak hours (14:00–22:00) destroys 100% of that month's demand charge savings."
 | Tier | Guarantee | Cost adder | Remedy / limit |
@@ -1208,12 +1260,12 @@ Holding both SEDA RPVSP (service provider) and RPVI (investor) lets an operator 
 ---
 id: T08
 title: BESS for C&I — why it is needed, topologies, sizing rules, dispatch, EMS, demand-side alternatives, site suitability
-covers: solar/tariff mismatch, load-curve examples, hardware topologies and models, sizing heuristics and formulas, dispatch patterns, EMS functions, MD mitigation hierarchy (tariff switch, DSM, EMS, BESS, thermal storage), which sites suit BESS
-sources: [R1, R2, R3, R4, R5, R8, R6]
-conflicts: [C08, C10, C17]
-related: [T01, T05, T06, T09]
+covers: solar/tariff mismatch, load-curve examples, hardware topologies and models, sizing heuristics and formulas, dispatch patterns, EMS functions, MD mitigation hierarchy (tariff switch, DSM, EMS, BESS, thermal storage), which sites suit BESS, load profiles by industry (R9), BESS case studies (R9)
+sources: [R1, R2, R3, R4, R5, R8, R6, R9]
+conflicts: [C08, C10, C17, C21, C22]
+related: [T01, T04, T05, T06, T09]
 updated: 2026-10-23
-pending: R9 (research prompt #4, load profiles by industry) not yet received
+note: R9 (research prompt #4, load profiles by industry) added 23 Oct 2026. Its load factors, sector ratings and case studies carry no source; three of its seven case studies reuse figures from R1, R3 and R8 (see §9).
 ---
 
 <!-- ai-banner -->
@@ -1228,12 +1280,15 @@ pending: R9 (research prompt #4, load profiles by industry) not yet received
 - **SELCO >1 MWac: BESS ≥ 1 hour × PV kWp** (R5 only) [C08].
 - **Mitigation ladder (R2):** tariff switch (zero capex) → operational DSM → EMS automatic load shedding → solar + BESS → thermal energy storage for chiller-heavy sites.
 - Sites with short, sharp peaks in the window (stamping presses, cranes/welding, compressors, motors, furnaces) suit BESS; flat 24/7 loads need long durations [R3, R4, R2].
+- **Load shape by industry (R9, unsourced, grade C):** Tier 1 = metal stamping (load factor 28%), office towers (32%), food processing (42%), plastic injection (55%); Tier 2 = malls (52%), hotels (62%), hospitals (72%), cold storage (68%, "conditional"); poor fit = textile spinning (78%; dyeing plants are spiky), E&E / semiconductor (85%), rubber gloves (88%, "unviable for standalone BESS") [R9; C21]. Rule: LF < 0.60 good, LF > 0.75 "requires excessive storage" (§8).
+- R9 sizes PCS for the **top 20%–35% of peak** with a 1.3×–1.5× energy buffer; R3 says 10%–20% of MD [C22].
 
 ## 1. Why BESS: the mismatch
 - "Peak solar irradiance occurs from 10:00 AM to 3:00 PM (Off-Peak tariff). TNB's expensive Peak Tariff starts at 2:00 PM and extends to 10:00 PM. BESS bridges this gap…" [R3].
 - "Standalone rooftop Solar PV fails to guarantee Maximum Demand reduction on MV/HV tariffs due to afternoon cloud transients (sudden solar drops) and the 18:00–22:00 dark peak. Pairing solar with BESS secures peak shaving and avoids cheap SMP export loss (RM0.1881/kWh)" [R2].
 - R4: high rooftop solar in Selangor/Johor has depressed midday SMP (a "duck curve").
 - R5: storing surplus solar instead of exporting at SMP (RM0.1881) to avoid peak import (RM0.3132) gives a spread of "RM 0.09 to RM 0.13 per kWh", plus the MD effect.
+- R9 "Post-Solar Load Factor Distortion Effect": solar without storage cuts kWh but not MD, so "the MD share of the electricity bill surges from ~55% up to ~70%". R9's own simulator gives 59.5% → 66.4% for a 1,000 kW stamping plant with 500 kWp (T01 §6).
 
 ### 1a. R2 example — cloud transient and dark peak (grid demand, kW)
 | Time | Standalone solar | Solar + BESS |
@@ -1276,12 +1331,15 @@ Specs named elsewhere: Sungrow PowerStack 255CS 125 kW / 257 kWh; PowerTitan 2.0
 | Solar arbitrage & clipping capture | Sized to PV clipping volume | 2–4 hours (0.25C–0.5C) | Store 10am–3pm SELCO/ATAP surplus to displace 31.32 sen evening peak energy |
 | Short-interruption ride-through | 100% of critical process load | 15–30 minutes (2C) | Bridge voltage sags and brief trips for CNC, ovens, assembly lines |
 
+R9 "Dynamic Sizing" step: "Size PCS (kW) for top 20%–35% peak clipping with a 1.3×–1.5× energy buffer for 90% DoD and round-trip efficiency"; durations by sector run 1.0–3.0 hours (§8) [R9; C22].
+
 ## 4. Sizing formulas used in the reports
 - **R2:** inverter kW = ΔkW × 1.15; battery kWh = ΔkW × 3.5 h / (0.85 DoD × 0.90 η × 0.90 SoH_EoL); capex RM1,200/kWh. Default (1,800 kW MD, 25% cut = 450 kW): 518 kW, 2,288 kWh, RM2,745,098, payback 4.0 yrs after 24% GITA (page placeholder shows 2.4 yrs). Note says "across the 8-hour weekday peak window" but code uses 3.5 h.
 - **R3, R4, R8:** kWh = 2 × kW shaved (2-hour, 0.5C); full kW assumed shaved.
 - **R5 (SELCO >1 MWac rule):** E_BESS ≥ 1 × PV kWp (kWh).
 - **R8 zero-capex:** 2-hour LFP at RM2,300–2,900/kW.
 - **R4 calculator:** RM1,800/kWh, 2-hour, net capex 60% after tax.
+- **R9:** PCS kW = top 20%–35% of peak; energy = 1.3–1.5 × (kW × hours) buffer. R9's simulator takes "kW shaved" as an input and never sizes a battery. R9's case studies run ~2.0–3.1 kWh per kW of rating (§9).
 
 ## 5. EMS functions named
 - Predictive interval control: D_projected = 2 × [E(t_e) + P_inst × ((30 − t_e)/60)]; shed non-critical AHUs / unload chillers for 15 minutes when projected > target [R2].
@@ -1302,16 +1360,53 @@ Specs named elsewhere: Sungrow PowerStack 255CS 125 kW / 257 kWh; PowerTitan 2.0
 ## 7. Which sites suit BESS (from the reports)
 | Load type / sector | Evidence |
 |---|---|
-| Automotive stamping (press spikes) | LVK 250 kW / 522 kWh case study [R3, R4]; Selangor stamping cluster [R4] |
+| Automotive stamping (press spikes) | LVK 250 kW / 522 kWh case study [R3, R4]; Selangor stamping cluster [R4]; R9 Tier 1, score 95, LF 28%, 30–500 kW press inrush, 1.0–1.5 h [R9] |
+| Plastic injection (heater bands, hydraulics) | R9 Tier 1, score 88, LF 55%, 30–45 min heater spikes + 18:00–22:00 solar drop-off spike [R9] |
+| Food processing (batch ovens, retorts, blast freezers) | Plus Xnergy 20 MWh SELCO site (grain) [R4, R8]; R9 Tier 1, score 90, LF 42%, 45–90 min afternoon spikes [R9] |
+| Office towers (chillers, 17:00–18:00 lift surge) | R9 Tier 1, score 92, LF 32%; load overlaps the window only 14:00–18:00; 2.0–2.5 h with PV [R9] |
+| Malls, hotels, hospitals | R9 Tier 2 (scores 78 / 72 / 60); evening tails 17:30–21:30 (malls) and 15:30–21:30 (hotels); hospitals stack value with UPS/backup [R9] |
+| Cold storage | R9 "Conditional (Tier 2/3)", LF 68%, 15%–25% afternoon hump; pre-cooling or solar + BESS [R9] |
 | Shipbuilding / marine (cranes, welding) | HO Energy 4.3 MW / 8.36 MWh [R4]; Perak Lumut [R4] |
 | Aerospace components | Elecod 1.5 MW / 2.60 MWh [R4] |
-| Food / grain processing | Plus Xnergy 20 MWh SELCO site [R4, R8] |
-| Electronics (Penang) | ERS 200 kWh with 500 kWp solar, 35% MD cut [R8]; Penang 24/7 plants on ToU favour >1 MWac SELCO + BESS [R4] |
-| Cement, foundry, gloves (Perak) | "High concentration of peaky motor and furnace loads" [R4] |
-| CNC, ovens, automated lines | Ride-through + MD shaving [R3] |
+| Electronics (Penang) | ERS 200 kWh with 500 kWp solar, 35% MD cut [R8]; Penang 24/7 plants on ToU favour >1 MWac SELCO + BESS [R4]; R9: fabs/OSATs flat 24/7 (LF 85%, <8% diurnal variation) → "UPS / Solar ATAP Only", but precision automation vendors in BKIP/Perai are Tier 1 [R9] [C21] |
+| Cement, foundry, gloves (Perak) | "High concentration of peaky motor and furnace loads" [R4]; R9: rubber gloves "extremely flat 24/7", LF 88%, "Unviable for Standalone BESS" [C21] |
+| Textiles | R9: spinning/weaving flat 24/7 (poor); batch jet-dyeing houses spiky (Tier 1) [R9] |
+| CNC, ovens, automated lines | Ride-through + MD shaving [R3]; overseas CNC case 250 kW / 515 kWh, 780 → 550 kW [R9] |
 | Compressors, chillers | 10%–20% of MD shaving heuristic [R3]; TES for chillers [R2] |
 | EV fast-charging hubs | PV + ESS + EV buffers [R3]; Gentari hub [R8] |
-Load shapes by industry are the subject of research prompt #4 (R9, pending). For a payback rule of thumb by "hours per day above target", see `../context/eternalgy_profile_and_analysis.md` (analysis, not from the reports).
+Full R9 sector table: §8. Case studies: §9. For a payback rule of thumb by "hours per day above target", see `../context/eternalgy_profile_and_analysis.md` (analysis, not from the reports).
+
+## 8. Load profiles by industry (R9) [C21]
+R9 is the only report built for this question (research prompt #4). Every figure below is unsourced, and the "MD share" column is an output of R9's own simulator (1,000 kW, no solar, MV ToU), not measured bills. Use it to choose which prospects to meter first, not to promise savings.
+R9 rule: "High-power spiky loads with low load factors (LF < 0.60) offer maximum BESS returns, whereas flat 24/7 loads (LF > 0.75) require excessive storage capacity."
+| Sector | R9 rating (score /100) | Load factor | MD share (modelled) | Shift pattern | Peak-window behaviour (14:00–22:00) | Spike drivers | Opt. BESS duration |
+|---|---|---|---|---|---|---|---|
+| Metal stamping | High, Tier 1 (95) | 28% | 59.5% | 1–2 shifts (07:00–23:00) | Jagged; sharp 30–60 min spikes 14:00–17:00 and 19:00–21:00 | Mechanical/servo press inrush (30–500 kW), spot welders, compressors | 1.0–1.5 h (0.5C–1C) |
+| Office towers | High, Tier 1 (92) | 32% | 56.3% | Weekday day (08:00–18:00) | Trapezoidal block overlapping the window only 14:00–18:00; drops >75% after 18:00 | Chiller max loading (solar heat gain) + 17:00–18:00 lift surge | 2.0–2.5 h (with PV) |
+| Food processing | High, Tier 1 (90) | 42% | 49.7% | Batch / 2-shift | Stepped batch plateaus; 45–90 min afternoon spikes 14:00–19:00 | Batch ovens, fryers, retort sterilisers, blast freezers, CIP | 1.5–2.0 h |
+| Plastic injection | High, Tier 1 (88) | 55% | 43.1% | 2–3 shifts (24/5 or 24/7) | Elevated baseload, sharp 30–45 min heater spikes; evening solar drop-off spike 18:00–22:00 | Barrel heater bands at mould warm-up, hydraulic pumps, chillers | 1.5–2.0 h |
+| Shopping malls | Moderate-High, Tier 2 (78) | 52% | 44.1% | Daily 10:00–22:00 | Broad 12-hr plateau; solar clips midday, steep evening cliff 17:30–21:30 | Central chiller plant, F&B cooking, tenant lighting, cinema | 2.0–3.0 h (evening tail) |
+| Hotels & resorts | Moderate-High, Tier 2 (72) | 62% | 40.2% | 24/7 | Bimodal; late-afternoon/evening hump 15:30–21:30 | Check-in A/C surge, heat-pump hot water, laundry, banquet HVAC | 2.0–3.0 h |
+| Hospitals | Moderate, Tier 2 (60) | 72% | 36.8% | 24/7 | High 24/7 baseload (60%) with daytime clinical plateau | OT chillers, CSSD autoclaves, MRI/CT | 1.5–2.0 h + microgrid (stack with UPS/backup) |
+| Cold storage | Conditional, Tier 2/3 (55) | 68% | 38.2% | 24/7 | High baseload with 15%–25% afternoon thermal hump 14:00–18:00 | High condensing temperature, warm product at docks, defrost heaters | Pre-cooling or solar + BESS |
+| Textiles & dyeing | Low (flat) / High (dyeing) (40) | 78% | 35.1% | 24/7 spinning/weaving | Flat for spinning; spiky afternoon for batch dyeing | Air-jet looms, ring frames; jet-dyeing autoclaves | Poor (weaving) / Tier 1 (dyeing) |
+| E&E / semiconductor | Poor for standalone MD (25) | 85% | 33.2% | 24/7 cleanroom | Flat; <8% diurnal variation | Cleanroom MAUs/FFUs, ultra-pure water, chillers, IC test handlers | UPS / Solar ATAP only |
+| Rubber gloves | Poor, flat 24/7 (15) | 88% | 32.5% | 24/7 continuous dipping | Extremely flat; stopping a line ruins in-process latex | Dipping-line conveyors, oven blowers, WWTP aerators | Unviable for standalone BESS |
+Source: `../sources/R9_load_profile_analyzer.md` (E1). R9's tiers do not follow its LF rule exactly (plastic injection at 55% is Tier 1, malls at 52% Tier 2).
+- Analysis note: on the rule of thumb in `../context/eternalgy_profile_and_analysis.md` §3 (no tax incentive: 1 h above target ≈ 1.6 yr payback, 2 h ≈ 3.2 yr, 4 h ≈ 6.4 yr), R9's Tier 1 durations of 1.0–2.5 h imply roughly 1.6–4 yr simple payback, and flat 24/7 loads land beyond 6 yr. This agrees with R9's ranking, but only a customer's 30-minute data shows the real hours above target.
+
+## 9. BESS case studies (R9) [C17]
+R9 calls these "published performance data"; none has a link or date. Three reuse figures from earlier AI reports and are **not independent evidence**.
+| Case | Site | System | Demand cut | Savings claimed | Payback claimed | Evidence note |
+|---|---|---|---|---|---|---|
+| Livoltek evening peak suppression (Malaysia, MV ToU) | Factory with rooftop PV; shift to 22:00 after solar drops to 0 at 19:00 | 125 kW / 261 kWh LFP | 89.99 kW | RM9,000/month (>RM95,000/yr) | 2.8–3.5 yrs with GITA | 89.99 × 97.06 = RM8,734/month |
+| Plus Xnergy zero-capex EaaS (Malaysia, MV ToU) | Large plant | 1.5 MW / 3.0 MWh | 1,478 kW (3,900 → 2,422 kW) | Client nets RM21,520/month (pays RM82.50/kW vs RM97.06; gross MD cut RM143,455/month), 15 years | 0 (EaaS) | **Same figures as R8's illustrative example** |
+| Solarvest Solar ATAP + BESS reference site | MV C&I facility | 1,000 kWp + 500 kW / 1,000 kWh | >650 kW (>65%) | RM712,000/yr gross | <2.5 yrs (RM2.4M less RM920k GITA) | >650 kW from a 500 kW BESS needs ≥150 kW from PV; RM920k = 38.3% of capex |
+| Avera Energy MV General → ToU | 500,000 kWh/month plant | Rooftop solar + 165 kW / 330 kWh | 315 kW (150 kW shift optimisation + 165 kW BESS) | RM58,945/month (25.7% bill cut) | 3.0–4.2 yrs | **Same RM and % as R3's simulator placeholder** for a 500,000 kWh/month factory |
+| UniBess modular peak shaving | MV factory, 600 kW spikes | 500 kW / 1,044 kWh (4 × 125 kW cabinets) | "400 kW shaved (Capped at 200 kW target)" | RM38,824/month (RM465,888/yr) | 2.5–3.5 yrs | **Same as R1's hard-coded simulator result**; 400 vs 200 kW self-contradictory |
+| Predictive HAPLT controller field trial | Industrial sub-load feeder | 50 kW / 155 kWh (139.5 kWh usable) | "89% Average MD Reduction Factor" | RM2,445/month | Academic trial | CNN/LSTM/XGBoost forecasting kept charge for the critical peaks |
+| Precision CNC machining plant (overseas ToU market) | Machining + compressors | 250 kW / 515 kWh LFP | 230 kW (780 → 550 kW) | US$5,520/month (~RM295,000/yr) | 2.1 yrs | No location or tariff |
+Lessons the cases illustrate (R9's details): evening shifts after solar drops out set the MD (Livoltek); EMS caps grid import at a preset threshold in the 14:00–22:00 window (UniBess, CNC); forecasting avoids draining the battery on early-afternoon humps (HAPLT); tariff switch and shift changes cut MD alongside BESS (Avera).
 
 
 
@@ -1322,7 +1417,7 @@ Load shapes by industry are the subject of research prompt #4 (R9, pending). For
 id: T09
 title: Regulation, licensing, safety and compliance for C&I solar and behind-the-meter BESS
 covers: agencies and roles, ST licensing thresholds, BESS safety guideline GP/ST/No.62/2026, competent persons, standards, statutory forms, BOMBA fire safety (MS 2747:2024), TNB connection studies and fees, metering fees, insurance, EPCC readiness checklist, EECA 2024 energy-manager rules
-sources: [R5, R1, R3, R2, R4, R6]
+sources: [R5, R1, R3, R2, R4, R6, R9]
 primary_source: R5 (answers research prompt #5; 3 st.gov.my links)
 conflicts: [C06, C07, C08, C11]
 related: [T02, T08]
@@ -1449,6 +1544,7 @@ Industrial insurers (PAR/IAR) require ST guideline and MS 2747:2024 compliance a
 - 21,600–50,000 GJ/yr (6.0M–13.9M kWh/yr): appoint **Registered Energy Manager (REM) Class 1**; ≥50,000 GJ/yr (>13.9M kWh/yr): **REM Class 2**.
 - Fines up to RM100,000; annual EECR report to ST (R2 roadmap phase 4).
 - EVC's zero-capex BESS sites are curated via 12-month data logging by Registered Energy Managers [R8].
+- R9: EECA "and ISO 50001 mandatory requirements" catalyse BESS sales to technical specifiers ("Registered Electrical Energy Managers - REEM", Certified Energy Managers, facility managers); IEM runs a 5-day Energy Manager Training Course (EMTC) "for REEM certification"; MAREMA and MAESCO group "ST-Certified REEMs & ESCOs" who audit 15-minute load profiles. R9 cites no clause; whether ISO 50001 is mandatory under EECA is not supported by any other report [R9].
 - Analysis note (not from the reports): every Regulated Energy Consumer must already have an REM, which makes them a ready audience for MD audits.
 
 
@@ -1459,8 +1555,8 @@ Industrial insurers (PAR/IAR) require ST guideline and MS 2747:2024 compliance a
 ---
 id: T10
 title: Strategy playbooks proposed by the reports (client archetypes, roadmaps, segment strategies)
-covers: what each report recommends — R1 client archetypes and EPCC/RPVI playbook, R2 12-month C&I execution roadmap, R4 segment TAM strategy, R6 financing pathways, R7 post-2027 model, R8 moats and price-war segments
-sources: [R1, R2, R3, R4, R6, R7, R8]
+covers: what each report recommends — R1 client archetypes and EPCC/RPVI playbook, R2 12-month C&I execution roadmap, R4 segment TAM strategy, R6 financing pathways, R7 post-2027 model, R8 moats and price-war segments, R9 target-sector execution framework and industry associations
+sources: [R1, R2, R3, R4, R6, R7, R8, R9]
 related: [T05, T07, T08]
 updated: 2026-10-23
 note: These are the reports' own recommendations, several written before the Budget 2027 tax changes (see C01). Our planning conclusions for Eternalgy are in ../context/eternalgy_profile_and_analysis.md.
@@ -1511,6 +1607,27 @@ SME owner → financed outright (LCTF/HTG); SME tenant → operating lease; mid-
 - "The BESS + ToU Optimization Opportunity": under MV ToU, capacity and network are charged only on 2–10 PM weekday peaks; off-peak spikes are exempt; BESS discharges in the window.
 - "The MV ToU Tariff Trap": migrating without demand control raises the MD rate +8.7% and peak energy to 31.32 sen.
 
+## 8. R9 — target sectors, execution framework and channels
+Targets: Tier 1 spiky-load sectors (metal stamping, office towers, food processing, plastic injection), then Tier 2 (malls, hotels, hospitals; cold storage conditional); avoid standalone MD BESS for flat 24/7 loads (gloves, semiconductor fabs, textile spinning) (T08 §8, [C21]).
+"Strategic Commercial Execution Framework":
+| Step | R9 text |
+|---|---|
+| 1. Target identification | "Focus on post-solar 1–2 shift MV factories (LF = 0.28–0.55) in Shah Alam, Klang, Meru, Tebrau, and Senai." |
+| 2. Interval data audit | "Request 12 months of 15/30-minute load profile data from myTNB portal to map 14:00–22:00 peak pyramid curves." |
+| 3. Dynamic sizing | "Size PCS (kW) for top 20%–35% peak clipping with a 1.3×–1.5× energy buffer for 90% DoD and round-trip efficiency." [C22] |
+| 4. Bifurcated offer | "Present CAPEX purchase with 100% MIDA GITA tax shield (~2.5 yr payback) alongside Zero-Capex EaaS leasing." [C02, C20] |
+Two personas: **technical specifiers** (REEMs, Certified Energy Managers, facility managers) and **financial approvers** (CFO, managing director); EECA is the trigger [R9].
+Associations and events (R9, unsourced):
+| Body | Reach | Touchpoints and events |
+|---|---|---|
+| FMM (Federation of Malaysian Manufacturers) | 3,500+ member factories; state committees in Selangor, Penang, Johor | FMM Energy Efficiency & Conservation Conference; FMM ISO 50001 EnMS workshops; state branch ESG seminars |
+| MPMA (plastics manufacturers) | 800+ plastics and injection plants, "40%+ MD bill shares" | MPMA technical seminars on RP4 tariff mitigation; Mould & Die Pavilion at MIMF (MITEC KL) |
+| MAREMA & MAESCO | ST-certified REEMs and ESCOs auditing 15-min load profiles | ETCON (Energy Transition Conference by TNB); MAREMA technical dialogues and CPD workshops |
+| IEM (Institution of Engineers) | Electrical and building engineers; runs the 5-day EMTC for REEM certification | CPD talks at Wisma IEM (Petaling Jaya) and branches (Penang, JB, Ipoh) |
+| MSIA (semiconductor) | VPs of operations and facility directors at MNCs and precision machining suppliers | SEMICON Southeast Asia; MSIA Northern Corridor C-suite and facility engineering roundtables |
+| PPK / MAH / APHM (malls, hotels, private hospitals) | Asset managers, chief engineers, REITs with MV C1/C2 properties | IGEM (International Greentech & Eco Products Expo, KLCC); BMAM / PPK facility summits |
+Prompt #4 also asked about the SMI Association; R9 does not cover it.
+
 
 
 <!-- ===== FILE: kb/registers/conflicts.md ===== -->
@@ -1519,8 +1636,8 @@ SME owner → financed outright (LCTF/HTG); SME tenant → operating lease; mid-
 ---
 id: REG-CONFLICTS
 title: Conflict and verification register
-covers: every point where the 8 research reports disagree with each other, or where a figure needs official confirmation
-sources: [R1, R2, R3, R4, R5, R6, R7, R8]
+covers: every point where the 9 research reports disagree with each other, or where a figure needs official confirmation
+sources: [R1, R2, R3, R4, R5, R6, R7, R8, R9]
 updated: 2026-10-23
 ---
 
@@ -1529,9 +1646,11 @@ updated: 2026-10-23
 
 # Conflict and verification register
 
-How to use: topic files tag disputed facts with `[C##]`. Look the ID up here before relying on the number. "Status" says what would settle it. None of these has been checked against an official source yet; all 8 reports are AI-generated.
+How to use: topic files tag disputed facts with `[C##]`. Look the ID up here before relying on the number. "Status" says what would settle it. None of these has been checked against an official source yet; all 9 reports are AI-generated.
 
-Source IDs: R1 strategy hub · R2 MD mitigation portal · R3 BESS solutions dashboard · R4 market explorer · R5 BESS compliance navigator · R6 financing · R7 green tax portal · R8 market benchmark. See `../00_INDEX.md`.
+Source IDs: R1 strategy hub · R2 MD mitigation portal · R3 BESS solutions dashboard · R4 market explorer · R5 BESS compliance navigator · R6 financing · R7 green tax portal · R8 market benchmark · R9 load profile analyzer. See `../00_INDEX.md`.
+
+Note on independence: three of R9's seven case studies reuse figures from R1, R3 and R8 (see `internal_issues.md`). Where R9 repeats another report's number it is not a second source.
 
 ## Summary table
 
@@ -1557,6 +1676,8 @@ Source IDs: R1 strategy hub · R2 MD mitigation portal · R3 BESS solutions dash
 | C18 | Zero-capex savings split | Low | Client keeps 15% vs 20–25% vs 15–30% | Different products; not a true conflict |
 | C19 | Solar yield assumption | Low | 1,250 kWh/kWp/yr vs 115 kWh/kWp/month (~1,380/yr) | Use Eternalgy's SAJ fleet data |
 | C20 | Standalone BESS GITA in 2027 (detail of C01) | **Critical** | 100% Tier 1 retained (R2, R3) vs "0% standalone, must integrate" (R7) | Open: same as C01 |
+| C21 | Load shape of 24/7 process plants (gloves, fabs) | Medium | R4: Perak gloves among "peaky motor and furnace loads"; Penang 24-h plants suit SELCO + BESS and MD shaving. R9: gloves "extremely flat" (LF 88%, unviable); fabs flat (UPS + ATAP only) | Open: 30-min interval data from a glove plant and a fab |
+| C22 | MD-shaving BESS sizing heuristic | Medium | Power 10%–20% of MD at 1–2 h (R3) vs top 20%–35% of peak with 1.3–1.5× energy buffer, 1–3 h by sector (R9) vs 3.5 h derated (R2) | Method issue: size from the customer's 30-min data |
 
 ---
 
@@ -1571,6 +1692,7 @@ Source IDs: R1 strategy hub · R2 MD mitigation portal · R3 BESS solutions dash
 | R6 | 2027–2030: 0% (removed) | not stated separately | 2027–2030: 100% Tier 1 | GITE deadline 31 Dec 2026 |
 | R7 (dedicated tax research, cites MOF Appendix 25) | 0% from 1 Jan 2027 ("Omitted from Tier 2b RE list") | "0% Standalone (Must integrate)" | 100% Tier 1b (2027–2030), 70% SI cap | GITE solar leasing expires 31 Dec 2026; GITA Project Tier 3 (commercial solar) abolished; EE → ACA (Appendix 28) |
 | R8 | — | — | — | "GITA / GTFS Sunset: 31 Dec 2026 — 60–100% Tax Allowance Deadline" |
+| R9 | — | "Tier 1 Green Asset", 100% GITA (no date, no 2027 distinction) | — | Calls it "MIDA Tier 1" GITA; no Budget 2027 or 31 Dec 2026 mention |
 
 Assessment:
 - R7 is the only report built for this question, and the only one citing the Budget 2027 documents (speech 9 Oct 2026, Appendix 25 / Lampiran 25, MIDA release 12 Oct 2026). R6 agrees with R7 on solar and integrated systems.
@@ -1591,6 +1713,7 @@ Status: **Open.** Settle by reading Budget 2027 Appendix 25 (tax-measures.pdf) a
 | R5 calculator | 24% of BESS capex | GITA 100% × 24% on BESS only |
 | R7 | "200% combined tax deduction… 48.0% of capex at 24%" (text); engine spreads CA (20% IA + 14% AA = 34% in year 1, then 14%/yr) and caps GITA at 70% of (SI − CA), unused GITA carried forward indefinitely | CA first is mandatory (P.U. (A) 243/2024 Para 6(1)) |
 | R8 calculator | 34% of gross (100% GITA + CA), 24% (60% GITA) | Flat percentages |
+| R9 | "Net ~48% CAPEX Subsidy"; payback "5–6 years down to 2.5–3.5 years"; its Solarvest case uses RM920k on RM2.4M (38.3%) | (100% GITA + 100% CA) × 24% |
 
 Assessment: capital allowance is ordinary depreciation that any asset gets over time; GITA is the incentive. Payback headlines should show GITA alone (rate × capex × tax rate), state the 70% statutory-income cap, and show CA separately as timing. The customer must be profitable to use either.
 
@@ -1614,12 +1737,13 @@ Possible reading: 20/40 sen = earlier framework, 14 sen = after the 18 Sep 2026 
 | R4 | — | "+115% to +201%" |
 | R6 | "RP3 Baseline" 37.00 | "+162% vs RP3" |
 | R8 | Text: from RM30.30; chart: legacy C1/C2 37.00; also an unexplained "RP4 High-Peak Industrial" 98.61 | "+162%" |
+| R9 | "~RM37.00–RM45.10/kW" (E1/E2 ref); chart 41,000 per 1,000 kW; with 1.6% KWTBB ~RM37.59–45.82 | "+115% to +162%" |
 
-Arithmetic: 89.27 / 30.30 = +194.6%; 97.06 / 45.10 = +115.2%; 97.06 / 37.00 = +162.3%. The ranges reflect which legacy tariff is the base. Use the per-tariff legacy rates (R1) when comparing.
+Arithmetic: 89.27 / 30.30 = +194.6%; 97.06 / 45.10 = +115.2%; 97.06 / 37.00 = +162.3%. The ranges reflect which legacy tariff is the base. Use the per-tariff legacy rates (R1) when comparing. R9 gives RM98.61/kW = 97.06 × 1.016 (MV ToU incl. KWTBB), which explains R8's "unexplained" 98.61 bar.
 
 ## C05 — MD share of a C&I bill
 
-R8: capacity + network "now represent 30% to 70% of C&I monthly power bills". R6: MD "accounting for 35% to 45% of an industrial electricity bill". R3's worked factory (500,000 kWh, 900 kW, MV General) gives 80,343 / 229,493 ≈ 35% (derived, not stated by R3). Share falls as load factor rises; measure per customer.
+R8: capacity + network "now represent 30% to 70% of C&I monthly power bills". R6: MD "accounting for 35% to 45% of an industrial electricity bill". R3's worked factory (500,000 kWh, 900 kW, MV General) gives 80,343 / 229,493 ≈ 35% (derived, not stated by R3). R9: 32.5% (rubber gloves, LF 88%) to 59.5% (metal stamping, LF 28%) — outputs of its own simulator at 1,000 kW with no solar, not measured bills; after solar without storage "from ~55% up to ~70%"; MPMA plastics plants "40%+". R9 supports the reading that the share depends on load factor. Share falls as load factor rises; measure per customer.
 
 ## C06 — ST licensing thresholds
 
@@ -1676,7 +1800,7 @@ R6 Tier 2 warranty: "≥97% system uptime specifically during peak hours (08:00�
 
 ## C14 — Agency for GITA Asset
 
-R1 and R7: MGTC verifies GITA Asset (own consumption); MIDA handles GITA Project and GITE. R4: "MIDA GITA Asset 100% Investment Tax Allowance" and "MIDA's GITA 100% tax allowance". Likely R4 misattribution.
+R1 and R7: MGTC verifies GITA Asset (own consumption); MIDA handles GITA Project and GITE. R4: "MIDA GITA Asset 100% Investment Tax Allowance" and "MIDA's GITA 100% tax allowance". R9: "The MIDA Tier 1 Green Investment Tax Allowance (GITA) Shield", "100% MIDA GITA tax shield". Likely R4 and R9 misattribution.
 
 ## C15 — MV account counts (resolved)
 
@@ -1688,19 +1812,39 @@ R2: LV ≤1 kV (400 V); MV >1 kV to ≤50 kV; HV >50 kV to ≤230 kV. R4: LV 400
 
 ## C17 — BESS payback claims
 
-Claims: R2 roadmap "2–3 years" with GITA; R3 "3–5 year payback"; R4 MV TAM "3.0–4.5 years (w/ GITA 100%)"; R8 zero-capex financier "~4-year payback", Solarvest "~3-year payback"; Plus Xnergy "RM1.25M/year savings per 10 MWh". Calculator placeholders and their computed outputs disagree (see `internal_issues.md` and each source extract's "Extraction notes"). Payback depends on how many hours a day the load sits above the target MD; see `../topics/T08_bess_technical_sizing.md`.
+Claims: R2 roadmap "2–3 years" with GITA; R3 "3–5 year payback"; R4 MV TAM "3.0–4.5 years (w/ GITA 100%)"; R8 zero-capex financier "~4-year payback", Solarvest "~3-year payback"; Plus Xnergy "RM1.25M/year savings per 10 MWh"; R9 "5–6 years down to 2.5–3.5 years" with a ~48% tax shield, "~2.5 yr payback" with GITA, case studies 2.1–4.2 years (three of them recycle R1, R3 and R8 figures). Calculator placeholders and their computed outputs disagree (see `internal_issues.md` and each source extract's "Extraction notes"). Payback depends on how many hours a day the load sits above the target MD; see `../topics/T08_bess_technical_and_sizing.md` §8.
 
 ## C18 — Zero-capex savings split
 
-R6: IPMVP shared savings 75:25 or 80:20 (ESCO : host), 5–10 years (7 standard). R8: Plus Xnergy client keeps 15% (bills RM82.50/kW vs TNB RM97.06/kW); EV Connection 15%–30% client split. R6 also cites the Plus Xnergy 15% model. Different products, not a true conflict.
+R6: IPMVP shared savings 75:25 or 80:20 (ESCO : host), 5–10 years (7 standard). R8: Plus Xnergy client keeps 15% (bills RM82.50/kW vs TNB RM97.06/kW); EV Connection 15%–30% client split. R6 also cites the Plus Xnergy 15% model; R9 repeats R8's Plus Xnergy example as a "case study" (15-year EaaS). Different products, not a true conflict.
 
 ## C19 — Solar yield assumption
 
-R3: ~115 kWh per kWp per month (≈1,380 kWh/kWp/yr). R8: 1,250 kWh/kWp/yr at RM0.38 avoided cost. Use Eternalgy's SAJ fleet data by state.
+R3: ~115 kWh per kWp per month (≈1,380 kWh/kWp/yr). R8: 1,250 kWh/kWp/yr at RM0.38 avoided cost. R9: ~105 kWh/kWp/month (≈1,260 kWh/kWp/yr). Use Eternalgy's SAJ fleet data by state.
 
 ## C20 — Standalone BESS GITA in 2027 (Critical, part of C01)
 
-R2: "BESS and integrated solar storage maintain Tier 1 status through 2030." R3: standalone BESS "Tier 1: 100% GITA" in both 2024–2026 and 2027–2030. R7 matrix: standalone BESS (own use) 2027–2030 = "0% Standalone (Must integrate)"; R7 chart: standalone BESS 100 → 0. R6: does not separate. If R7 is right, BESS-only MD-shaving retrofits lose GITA from 2027 unless paired with RE.
+R2: "BESS and integrated solar storage maintain Tier 1 status through 2030." R3: standalone BESS "Tier 1: 100% GITA" in both 2024–2026 and 2027–2030. R7 matrix: standalone BESS (own use) 2027–2030 = "0% Standalone (Must integrate)"; R7 chart: standalone BESS 100 → 0. R6: does not separate. R9: BESS "Classified as a Tier 1 Green Asset, qualifying for 100%", with no date and no 2027 distinction (reads as pre-Budget-2027 information). If R7 is right, BESS-only MD-shaving retrofits lose GITA from 2027 unless paired with RE.
+
+## C21 — Load shape of 24/7 process plants (gloves, semiconductor fabs)
+
+| Report | Rubber gloves | Semiconductor / Penang fabs |
+|---|---|---|
+| R4 (state table) | Perak row lists "Cement & limestone, rubber gloves, ceramics, foundry & casting, shipbuilding/marine, automotive" with: Peaky motor and furnace loads; RM89.27/kW MD reduction via BESS "critical for margin preservation" | Penang: "24-hour MNC plants on MV/HV ToU; cleanroom chiller baseloads favour >1 MWac SELCO + BESS and precision MD shaving" |
+| R9 (sector table) | LF 88%, "Extremely flat 24/7 load across all shifts. Stopping a line ruins in-process latex." — "Unviable for Standalone BESS" (score 15) | LF 85%, "<8% diurnal variation. Poor for standalone MD shaving" — "UPS / Solar ATAP Only" (score 25); Penang/Kedah automation vendors in BKIP/Perai are Tier 1 |
+
+Possible reading: R4 describes a state's sector mix (cement and foundries are peaky; gloves may not be), and its Penang point is about the SELCO >1 MWac BESS mandate, not MD fit. R9 is about the load shape of each sector. Neither cites load data. Status: **open** — settle with 30-minute interval data from at least one glove plant and one fab before targeting either. Until then, treat flat 24/7 plants as solar (+ SELCO-mandated BESS) prospects, not MD-shaving BESS prospects.
+
+## C22 — MD-shaving BESS sizing heuristic
+
+| Report | Power | Energy / duration |
+|---|---|---|
+| R3 | 10%–20% of facility MD | 1–2 hours (0.5C–1C) |
+| R9 | "top 20%–35% peak clipping" | "1.3×–1.5× energy buffer for 90% DoD and round-trip efficiency"; 1.0–3.0 h by sector (stamping 1.0–1.5 h; malls and hotels 2.0–3.0 h) |
+| R2 calculator | ΔkW × 1.15 | ΔkW × 3.5 h / (0.85 × 0.90 × 0.90) |
+| R3, R4, R8 calculators; R9 case studies | full kW shaved | ~2 kWh per kW (R9 cases 2.0–3.1 kWh/kW) |
+
+Status: method issue, not a fact to verify. The right size depends on how many hours a day the load sits above the target MD; size from the customer's 12 months of 30-minute data (see `../context/eternalgy_profile_and_analysis.md` §3, analysis).
 
 
 
@@ -1711,7 +1855,7 @@ R2: "BESS and integrated solar storage maintain Tier 1 status through 2030." R3:
 id: REG-INTERNAL
 title: Calculator errors and internal inconsistencies inside each report
 covers: placeholder-vs-computed mismatches, hard-coded results, formula problems, self-contradictions — found while extracting each report (full detail in each source extract's "Extraction notes")
-sources: [R1, R2, R3, R4, R5, R6, R7, R8]
+sources: [R1, R2, R3, R4, R5, R6, R7, R8, R9]
 updated: 2026-10-23
 ---
 
@@ -1720,7 +1864,7 @@ updated: 2026-10-23
 
 # Internal issues register
 
-Rule for any AI reading this KB: **do not quote a report's calculator output or headline payback without checking it here.** Every interactive calculator in the 8 reports shows a static placeholder before its script runs, and most placeholders differ from what the code actually computes.
+Rule for any AI reading this KB: **do not quote a report's calculator output or headline payback without checking it here.** Every interactive calculator in the 9 reports shows a static placeholder before its script runs, and most placeholders differ from what the code actually computes.
 
 ## Calculator results: placeholder vs computed at default inputs
 | Report | Calculator | Placeholder on page | Computed by the code | Main problems |
@@ -1741,6 +1885,7 @@ Rule for any AI reading this KB: **do not quote a report's calculator output or 
 | R7 | Tax engine | "48.0% of capex" | 5-yr cumulative RM912,000 (45.6%) at defaults | Unabsorbed CA discarded; 70% cap applied after CA (unlabelled); CA caption fixed at 34% |
 | R7 | Cutoff audit checklist | — | — | Doesn't test RPVI conditions before granting GITE; BESS box ignored in pre-2027 branch |
 | R8 | Project ROI & tax shield | RM391,800 tax; RM253,200/yr; 4.4 yrs | RM516,800 (34%); RM344,624/yr; 2.9 yrs | 34% / 24% tax factors hard-coded; gross savings (no charging cost, O&M, degradation); BESS savings at MV General rate |
+| R9 | Post-solar bill simulator | RM163,144; 59.5%; "Pre-Solar Baseline" (= no-solar, no-BESS case) | RM121,829; 59.8%; RM24,265/month (solar + BESS both on by default) | Solar never cuts MD; fixed 40/60 peak/off-peak solar split; no export credit; savings = kW × RM97.06 even when kW shaved > peak (RM145,590/month on a RM200 bill); no battery size, capex or payback; "Shopping Mall" preset does nothing; static banner says 59.5% → 69.4% with solar, code gives 66.4% |
 
 ## Internal contradictions (non-calculator)
 | Report | Issue |
@@ -1753,9 +1898,18 @@ Rule for any AI reading this KB: **do not quote a report's calculator output or 
 | R6 | Warranty peak window 08:00–22:00 vs 14:00–22:00; GTFS excludes standalone solar yet recommender finances solar via GTFS; CRESS (~26 + 20/40 sen) costs more than the grid rate it quotes, yet promises 10–30% savings; frames RP4 + ATAP as one 1 Jan 2026 shift (RP4 began 1 Jul 2025) |
 | R7 | "Budget 2027 Enacted" vs its own note that gazette orders are still draft; relies on P.U. (A) 243/2024 which covers assets only to 31 Dec 2023; integrated system "current" rate stated three ways (60% split / 60% / 100%); EE-to-ACA shift unreconciled with ACA scope |
 | R8 | "+162%" stated from RM30.30 but matches the RM37.00 bar; unexplained RM98.61 bar; 15 companies' MW sum (≥8,224 MW) exceeds the stated national 5,777 MW; ranking basis not stated; SELCO threshold ">72 kWp" vs "≥1 MWac"; payment stages sum to 80–110%; chart "net" ratios differ (76% / 68% / 66%) with no stated basis |
+| R9 | Sector "Post-RP4 MD Share" values are its own simulator outputs, not data; design comment promises 9 case studies (7 exist), search and modals (absent); tiers don't follow its LF < 0.60 / > 0.75 rule (plastic 0.55 Tier 1, malls 0.52 Tier 2); UniBess "400 kW shaved (Capped at 200 kW target)"; Solarvest ">650 kW" from a 500 kW BESS and RM712k/yr below the RM757k its MD cut alone implies; Solarvest tax benefit 38.3% vs "~48%" in the same section; geography rows don't sum to the region cards or chart; MV General demand described as "inside peak window" |
+
+## Figures recycled between reports
+R9's case studies reuse numbers from earlier reports, so they are not independent confirmation:
+| R9 case | Figures | Same as |
+|---|---|---|
+| Plus Xnergy zero-capex EaaS | 1,478 kW shaved; client nets RM21,520/month at RM82.50/kW vs RM97.06/kW | R8's illustrative "benchmark model" example |
+| UniBess modular peak shaving | 400 kW shaved; RM38,824/month; RM465,888/year | R1's hard-coded simulator result (400 kW × RM97.06) |
+| Avera Energy MV General → ToU | 500,000 kWh/month plant; RM58,945/month; 25.7% bill cut | R3's simulator placeholder (RM229,693 → RM170,748, −25.7%) |
 
 ## Common pattern
-All 8 are AI-generated single-page dashboards (Tailwind + unversioned Chart.js CDN). Design comments often promise features that are static or missing. Treat every number as a lead to verify, prioritising those in `conflicts.md`.
+All 9 are AI-generated single-page dashboards (Tailwind + unversioned Chart.js CDN). Later reports can reuse earlier reports' numbers (see above). Design comments often promise features that are static or missing. Treat every number as a lead to verify, prioritising those in `conflicts.md`.
 
 
 
@@ -1765,7 +1919,7 @@ All 8 are AI-generated single-page dashboards (Tailwind + unversioned Chart.js C
 ---
 id: REG-CITATIONS
 title: Every source the reports cite — links, named documents and their quality
-sources: [R1, R2, R3, R4, R5, R6, R7, R8]
+sources: [R1, R2, R3, R4, R5, R6, R7, R8, R9]
 updated: 2026-10-23
 ---
 
@@ -1774,7 +1928,7 @@ updated: 2026-10-23
 
 # Citations register
 
-**Key fact:** only **R4** (23 links) and **R5** (3 links) contain hyperlinks. R1, R2, R3, R6, R7 and R8 contain **no source links**; R7 names legal documents without URLs. Quality grade: **A** official regulator/government document; **B** broker or industry-body research; **C** law-firm or mirror copy; **D** vendor marketing / blog.
+**Key fact:** only **R4** (23 links) and **R5** (3 links) contain hyperlinks. R1, R2, R3, R6, R7, R8 and R9 contain **no source links**; R7 names legal documents without URLs; R9's footer names only "Tenaga Nasional Berhad (TNB) & Industry Case Studies" and "Energy Commission Guidelines". Quality grade: **A** official regulator/government document; **B** broker or industry-body research; **C** law-firm or mirror copy; **D** vendor marketing / blog.
 
 ## 1. Hyperlinks (26 unique)
 | # | URL | Grade | Cited by | Used for |
@@ -1818,7 +1972,10 @@ Labels cited without links (R4): "IET Research", "ST MAISPEM", "Legal 500 RE", "
 | GP/ST/No.62/2026 "Guidelines on Battery Energy Storage System (BESS) Safety" — Clauses 4.1(a), 4.1(c), 4.2, 4.3(a), page 16, Appendix A | BESS safety code, licensing ≥5 kW, competencies, standards | R3, R5 |
 | "Keperluan Pelesenan BESS" (1 July 2026) | BESS licensing directive | R5 |
 | Fire Services Act 1988 [Act 341]; MS 2747:2024 | BOMBA BESS fire safety | R3, R5 |
-| Energy Efficiency and Conservation Act 2024 (Act 861); EECR report | Regulated Energy Consumers, REM Class 1/2 | R2 |
+| Energy Efficiency and Conservation Act 2024 (Act 861); EECR report | Regulated Energy Consumers, REM Class 1/2; R9: GTM trigger for energy managers | R2, R9 |
+| ISO 50001 (EnMS) | Called a "mandatory requirement" alongside EECA (no clause given) | R9 |
+| myTNB portal | Source of 12 months of 15/30-minute load-profile data (no process given) | R9 |
+| BESS case studies: Livoltek, Plus Xnergy, Solarvest, Avera Energy, UniBess, "Predictive HAPLT Controller Field Validation", overseas CNC plant | Presented as "published performance data"; no publication, date or link | R9 |
 | Budget 2027 speech "bs27.pdf" (9 Oct 2026); Budget Speech Para 112 | GITA extension, TNB RM15B grid, KWAP RM1B | R7 |
 | MOF "tax-measures.pdf" — Appendix 12 (SVA), Appendix 15 (Sukuk PRISMA), Appendix 25 / Lampiran 25 (Review of Green Technology Tax Incentive), Appendix 28 (ACA) | 2027–2030 incentive rules | R7 |
 | MIDA Belanjawan 2027 release / briefing deck (12 Oct 2026) | GITA changes | R7 |
@@ -1865,6 +2022,7 @@ updated: 2026-10-23
 | BEM | Board of Engineers Malaysia |
 | BESC | Bilateral Energy Supply Contract (CRESS PPA) |
 | BESS / ESS | Battery / Energy Storage System |
+| BKIP / KHTP / SILC / PKFZ | Industrial parks named by R4 and R9: Batu Kawan Industrial Park (Penang); Kulim Hi-Tech Park (Kedah); SILC (Iskandar Puteri / Nusajaya, Johor); Port Klang Free Zone (Selangor) |
 | BMS | Battery Management System (also Building Management System in EE context) |
 | BNM | Bank Negara Malaysia |
 | BoP | Balance of plant |
@@ -1874,11 +2032,15 @@ updated: 2026-10-23
 | CAS | Connection Assessment Study (TNB, required above 72 kW) |
 | CAR / EAR / PAR / IAR | Contractor's All Risks / Erection All Risks / Property All Risks / Industrial All Risks insurance |
 | CCC | Named as the only requirement for ≤72 kW systems; not defined in the reports |
+| CEM | Certified Energy Manager (R9, one of the "technical specifier" personas) |
 | CGC | Credit Guarantee Corporation |
 | CGPP | Corporate Green Power Programme (utility-scale) |
+| CIP | Clean-in-place sanitation (food plants; R9 spike driver) |
 | COD | Commercial operation date |
+| CPD | Continuing professional development (hours / accredited talks for engineers and energy managers) |
 | CRESA | Corporate RE Supply Agreement (CRESS top-up/backup with TNB) |
 | CRESS | Corporate Renewable Energy Supply Scheme — off-site RE wheeled to corporate buyers over TNB's grid |
+| CSSD | Central sterile services department (hospital steam autoclaves; R9 spike driver) |
 | DLP | Defects Liability Period |
 | DoD / SoH / SoC | Depth of discharge / state of health / state of charge |
 | DSM | Demand-side management |
@@ -1886,10 +2048,15 @@ updated: 2026-10-23
 | EECR | Annual energy efficiency report to ST under EECA |
 | ELP | Earthing & lightning protection |
 | EMS / EPMS | Energy Management System / Energy Performance Monitoring System |
+| EMTC | IEM's 5-day Energy Manager Training Course, "for REEM certification" (R9) |
+| EnMS / ISO 50001 | Energy management system / the ISO standard for one; R9 calls it a "mandatory requirement" alongside EECA (unsourced) |
 | EPCC | Engineering, procurement, construction and commissioning contractor |
 | EPO | Emergency power off |
+| ESCO | Energy service company |
 | FAT / SAT | Factory / Site Acceptance Test |
 | FC | Fire Certificate (BOMBA) |
+| FIZ / FTZ | Free Industrial Zone / Free Trade Zone (R9: 22 FIZs in Peninsular Malaysia) |
+| FMM | Federation of Malaysian Manufacturers (R9: 3,500+ member factories) |
 | FRR | Fire-resistance rating (2-hour for BESS under MS 2747:2024) |
 | GCPV / OGPV | Grid-connected / off-grid PV (SEDA qualified person certifications) |
 | GITA | Green Investment Tax Allowance — **Asset** (own consumption, MGTC) or **Project** (business, MIDA) |
@@ -1897,21 +2064,29 @@ updated: 2026-10-23
 | GSF 2.0 | Green Sustainability Fund 2.0 (Budget 2027, RM2B, 1% p.a. subsidy) |
 | GSO | Grid System Operator |
 | GTFS 5.0 | Green Technology Financing Scheme 5.0 (guarantee, 0% rebate, to 31 Dec 2026) |
+| HAPLT | Name of a predictive (CNN/LSTM/XGBoost) BESS controller in an R9 academic field trial; not expanded |
 | HTG / LCTF | BNM High Tech and Green Facility / Low Carbon Transition Facility |
 | ICPT | Imbalance Cost Pass-Through (legacy 6-monthly fuel adjustment) |
+| IEM | Institution of Engineers (Malaysia); runs the EMTC (R9) |
+| IGEM / MIMF / ETCON / SEMICON SEA | Events named by R9: International Greentech & Eco Products Expo (KLCC); MIMF (MITEC KL, Mould & Die Pavilion); Energy Transition Conference (by TNB); SEMICON Southeast Asia |
 | IPMVP | International Performance Measurement and Verification Protocol |
 | ITA / RA | Investment Tax Allowance / Reinvestment Allowance (bar GITA) |
 | JBPM / BOMBA | Jabatan Bomba dan Penyelamat Malaysia (Fire and Rescue Department) |
 | KWTBB | Kumpulan Wang Tenaga Boleh Baharu — 1.6% RE fund levy on bills |
 | LD | Liquidated damages |
 | LDES | Long-duration energy storage |
+| LF | Load factor — average demand ÷ peak demand over the month; R9 uses monthly kWh = peak kW × 720 h × LF. Low LF (<0.60) = spiky load, good BESS fit; high LF (>0.75) = flat load (R9) |
 | LFP | Lithium iron phosphate |
 | LSS5 / LSS6 | Large Scale Solar tender rounds 5 / 6 |
 | LV / MV / HV | Low / Medium / High Voltage tariff categories under RP4 |
 | MAQ | Maximum Allowable Quantity — ATAP monthly export credit ceiling = kWac × 5 h × days |
+| MAREMA / MAESCO | Associations named by R9 for "ST-Certified REEMs & ESCOs" (registered energy managers; energy service companies); not expanded |
+| MAU / FFU | Make-up air unit / fan filter unit (cleanroom loads) |
 | MD | Maximum Demand — 2 × the highest 30-minute kWh in the billing month (within the assessed window) |
 | MGTC | Malaysian Green Technology and Climate Change Corporation (runs MyHIJAU, verifies GITA Asset) |
 | MIDA | Malaysian Investment Development Authority |
+| MPMA | Plastics manufacturers' association (R9: "Plastics Mfrs Assoc", 800+ plastics and injection plants) |
+| MSIA | Semiconductor industry association (R9: "Semiconductor Assoc", E&E, precision and OSAT vendors) |
 | MyBeST | Utility BESS auction (400 MW / 1,600 MWh per R8) |
 | MyHIJAU | MGTC green product/service directory and mark |
 | NEDA | New Enhanced Dispatch Arrangement (Single Buyer dispatch market used by CRESS) |
@@ -1920,16 +2095,19 @@ updated: 2026-10-23
 | OSAT | Outsourced semiconductor assembly and test |
 | OTEC | Ocean Thermal Energy Conversion |
 | PCS | Power conversion system (battery inverter) |
+| Peak-window kWh ratio (α) | R9 simulator input: share of monthly kWh drawn in the 14:00–22:00 weekday window |
 | PEPC | Professional Engineer with Practising Certificate |
 | PETRA | Ministry of Energy Transition and Water Transformation |
 | PF | Power factor (surcharge below 0.85 LV/MV, 0.90 HV) |
 | POI | Point of interconnection |
 | PPA | Power purchase agreement |
+| PPK / MAH / APHM / BMAM | Commercial-property and hospitality bodies named by R9 for malls, hotels and private hospitals; not expanded |
 | PSS | Power System Study (TNB, larger connections) |
 | PTW | Permit to Work (Regulation 113) |
 | QCE | Qualifying capital expenditure |
 | RE SAA | RE Supply Access Agreement (CRESS grid access) |
 | RED | Renewable Energy Developer (CRESS) |
+| REEM | "Registered Electrical Energy Manager" — R9's term; R2 uses REM |
 | REM | Registered Energy Manager (EECA, Class 1 / Class 2) |
 | RP3 / RP4 / RP5 | TNB Regulatory Periods; RP4 = 1 Jul 2025–31 Dec 2027 |
 | RPVSP / RPVI | SEDA Registered PV Service Provider / Registered PV Investor |
@@ -1947,6 +2125,7 @@ updated: 2026-10-23
 | TNBX | TNB unit administering SARE |
 | ToU | Time-of-use tariff (peak 14:00–22:00 weekdays under RP4) |
 | VFD / VSD | Variable frequency / speed drive |
+| WWTP | Wastewater treatment plant (glove-plant aerators; R9) |
 
 
 
@@ -2005,10 +2184,14 @@ One missed half-hour sets MD for the month, so screening with 30-minute meter da
 - GITE (70% exemption for RPVI leasing) ends 31 Dec 2026 [R7, R6]: host-owned purchases with financing (GSF 2.0, LCTF, HTG) become relatively more attractive than RPVI-funded PPAs.
 - 50–300 kWp rooftops and BESS hardware sold without EMS are named price-war segments [R8]; software (EMS, MD audits) and guarantees are where margins are protected.
 - EECA 2024: sites ≥21,600 GJ/yr must appoint a Registered Energy Manager [R2] — a ready audience for MD audits.
+- R9's load-shape ranking (unsourced) fits the payback rule of thumb in §3: Tier 1 sectors with 1.0–2.5 h durations (metal stamping, office towers, food processing, plastic injection) land at roughly 1.6–4 yr simple payback; flat 24/7 plants (gloves, fabs, textile spinning) land beyond 6 yr and are solar prospects, not MD-shaving BESS prospects [R9, T08 §8; C21].
+- R9's Tier 1 clusters (Shah Alam, Klang–Meru, Bangi–Kajang, Tebrau, Senai) are in Selangor and Johor, where Eternalgy already has projects; FMM, MPMA and MAREMA/MAESCO are the channels R9 names to reach factory owners and energy managers [R9, T10 §8].
+- R9's case studies should not be used as proof in sales material: three repeat figures from R1, R3 and R8, and none has a source (`registers/internal_issues.md`). Eternalgy's own metered results will be more credible.
+- R9's "12 months of 15/30-minute data from myTNB portal" is a lead for the MD audit tool's data step; the process is unverified (gap `tnb-30min-data-access`).
 
 ## 5. Pending inputs
-- R9: research prompt #4 (load profiles by industry) — not yet received.
 - Verification of every [C##] item against official documents.
+- Real 30-minute load data from MV prospects to test R9's sector ranking [C21, C22].
 
 
 
@@ -2024,7 +2207,7 @@ Open: 12 · Answered: 0
 | Priority | Status | Question | Related | File |
 |---|---|---|---|---|
 | high | open | What exactly does Budget 2027 Appendix 25 say for standalone solar, standalone BESS and integrated solar + BESS from 1 Jan 2027? | T03, C01, C20 | [open/2026-10-23-budget-2027-gita-wording.md](open/2026-10-23-budget-2027-gita-wording.md) |
-| high | open | Which Malaysian industries have short demand peaks inside 14:00-22:00 weekdays (good BESS fit) versus flat 24/7 loads? | T08, T04 | [open/2026-10-23-load-profiles-by-industry.md](open/2026-10-23-load-profiles-by-industry.md) |
+| high | open | Which Malaysian industries have short demand peaks inside 14:00-22:00 weekdays (good BESS fit) versus flat 24/7 loads? | T08, T04, C21, C22 | [open/2026-10-23-load-profiles-by-industry.md](open/2026-10-23-load-profiles-by-industry.md) |
 | high | open | What is the exact mandatory BESS sizing rule and capacity cap for Enhanced SELCO above 1 MWac? | T02, T09, C08 | [open/2026-10-23-selco-bess-sizing-rule.md](open/2026-10-23-selco-bess-sizing-rule.md) |
 | high | open | What minimum battery size (kWh per kWp) qualifies a solar system for GITA Tier 1b, and does retrofitting BESS onto pre-2027 solar qualify? | T03, C01 | [open/2026-10-23-tier1b-min-bess-ratio.md](open/2026-10-23-tier1b-min-bess-ratio.md) |
 | high | open | How does an MV customer obtain 12 months of 30-minute load-profile data from TNB, and in what format? | T01, T08 | [open/2026-10-23-tnb-30min-data-access.md](open/2026-10-23-tnb-30min-data-access.md) |

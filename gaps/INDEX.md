@@ -7,7 +7,7 @@ Open: 12 · Answered: 0
 | Priority | Status | Question | Related | File |
 |---|---|---|---|---|
 | high | open | What exactly does Budget 2027 Appendix 25 say for standalone solar, standalone BESS and integrated solar + BESS from 1 Jan 2027? | T03, C01, C20 | [open/2026-10-23-budget-2027-gita-wording.md](open/2026-10-23-budget-2027-gita-wording.md) |
-| high | open | Which Malaysian industries have short demand peaks inside 14:00-22:00 weekdays (good BESS fit) versus flat 24/7 loads? | T08, T04 | [open/2026-10-23-load-profiles-by-industry.md](open/2026-10-23-load-profiles-by-industry.md) |
+| high | open | Which Malaysian industries have short demand peaks inside 14:00-22:00 weekdays (good BESS fit) versus flat 24/7 loads? | T08, T04, C21, C22 | [open/2026-10-23-load-profiles-by-industry.md](open/2026-10-23-load-profiles-by-industry.md) |
 | high | open | What is the exact mandatory BESS sizing rule and capacity cap for Enhanced SELCO above 1 MWac? | T02, T09, C08 | [open/2026-10-23-selco-bess-sizing-rule.md](open/2026-10-23-selco-bess-sizing-rule.md) |
 | high | open | What minimum battery size (kWh per kWp) qualifies a solar system for GITA Tier 1b, and does retrofitting BESS onto pre-2027 solar qualify? | T03, C01 | [open/2026-10-23-tier1b-min-bess-ratio.md](open/2026-10-23-tier1b-min-bess-ratio.md) |
 | high | open | How does an MV customer obtain 12 months of 30-minute load-profile data from TNB, and in what format? | T01, T08 | [open/2026-10-23-tnb-30min-data-access.md](open/2026-10-23-tnb-30min-data-access.md) |
